@@ -1,0 +1,188 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\title{Menu Intelligence: Structured Menu Extraction and Categorization}
+\author{Philipp Philippov}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report describes Menu Intelligence, a web service for turning raw menu
+text or menu documents into a structured menu representation. The project is
+framed as a pipeline of NLP tasks: menu item categorization, structured field
+extraction, and final menu aggregation. The repository is available at
+\url{https://github.com/philippovdev/nlp-menu-intelligence}.
+
+Main points to fill:
+\begin{itemize}
+  \item dataset size and source summary
+  \item strongest baseline and final model
+  \item key quantitative results
+\end{itemize}
+\end{abstract}
+
+\section{Introduction}
+
+Explain why menu structuring matters for restaurant tooling, digital menus, and
+catalog maintenance. State that the project targets both a real deployable
+service and a measurable NLP pipeline.
+
+\subsection{Team}
+
+State the team members and responsibilities. If the project is solo, describe
+the roles covered by the single contributor.
+
+\section{Related Work}
+
+Summarize the closest work in:
+\begin{itemize}
+  \item short text classification
+  \item food or recipe classification
+  \item information extraction from short structured texts
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\begin{tabular}{llllll}
+\toprule
+Approach & Task & Dataset & Metric & Result & Notes \\
+\midrule
+TBD & TBD & TBD & TBD & TBD & TBD \\
+\bottomrule
+\end{tabular}
+\caption{Related work summary.}
+\label{tab:related-work}
+\end{table}
+
+\section{Model Description}
+
+Describe the working pipeline:
+\begin{itemize}
+  \item document ingestion
+  \item text extraction
+  \item line normalization
+  \item category prediction
+  \item structured field extraction
+  \item JSON aggregation and human review
+\end{itemize}
+
+Include a pipeline diagram here when it is ready.
+
+\section{Dataset}
+
+Describe:
+\begin{itemize}
+  \item source collection policy
+  \item annotation format
+  \item split policy
+  \item category labels
+  \item extraction labels
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lccc}
+\toprule
+Statistic & Train & Valid & Test \\
+\midrule
+Restaurants & TBD & TBD & TBD \\
+Documents & TBD & TBD & TBD \\
+Items & TBD & TBD & TBD \\
+Avg. tokens per item & TBD & TBD & TBD \\
+\bottomrule
+\end{tabular}
+\caption{Dataset statistics.}
+\label{tab:dataset-stats}
+\end{table}
+
+\section{Experiments}
+
+\subsection{Metrics}
+
+Define the metrics used for category classification and extraction:
+\begin{itemize}
+  \item Accuracy
+  \item Macro-F1
+  \item extraction Precision, Recall, and F1
+\end{itemize}
+
+\subsection{Experiment Setup}
+
+Describe:
+\begin{itemize}
+  \item train, valid, and test split
+  \item hardware
+  \item run configuration
+  \item model selection policy
+\end{itemize}
+
+\subsection{Baselines}
+
+List the baselines used in the comparison:
+\begin{itemize}
+  \item heuristic pipeline
+  \item TF-IDF + Logistic Regression
+  \item TF-IDF + Linear SVM
+  \item fastText
+  \item transformer model
+\end{itemize}
+
+\section{Results}
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+Method & Accuracy & Macro-F1 & Extraction F1 & Notes \\
+\midrule
+Heuristic baseline & TBD & TBD & TBD & current service baseline \\
+TF-IDF + Logistic Regression & TBD & TBD & TBD & \\
+TF-IDF + Linear SVM & TBD & TBD & TBD & \\
+fastText & TBD & TBD & TBD & \\
+Transformer & TBD & TBD & TBD & \\
+\bottomrule
+\end{tabular}
+\caption{Main experimental results.}
+\label{tab:main-results}
+\end{table}
+
+Interpret:
+\begin{itemize}
+  \item which methods work best and why
+  \item which categories remain difficult
+  \item where OCR quality limits downstream NLP
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\begin{tabular}{p{0.9\linewidth}}
+\toprule
+Sample output goes here. \\
+\bottomrule
+\end{tabular}
+\caption{Output samples.}
+\label{tab:output}
+\end{table}
+
+\section{Conclusion}
+
+Summarize:
+\begin{itemize}
+  \item dataset created
+  \item baselines evaluated
+  \item best-performing approach
+  \item remaining work and future improvements
+\end{itemize}
+
+\bibliographystyle{apalike}
+\bibliography{lit}
+
+\end{document}

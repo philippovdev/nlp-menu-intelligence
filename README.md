@@ -52,6 +52,17 @@ make ci-local
 - `POST /api/v1/menu/parse`
 - `POST /api/v1/menu/parse-file`
 
+## Course Documentation
+
+- [Course docs](docs/course/README.md)
+- [Problem statement](docs/course/problem-statement.md)
+- [Dataset plan](docs/course/dataset.md)
+- [Related work plan](docs/course/related-work.md)
+- [Experiments plan](docs/course/experiments.md)
+- [Workstreams](docs/course/workstreams.md)
+- [Report checklist](docs/course/report-checklist.md)
+- [Report workspace](report/README.md)
+
 ## Deployment
 
 - CI is defined in `.github/workflows/ci.yml`.
