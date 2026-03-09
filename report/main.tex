@@ -149,14 +149,19 @@ in-repo v0 sample item set (10 annotated items): category accuracy is 0.9000,
 category macro-F1 is 0.8182, and exact-match price and size accuracy are both
 1.0000 on this starter subset.
 
+The first classical classifier baseline is now measured on the fixed
+`items.v1.jsonl` split using word-level TF-IDF features and Logistic
+Regression. It reaches 0.2778 accuracy and 0.2472 macro-F1 on the validation
+split, and 0.3333 accuracy with 0.2790 macro-F1 on the held-out test split.
+
 \begin{table}[t]
 \centering
 \begin{tabular}{lcccc}
 \toprule
 Method & Accuracy & Macro-F1 & Extraction F1 & Notes \\
 \midrule
-Heuristic baseline & TBD & TBD & TBD & current service baseline \\
-TF-IDF + Logistic Regression & TBD & TBD & TBD & \\
+Heuristic baseline & 0.9000 & 0.8182 & N/A & v0 sample item set \\
+TF-IDF + Logistic Regression & 0.3333 & 0.2790 & N/A & items.v1 test split; valid = 0.2778 / 0.2472 \\
 TF-IDF + Linear SVM & TBD & TBD & TBD & \\
 fastText & TBD & TBD & TBD & \\
 Transformer & TBD & TBD & TBD & \\
