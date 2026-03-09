@@ -204,3 +204,20 @@ def test_parse_menu_rejects_blank_text_with_api_error_shape() -> None:
     assert response.status_code == 422
     assert response.json()["schema_version"] == "v1"
     assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
+def test_parse_menu_uses_full_default_taxonomy_when_labels_are_omitted() -> None:
+    response = client.post(
+        "/api/v1/menu/parse",
+        json={
+            "schema_version": "v1",
+            "text": "Pepperoni Pizza 30 cm 590",
+            "currency_hint": "RUB",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["items"][0]["category"] == {
+        "label": "pizza",
+        "confidence": 0.78,
+    }

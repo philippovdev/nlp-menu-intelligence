@@ -9,15 +9,6 @@ IssueLevel = Literal["info", "warning", "error"]
 ItemKind = Literal["menu_item", "category_header", "noise"]
 Number = int | float
 DocumentSourceType = Literal["pdf", "image"]
-
-DEFAULT_CATEGORY_LABELS = (
-    "salads",
-    "soups",
-    "mains",
-    "desserts",
-    "drinks",
-    "other",
-)
 FULL_CATEGORY_LABELS = (
     "salads",
     "soups",
@@ -32,6 +23,7 @@ FULL_CATEGORY_LABELS = (
     "drinks_cold",
     "other",
 )
+DEFAULT_CATEGORY_LABELS = FULL_CATEGORY_LABELS
 
 DEFAULT_LANGUAGE = "ru"
 DEFAULT_CURRENCY = "RUB"

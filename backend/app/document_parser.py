@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import mimetypes
 import unicodedata
 from io import BytesIO
 
 import pytesseract
 from fastapi import UploadFile
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageOps, UnidentifiedImageError
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
 from pytesseract.pytesseract import TesseractError, TesseractNotFoundError
@@ -37,10 +38,14 @@ async def parse_menu_file(
     currency_hint: str = "RUB",
     category_labels: list[str] | None = None,
 ) -> MenuParseResponse:
-    media_type = normalize_media_type(file.content_type)
-    source_type = validate_media_type(media_type)
     file_bytes = await file.read()
     validate_file_bytes(file_bytes)
+    media_type = resolve_media_type(
+        content_type=file.content_type,
+        filename=file.filename,
+        file_bytes=file_bytes,
+    )
+    source_type = validate_media_type(media_type)
 
     if source_type == "pdf":
         extracted_text, extraction_issues = extract_pdf_text(file_bytes)
@@ -79,6 +84,28 @@ def validate_media_type(media_type: str | None) -> str:
             details={"media_type": media_type},
         )
     return SUPPORTED_MEDIA_TYPES[media_type]
+
+
+def resolve_media_type(
+    *,
+    content_type: str | None,
+    filename: str | None,
+    file_bytes: bytes,
+) -> str | None:
+    media_type = normalize_media_type(content_type)
+    if media_type in SUPPORTED_MEDIA_TYPES:
+        return media_type
+
+    filename_media_type, _ = mimetypes.guess_type(filename or "")
+    normalized_filename_media_type = normalize_media_type(filename_media_type)
+    if normalized_filename_media_type in SUPPORTED_MEDIA_TYPES:
+        return normalized_filename_media_type
+
+    sniffed_media_type = sniff_media_type(file_bytes)
+    if sniffed_media_type is not None:
+        return sniffed_media_type
+
+    return media_type
 
 
 def validate_file_bytes(file_bytes: bytes) -> None:
@@ -145,6 +172,7 @@ def extract_pdf_text(file_bytes: bytes) -> tuple[str, list[Issue]]:
 def extract_image_text(file_bytes: bytes) -> str:
     try:
         with Image.open(BytesIO(file_bytes)) as image:
+            image = ImageOps.exif_transpose(image)
             if image.mode not in {"RGB", "L"}:
                 image = image.convert("RGB")
             extracted_text = pytesseract.image_to_string(image, lang=OCR_LANGUAGES)
@@ -186,6 +214,18 @@ def normalize_media_type(value: str | None) -> str | None:
     if value is None:
         return None
     return value.strip().lower()
+
+
+def sniff_media_type(file_bytes: bytes) -> str | None:
+    if file_bytes.startswith(b"%PDF-"):
+        return "application/pdf"
+    if file_bytes.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if file_bytes.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if file_bytes.startswith(b"RIFF") and file_bytes[8:12] == b"WEBP":
+        return "image/webp"
+    return None
 
 
 def normalize_extracted_text(text: str) -> str:

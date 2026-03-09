@@ -71,6 +71,15 @@ def build_png_bytes() -> bytes:
     return buffer.getvalue()
 
 
+def build_oriented_jpeg_bytes() -> bytes:
+    image = Image.new("RGB", (16, 32), "white")
+    exif = Image.Exif()
+    exif[274] = 6
+    buffer = BytesIO()
+    image.save(buffer, format="JPEG", exif=exif)
+    return buffer.getvalue()
+
+
 def test_parse_menu_file_rejects_unsupported_media_type() -> None:
     response = client.post(
         "/api/v1/menu/parse-file",
@@ -150,6 +159,18 @@ def test_parse_menu_file_parses_pdf_text() -> None:
     ]
 
 
+def test_parse_menu_file_falls_back_to_filename_media_type() -> None:
+    pdf_bytes = build_pdf_bytes(["SALADS", "Caesar 250 g 390 RUB"])
+
+    response = client.post(
+        "/api/v1/menu/parse-file",
+        files={"file": ("menu.pdf", pdf_bytes, "application/octet-stream")},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["document"]["media_type"] == "application/pdf"
+
+
 def test_parse_menu_file_uses_ocr_for_images(monkeypatch) -> None:
     image_bytes = build_png_bytes()
     monkeypatch.setattr(
@@ -177,3 +198,25 @@ def test_parse_menu_file_uses_ocr_for_images(monkeypatch) -> None:
     assert payload["items"][1]["fields"]["prices"] == [
         {"value": 450, "currency": "RUB", "raw": "450"}
     ]
+
+
+def test_parse_menu_file_applies_exif_orientation_before_ocr(monkeypatch) -> None:
+    image_bytes = build_oriented_jpeg_bytes()
+    seen_sizes: list[tuple[int, int]] = []
+
+    def fake_image_to_string(image: Image.Image, lang: str) -> str:
+        seen_sizes.append(image.size)
+        return "SOUPS\nTom Yum 300 ml 450"
+
+    monkeypatch.setattr(
+        "app.document_parser.pytesseract.image_to_string",
+        fake_image_to_string,
+    )
+
+    response = client.post(
+        "/api/v1/menu/parse-file",
+        files={"file": ("menu.jpg", image_bytes, "image/jpeg")},
+    )
+
+    assert response.status_code == 200
+    assert seen_sizes == [(32, 16)]
