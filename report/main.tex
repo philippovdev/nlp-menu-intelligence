@@ -42,20 +42,35 @@ the roles covered by the single contributor.
 
 \section{Related Work}
 
-Summarize the closest work in:
-\begin{itemize}
-  \item short text classification
-  \item food or recipe classification
-  \item information extraction from short structured texts
-\end{itemize}
+The closest published work to this project does not come from one single
+benchmark. Instead, it splits across three literatures. First, short text and
+product-title categorization papers motivate efficient text baselines and show
+that catalog-style titles can be classified with strong simple models or
+specialized neural architectures \cite{joulin-etal-2017-bag,xia-etal-2017-large,cevahir-murakami-2016-large}.
+Second, food-domain NLP is real but fragmented: the nearest tasks are food-item
+healthiness classification, dish name recognition from recipe text, and
+large-scale menu normalization or clustering
+\cite{wiegand-klakow-2013-towards,hu-etal-2023-diner,latif-etal-2025-restaurant}.
+Third, structured extraction work is better represented by restaurant order
+extraction and document or receipt understanding resources such as FUNSD, CORD,
+and SROIE \cite{peng-etal-2017-may,jaume2019funsd,park2019cord,huang2019icdar2019}.
+
+The important gap is that I did not find a public paper that matches the exact
+task shape of this project: short menu item text, fixed menu taxonomy labels,
+deterministic slot extraction, and later OCR-noisy document inputs. The
+literature therefore supports the project mostly through adjacent tasks rather
+than one established benchmark.
 
 \begin{table}[t]
 \centering
-\begin{tabular}{llllll}
+\begin{tabular}{p{0.18\linewidth}p{0.15\linewidth}p{0.16\linewidth}p{0.12\linewidth}p{0.14\linewidth}p{0.17\linewidth}}
 \toprule
 Approach & Task & Dataset & Metric & Result & Notes \\
 \midrule
-TBD & TBD & TBD & TBD & TBD & TBD \\
+fastText \cite{joulin-etal-2017-bag} & short text classification & AG / DBPedia and related benchmarks & Accuracy & 92.5 on AG with bigrams & strong CPU baseline motivation \\
+Xia et al. \cite{xia-etal-2017-large} & product title categorization & millions of Japanese titles, 35 classes & Accuracy & $>$96\% & close product-title analog \\
+Hu et al. \cite{hu-etal-2023-diner} & dish name recognition & DiNeR & F1 / EM & 59.2 / 23.2 on OOD split & food-domain analog, not menu categorization \\
+Latif et al. \cite{latif-etal-2025-restaurant} & menu clustering & $>$700k menu items & similarity / coverage & 0.98 intra-cluster sim.; 100\% coverage & closest menu-domain paper, but clustering not fixed-label classification \\
 \bottomrule
 \end{tabular}
 \caption{Related work summary.}
