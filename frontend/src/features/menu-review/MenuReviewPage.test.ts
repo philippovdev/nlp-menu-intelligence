@@ -1,6 +1,11 @@
 import { mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { ParseMenuResponseV1 } from "../../api/menu";
+import type {
+  ApiErrorResponseV1,
+  ParseMenuFileResponseV1,
+  ParseMenuResponseV1,
+} from "../../api/menu";
+import { CATEGORY_LABELS } from "./schema";
 import MenuReviewPage from "./MenuReviewPage.vue";
 
 const mockResponse: ParseMenuResponseV1 = {
@@ -85,10 +90,59 @@ const mockResponse: ParseMenuResponseV1 = {
   ],
 };
 
+const mockFileResponse: ParseMenuFileResponseV1 = {
+  ...mockResponse,
+  request_id: "req_file_001",
+  document: {
+    source_type: "pdf",
+    filename: "menu.pdf",
+    media_type: "application/pdf",
+    ocr_used: true,
+    extracted_text: "САЛАТЫ\nЦезарь с курицей 250 г - 390 ₽",
+  },
+};
+
 function flushPromises(): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, 0);
   });
+}
+
+function mockFetchSuccess(
+  payload: ParseMenuResponseV1 | ParseMenuFileResponseV1,
+) {
+  const fetchMock = vi.fn().mockResolvedValue({
+    ok: true,
+    json: vi.fn().mockResolvedValue(payload),
+  });
+
+  vi.stubGlobal("fetch", fetchMock);
+  return fetchMock;
+}
+
+function mockFetchError(payload: ApiErrorResponseV1) {
+  const fetchMock = vi.fn().mockResolvedValue({
+    ok: false,
+    status: 400,
+    json: vi.fn().mockResolvedValue(payload),
+  });
+
+  vi.stubGlobal("fetch", fetchMock);
+  return fetchMock;
+}
+
+async function selectFile(
+  wrapper: ReturnType<typeof mount>,
+  file: File,
+): Promise<void> {
+  const input = wrapper.get('[data-testid="menu-file"]');
+
+  Object.defineProperty(input.element, "files", {
+    value: [file],
+    configurable: true,
+  });
+
+  await input.trigger("change");
 }
 
 afterEach(() => {
@@ -98,12 +152,7 @@ afterEach(() => {
 
 describe("MenuReviewPage", () => {
   it("submits pasted text and renders parsed items", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue(mockResponse),
-    });
-
-    vi.stubGlobal("fetch", fetchMock);
+    const fetchMock = mockFetchSuccess(mockResponse);
 
     const wrapper = mount(MenuReviewPage);
 
@@ -125,13 +174,94 @@ describe("MenuReviewPage", () => {
     expect(wrapper.text()).toContain("EMPTY_LINES_SKIPPED");
   });
 
-  it("lets the user edit the core review fields", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue(mockResponse),
+  it("updates local state when a file is selected", async () => {
+    const wrapper = mount(MenuReviewPage);
+    const file = new File(["pdf"], "menu.pdf", {
+      type: "application/pdf",
     });
 
-    vi.stubGlobal("fetch", fetchMock);
+    await selectFile(wrapper, file);
+
+    expect(wrapper.get('[data-testid="selected-file-name"]').text()).toContain(
+      "menu.pdf",
+    );
+    expect(wrapper.get('[data-testid="parse-button"]').text()).toBe(
+      "Parse file",
+    );
+  });
+
+  it("sends FormData to parse-file when a file is selected", async () => {
+    const fetchMock = mockFetchSuccess(mockFileResponse);
+    const wrapper = mount(MenuReviewPage);
+    const file = new File(["pdf"], "menu.pdf", {
+      type: "application/pdf",
+    });
+
+    await selectFile(wrapper, file);
+    await wrapper.get('[data-testid="parse-button"]').trigger("click");
+    await flushPromises();
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/v1/menu/parse-file",
+      expect.objectContaining({
+        method: "POST",
+        body: expect.any(FormData),
+      }),
+    );
+
+    const request = fetchMock.mock.calls[0]?.[1];
+    const body = request?.body as FormData;
+
+    expect(body.get("file")).toBe(file);
+    expect(body.get("lang")).toBe("ru");
+    expect(body.get("currency_hint")).toBe("RUB");
+    expect(body.getAll("category_labels")).toEqual([...CATEGORY_LABELS]);
+  });
+
+  it("renders the shared review UI after a successful file parse", async () => {
+    mockFetchSuccess(mockFileResponse);
+
+    const wrapper = mount(MenuReviewPage);
+    const file = new File(["pdf"], "menu.pdf", {
+      type: "application/pdf",
+    });
+
+    await selectFile(wrapper, file);
+    await wrapper.get('[data-testid="parse-button"]').trigger("click");
+    await flushPromises();
+
+    expect(wrapper.get('[data-testid="items-list"]').text()).toContain(
+      "Цезарь с курицей 250 г - 390 ₽",
+    );
+    expect(wrapper.text()).toContain("Filename");
+    expect(wrapper.text()).toContain("menu.pdf");
+    expect(wrapper.text()).toContain("OCR");
+    expect(wrapper.text()).toContain("used");
+  });
+
+  it("shows a readable error when file parsing fails", async () => {
+    mockFetchError({
+      schema_version: "v1",
+      error: {
+        code: "UNSUPPORTED_FILE",
+        message: "Unable to parse file.",
+      },
+    });
+
+    const wrapper = mount(MenuReviewPage);
+    const file = new File(["pdf"], "menu.pdf", {
+      type: "application/pdf",
+    });
+
+    await selectFile(wrapper, file);
+    await wrapper.get('[data-testid="parse-button"]').trigger("click");
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("Unable to parse file.");
+  });
+
+  it("lets the user edit the core review fields", async () => {
+    mockFetchSuccess(mockResponse);
 
     const wrapper = mount(MenuReviewPage);
 

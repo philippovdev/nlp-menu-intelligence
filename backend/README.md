@@ -19,3 +19,9 @@ uvicorn app.main:app --reload
 - `GET /api/v1/version`
 - `GET /api/status`
 - `POST /api/v1/menu/parse`
+- `POST /api/v1/menu/parse-file`
+
+## Runtime Notes
+
+- `POST /api/v1/menu/parse-file` requires Tesseract OCR for image uploads.
+- The Docker image installs `tesseract-ocr` with English and Russian language packs.

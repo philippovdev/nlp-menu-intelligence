@@ -8,6 +8,7 @@ SchemaVersion = Literal["v1"]
 IssueLevel = Literal["info", "warning", "error"]
 ItemKind = Literal["menu_item", "category_header", "noise"]
 Number = int | float
+DocumentSourceType = Literal["pdf", "image"]
 
 DEFAULT_CATEGORY_LABELS = (
     "salads",
@@ -92,6 +93,14 @@ class ModelVersion(StrictModel):
     ner_model: str
 
 
+class ParsedDocument(StrictModel):
+    source_type: DocumentSourceType
+    filename: str | None = None
+    media_type: str | None = None
+    ocr_used: bool
+    extracted_text: str
+
+
 class ParseMenuMeta(StrictModel):
     lang: str
     currency: str
@@ -150,6 +159,7 @@ class MenuParseResponse(StrictModel):
     model_version: ModelVersion
     items: list[MenuItem]
     issues: list[Issue] = Field(default_factory=list)
+    document: ParsedDocument | None = None
 
 
 class ApiErrorBody(StrictModel):
@@ -171,6 +181,32 @@ class ApiErrorResponse(StrictModel):
                 details={"errors": errors},
             )
         )
+
+    @classmethod
+    def from_api_error(cls, error: ApiError) -> ApiErrorResponse:
+        return cls(
+            error=ApiErrorBody(
+                code=error.code,
+                message=error.message,
+                details=error.details,
+            )
+        )
+
+
+class ApiError(Exception):
+    def __init__(
+        self,
+        *,
+        status_code: int,
+        code: str,
+        message: str,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.code = code
+        self.message = message
+        self.details = details
 
 
 def normalize_label(value: str) -> str:

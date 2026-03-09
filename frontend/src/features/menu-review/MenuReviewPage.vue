@@ -3,9 +3,10 @@ import { computed, ref } from "vue";
 import {
   ApiError,
   parseMenu,
+  parseMenuFile,
   type IssueLevel,
   type MenuItemV1,
-  type ParseMenuResponseV1,
+  type ParseMenuResultV1,
 } from "../../api/menu";
 import {
   CATEGORY_LABELS,
@@ -15,16 +16,80 @@ import {
   SIZE_UNIT_OPTIONS,
 } from "./schema";
 
+const supportedFileTypes = [
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
+const acceptedFileTypes = supportedFileTypes.join(",");
+const supportedFileTypeSet = new Set<string>(supportedFileTypes);
+const supportedFileExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".webp"];
+
 const text = ref("");
+const selectedFile = ref<File | null>(null);
+const fileInput = ref<HTMLInputElement | null>(null);
 const loading = ref(false);
 const errorMessage = ref("");
-const result = ref<ParseMenuResponseV1 | null>(null);
+const result = ref<ParseMenuResultV1 | null>(null);
 
-const canSubmit = computed(() => text.value.trim().length > 0 && !loading.value);
+const hasSelectedFile = computed(() => selectedFile.value !== null);
+const canSubmit = computed(
+  () =>
+    !loading.value &&
+    (hasSelectedFile.value || text.value.trim().length > 0),
+);
 const items = computed(() => result.value?.items ?? []);
+const parseButtonLabel = computed(() => {
+  if (loading.value) {
+    return hasSelectedFile.value ? "Parsing file..." : "Parsing menu...";
+  }
 
-function cloneResponse(value: ParseMenuResponseV1): ParseMenuResponseV1 {
-  return JSON.parse(JSON.stringify(value)) as ParseMenuResponseV1;
+  return hasSelectedFile.value ? "Parse file" : "Parse menu";
+});
+const selectedFileName = computed(
+  () => selectedFile.value?.name ?? "No file selected",
+);
+const documentMetadata = computed(() => result.value?.document ?? null);
+const extractedTextPreview = computed(() => {
+  const value = result.value?.document?.extracted_text?.trim();
+  return value ? value : null;
+});
+
+function isSupportedFile(file: File): boolean {
+  if (supportedFileTypeSet.has(file.type)) {
+    return true;
+  }
+
+  const name = file.name.toLowerCase();
+  return supportedFileExtensions.some((extension) => name.endsWith(extension));
+}
+
+function clearSelectedFile(): void {
+  selectedFile.value = null;
+
+  if (fileInput.value) {
+    fileInput.value.value = "";
+  }
+}
+
+function onFileChange(event: Event): void {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0] ?? null;
+
+  if (!file) {
+    selectedFile.value = null;
+    return;
+  }
+
+  if (!isSupportedFile(file)) {
+    clearSelectedFile();
+    errorMessage.value = "Unsupported file type. Use PDF, JPG, PNG, or WEBP.";
+    return;
+  }
+
+  selectedFile.value = file;
+  errorMessage.value = "";
 }
 
 function formatConfidence(value?: number | null): string {
@@ -53,15 +118,23 @@ async function submit(): Promise<void> {
   errorMessage.value = "";
 
   try {
-    const response = await parseMenu({
+    const requestOptions = {
       schema_version: DEFAULT_PARSE_REQUEST.schema_version,
-      text: text.value,
       lang: DEFAULT_PARSE_REQUEST.lang,
       currency_hint: DEFAULT_PARSE_REQUEST.currency_hint,
       category_labels: [...CATEGORY_LABELS],
-    });
+    };
+    const response = selectedFile.value
+      ? await parseMenuFile({
+          ...requestOptions,
+          file: selectedFile.value,
+        })
+      : await parseMenu({
+          ...requestOptions,
+          text: text.value,
+        });
 
-    result.value = cloneResponse(response);
+    result.value = structuredClone(response);
   } catch (error) {
     result.value = null;
     errorMessage.value =
@@ -191,17 +264,18 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   <main class="page">
     <section class="hero panel ds-card">
       <div class="hero__copy">
-        <p class="ds-label ds-eyebrow">Slice 1 Review Flow</p>
+        <p class="ds-label ds-eyebrow">Slice 2 Intake + Review</p>
         <h1 class="ds-title ds-title--hero">
-          Menu review starts with raw text and a fixed contract.
+          Intake can start from pasted text or a single uploaded file.
         </h1>
         <p class="ds-lead">
-          Paste menu text, submit it to the backend parser, and review the
-          first normalized fields without introducing frontend-side model logic.
+          Keep one review screen, route both intake paths through the backend,
+          and land in the same structured editing state.
         </p>
       </div>
       <div class="hero__meta">
         <span class="ds-pill">POST /api/v1/menu/parse</span>
+        <span class="ds-pill">POST /api/v1/menu/parse-file</span>
         <span class="ds-pill">same-origin /api</span>
         <span class="ds-pill">manual review enabled</span>
       </div>
@@ -219,20 +293,58 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
           :disabled="!canSubmit"
           @click="submit"
         >
-          {{ loading ? "Parsing..." : "Parse menu" }}
+          {{ parseButtonLabel }}
         </button>
       </div>
 
-      <label class="ds-field ds-field--stacked">
-        <span class="ds-label">Raw menu text</span>
-        <textarea
-          v-model="text"
-          class="ds-control"
-          data-testid="menu-text"
-          rows="12"
-          placeholder="САЛАТЫ&#10;Цезарь с курицей 250 г - 390 ₽&#10;Греческий - 350 ₽"
-        />
-      </label>
+      <div class="intake-grid">
+        <label class="ds-field ds-field--stacked">
+          <span class="ds-label">Raw menu text</span>
+          <textarea
+            v-model="text"
+            class="ds-control"
+            data-testid="menu-text"
+            rows="12"
+            placeholder="САЛАТЫ&#10;Цезарь с курицей 250 г - 390 ₽&#10;Греческий - 350 ₽"
+          />
+        </label>
+
+        <div class="file-intake">
+          <label class="ds-field">
+            <span class="ds-label">Upload one file</span>
+            <input
+              ref="fileInput"
+              class="ds-control"
+              data-testid="menu-file"
+              type="file"
+              :accept="acceptedFileTypes"
+              @change="onFileChange"
+            />
+          </label>
+
+          <div class="file-state">
+            <div>
+              <span class="ds-label">Selected file</span>
+              <div class="file-name" data-testid="selected-file-name">
+                {{ selectedFileName }}
+              </div>
+            </div>
+            <button
+              v-if="hasSelectedFile"
+              class="ds-button ds-button--ghost"
+              type="button"
+              @click="clearSelectedFile"
+            >
+              Clear
+            </button>
+          </div>
+
+          <p class="input-note">
+            Accepted formats: PDF, JPG, PNG, WEBP. If a file is selected, it is
+            parsed instead of the pasted text.
+          </p>
+        </div>
+      </div>
 
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </section>
@@ -256,6 +368,26 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
           <span>{{ result.meta.currency }}</span>
         </div>
       </div>
+
+      <div v-if="documentMetadata" class="summary summary--document">
+        <div>
+          <span class="ds-label">Source</span>
+          <span>{{ documentMetadata.source_type }}</span>
+        </div>
+        <div v-if="documentMetadata.filename">
+          <span class="ds-label">Filename</span>
+          <span>{{ documentMetadata.filename }}</span>
+        </div>
+        <div v-if="documentMetadata.ocr_used != null">
+          <span class="ds-label">OCR</span>
+          <span>{{ documentMetadata.ocr_used ? "used" : "not used" }}</span>
+        </div>
+      </div>
+
+      <details v-if="extractedTextPreview" class="document-preview">
+        <summary class="ds-label">Extracted text</summary>
+        <pre>{{ extractedTextPreview }}</pre>
+      </details>
 
       <div v-if="result.issues.length" class="ds-issue-list issue-list--global">
         <span
@@ -505,6 +637,40 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   margin-bottom: var(--ds-space-6);
 }
 
+.intake-grid {
+  display: grid;
+  gap: var(--ds-space-6);
+}
+
+.file-intake {
+  display: grid;
+  gap: var(--ds-space-4);
+  padding: var(--ds-space-5);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-group);
+  background: var(--ds-color-surface-soft);
+}
+
+.file-state {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+}
+
+.file-name {
+  margin-top: var(--ds-space-2);
+  color: var(--ds-color-text);
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.input-note {
+  margin: 0;
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-small);
+}
+
 .error {
   margin: var(--ds-space-6) 0 0;
   color: var(--ds-color-danger);
@@ -521,6 +687,31 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   display: flex;
   flex-direction: column;
   gap: var(--ds-space-1);
+}
+
+.summary--document {
+  margin-top: var(--ds-space-6);
+}
+
+.document-preview {
+  margin-top: var(--ds-space-6);
+}
+
+.document-preview summary {
+  cursor: pointer;
+}
+
+.document-preview pre {
+  margin: var(--ds-space-4) 0 0;
+  padding: var(--ds-space-5);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-group);
+  background: var(--ds-color-surface-soft);
+  color: var(--ds-color-text);
+  font-family: inherit;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .items {
@@ -593,6 +784,11 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
 
   .panel__header,
   .item-card__top {
+    flex-direction: column;
+  }
+
+  .file-state {
+    align-items: start;
     flex-direction: column;
   }
 

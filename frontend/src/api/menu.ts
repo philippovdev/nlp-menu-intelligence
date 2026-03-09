@@ -68,6 +68,14 @@ export type ParseMenuMetaV1 = {
   split_strategy: "lines";
 };
 
+export type ParseMenuDocumentV1 = {
+  source_type: "pdf" | "image";
+  filename?: string | null;
+  media_type?: string | null;
+  ocr_used?: boolean | null;
+  extracted_text?: string | null;
+};
+
 export type ParseMenuRequestV1 = {
   schema_version: SchemaVersion;
   text: string;
@@ -76,14 +84,27 @@ export type ParseMenuRequestV1 = {
   category_labels?: string[];
 };
 
-export type ParseMenuResponseV1 = {
+export type ParseMenuFileRequestV1 = {
+  schema_version: SchemaVersion;
+  file: File;
+  lang?: string;
+  currency_hint?: string;
+  category_labels?: string[];
+};
+
+export type ParseMenuResultV1 = {
   schema_version: SchemaVersion;
   request_id: string;
   meta: ParseMenuMetaV1;
   model_version: ModelVersionV1;
   items: MenuItemV1[];
   issues: IssueV1[];
+  document?: ParseMenuDocumentV1;
 };
+
+export type ParseMenuResponseV1 = ParseMenuResultV1;
+
+export type ParseMenuFileResponseV1 = ParseMenuResultV1;
 
 export type ApiErrorResponseV1 = {
   schema_version: SchemaVersion;
@@ -113,19 +134,11 @@ export class ApiError extends Error {
   }
 }
 
-export async function parseMenu(
-  payload: ParseMenuRequestV1,
-): Promise<ParseMenuResponseV1> {
-  const response = await fetch("/api/v1/menu/parse", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-
+async function readParseResult<T extends ParseMenuResultV1>(
+  response: Response,
+): Promise<T> {
   const data = (await response.json().catch(() => null)) as
-    | ParseMenuResponseV1
+    | ParseMenuResultV1
     | ApiErrorResponseV1
     | null;
 
@@ -142,5 +155,47 @@ export async function parseMenu(
     throw new ApiError("Unexpected response from server.", response.status);
   }
 
-  return data;
+  return data as T;
+}
+
+export async function parseMenu(
+  payload: ParseMenuRequestV1,
+): Promise<ParseMenuResponseV1> {
+  const response = await fetch("/api/v1/menu/parse", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return readParseResult<ParseMenuResponseV1>(response);
+}
+
+export async function parseMenuFile(
+  payload: ParseMenuFileRequestV1,
+): Promise<ParseMenuFileResponseV1> {
+  const formData = new FormData();
+
+  formData.append("schema_version", payload.schema_version);
+  formData.append("file", payload.file);
+
+  if (payload.lang) {
+    formData.append("lang", payload.lang);
+  }
+
+  if (payload.currency_hint) {
+    formData.append("currency_hint", payload.currency_hint);
+  }
+
+  payload.category_labels?.forEach((label) => {
+    formData.append("category_labels", label);
+  });
+
+  const response = await fetch("/api/v1/menu/parse-file", {
+    method: "POST",
+    body: formData,
+  });
+
+  return readParseResult<ParseMenuFileResponseV1>(response);
 }

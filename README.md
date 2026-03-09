@@ -50,6 +50,7 @@ make ci-local
 - `GET /api/v1/version`
 - `GET /api/status`
 - `POST /api/v1/menu/parse`
+- `POST /api/v1/menu/parse-file`
 
 ## Deployment
 

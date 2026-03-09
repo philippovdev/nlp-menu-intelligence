@@ -8,7 +8,13 @@ WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY app ./app
 
-RUN python -m pip install --upgrade pip && \
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+        tesseract-ocr \
+        tesseract-ocr-eng \
+        tesseract-ocr-rus && \
+    rm -rf /var/lib/apt/lists/* && \
+    python -m pip install --upgrade pip && \
     pip install .
 
 EXPOSE 8010
