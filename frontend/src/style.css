@@ -137,6 +137,52 @@ h2 {
   border: 1px solid rgba(21, 34, 32, 0.08);
 }
 
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.state-idle,
+.state-loading {
+  background: rgba(221, 186, 94, 0.18);
+  color: #8b5d23;
+}
+
+.state-online {
+  background: rgba(69, 123, 95, 0.16);
+  color: #23513d;
+}
+
+.state-error {
+  background: rgba(183, 66, 53, 0.14);
+  color: #8a2d25;
+}
+
+.refresh-button {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 999px;
+  background: #152220;
+  color: #fffaf0;
+  cursor: pointer;
+}
+
+.refresh-button:hover {
+  background: #223833;
+}
+
+.error-copy {
+  color: #8a2d25;
+}
+
 @media (max-width: 720px) {
   .page-shell {
     width: min(100% - 20px, 1100px);
@@ -160,4 +206,3 @@ h2 {
     grid-template-columns: 1fr;
   }
 }
-

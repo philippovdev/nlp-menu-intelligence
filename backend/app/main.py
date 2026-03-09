@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 APP_VERSION = "0.0.1"
+APP_NAME = "menu-intelligence-api"
 
 
 def create_app() -> FastAPI:
@@ -20,8 +21,11 @@ def create_app() -> FastAPI:
     async def version() -> dict[str, str]:
         return {"version": APP_VERSION}
 
+    @app.get("/api/status")
+    async def status() -> dict[str, str]:
+        return {"service": APP_NAME, "status": "ok", "version": APP_VERSION}
+
     return app
 
 
 app = create_app()
-

@@ -46,9 +46,11 @@ make ci-local
 
 - `GET /api/health`
 - `GET /api/version`
+- `GET /api/status`
 
 ## Deployment
 
 - CI is defined in `.github/workflows/ci.yml`.
 - VPS sync deployment is defined in `.github/workflows/deploy.yml`.
 - Remote sync logic lives in `ops/remote_sync.sh`.
+- Remote app deploy logic lives in `ops/remote_deploy.sh`.

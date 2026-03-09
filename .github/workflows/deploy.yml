@@ -39,3 +39,13 @@ jobs:
             "export DEPLOY_PATH='${DEPLOY_PATH}' DEPLOY_REF='${DEPLOY_REF}' REPO_URL='${REPO_URL}'; bash -s" \
             < ops/remote_sync.sh
 
+      - name: Build and restart application on VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" \
+            "export DEPLOY_PATH='${DEPLOY_PATH}'; bash -s" \
+            < ops/remote_deploy.sh

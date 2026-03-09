@@ -17,3 +17,14 @@ def test_version() -> None:
 
     assert response.status_code == 200
     assert response.json() == {"version": "0.0.1"}
+
+
+def test_status() -> None:
+    response = client.get("/api/status")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "service": "menu-intelligence-api",
+        "status": "ok",
+        "version": "0.0.1",
+    }
