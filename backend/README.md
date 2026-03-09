@@ -1,6 +1,6 @@
 # Backend
 
-FastAPI service for health checks, versioning, and the future OCR / inference pipeline.
+FastAPI service for the Slice 1 menu parsing flow.
 
 ## Run
 
@@ -11,3 +11,11 @@ pip install -e ".[dev]"
 uvicorn app.main:app --reload
 ```
 
+## Endpoints
+
+- `GET /api/health`
+- `GET /api/v1/health`
+- `GET /api/version`
+- `GET /api/v1/version`
+- `GET /api/status`
+- `POST /api/v1/menu/parse`

@@ -42,11 +42,14 @@ uvicorn app.main:app --reload
 make ci-local
 ```
 
-## Initial API
+## Current API
 
 - `GET /api/health`
+- `GET /api/v1/health`
 - `GET /api/version`
+- `GET /api/v1/version`
 - `GET /api/status`
+- `POST /api/v1/menu/parse`
 
 ## Deployment
 
