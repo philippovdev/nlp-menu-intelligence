@@ -154,6 +154,11 @@ The first classical classifier baseline is now measured on the fixed
 Regression. It reaches 0.2778 accuracy and 0.2472 macro-F1 on the validation
 split, and 0.3333 accuracy with 0.2790 macro-F1 on the held-out test split.
 
+The second classical classifier baseline uses the same TF-IDF feature setup
+with a linear SVM (`LinearSVC`). It reaches 0.2778 accuracy and 0.2556
+macro-F1 on the validation split, and improves the held-out test result to
+0.3889 accuracy with 0.3433 macro-F1.
+
 \begin{table}[t]
 \centering
 \begin{tabular}{lcccc}
@@ -162,7 +167,7 @@ Method & Accuracy & Macro-F1 & Extraction F1 & Notes \\
 \midrule
 Heuristic baseline & 0.9000 & 0.8182 & N/A & v0 sample item set \\
 TF-IDF + Logistic Regression & 0.3333 & 0.2790 & N/A & items.v1 test split; valid = 0.2778 / 0.2472 \\
-TF-IDF + Linear SVM & TBD & TBD & TBD & \\
+TF-IDF + Linear SVM & 0.3889 & 0.3433 & N/A & items.v1 test split; valid = 0.2778 / 0.2556 \\
 fastText & TBD & TBD & TBD & \\
 Transformer & TBD & TBD & TBD & \\
 \bottomrule

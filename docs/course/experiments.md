@@ -98,7 +98,7 @@ Keep one row per experiment run.
 | --- | --- | --- | --- | --- |
 | Heuristic baseline | 0.9000 | 0.8182 | N/A | v0 sample set; price exact = 1.0000, size exact = 1.0000 |
 | TF-IDF + Logistic Regression | 0.3333 | 0.2790 | N/A | items.v1 test split; valid acc = 0.2778, valid macro-F1 = 0.2472 |
-| TF-IDF + Linear SVM | TBD | TBD | N/A or TBD | |
+| TF-IDF + Linear SVM | 0.3889 | 0.3433 | N/A | items.v1 test split; valid acc = 0.2778, valid macro-F1 = 0.2556 |
 | fastText | TBD | TBD | N/A or TBD | |
 | Transformer | TBD | TBD | TBD | |
 
@@ -135,3 +135,11 @@ The first classical baseline is now saved in
 It uses word-level TF-IDF features with Logistic Regression, fits on the fixed
 `train` split of `items.v1.jsonl`, and reports `0.2778` accuracy / `0.2472`
 Macro-F1 on `valid` plus `0.3333` accuracy / `0.2790` Macro-F1 on `test`.
+
+The second classical baseline is now saved in
+[tfidf-linear-svm-items-v1.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/tfidf-linear-svm-items-v1.json).
+It uses the same TF-IDF feature setup with `LinearSVC`, fits on the fixed
+`train` split of `items.v1.jsonl`, and reports `0.2778` accuracy / `0.2556`
+Macro-F1 on `valid` plus `0.3889` accuracy / `0.3433` Macro-F1 on `test`.
+On the held-out test split it is stronger than the Logistic Regression
+baseline on both accuracy and Macro-F1.

@@ -15,18 +15,18 @@ from classification_baseline_common import (
 )
 from dataset_common import load_annotated_items
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
+from sklearn.svm import LinearSVC
 
 DEFAULT_DATASET = REPO_ROOT / "data/annotated/items.v1.jsonl"
-DEFAULT_OUTPUT = REPO_ROOT / "docs/course/artifacts/tfidf-logreg-items-v1.json"
+DEFAULT_OUTPUT = REPO_ROOT / "docs/course/artifacts/tfidf-linear-svm-items-v1.json"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--run-id", default="tfidf-logreg-v1-001")
+    parser.add_argument("--run-id", default="tfidf-linear-svm-v1-001")
     parser.add_argument("--run-date")
     parser.add_argument("--commit-sha")
     return parser.parse_args()
@@ -38,13 +38,15 @@ def build_pipeline() -> Pipeline:
             ("tfidf", TfidfVectorizer(ngram_range=(1, 2))),
             (
                 "classifier",
-                LogisticRegression(
-                    max_iter=1000,
+                LinearSVC(
+                    max_iter=10000,
                     random_state=42,
                 ),
             ),
         ]
     )
+
+
 def main() -> int:
     args = parse_args()
     dataset_path = resolve_repo_path(args.dataset)
@@ -65,14 +67,14 @@ def main() -> int:
         run_id=args.run_id,
         run_date=args.run_date,
         commit_sha=args.commit_sha,
-        method="tfidf_logistic_regression",
+        method="tfidf_linear_svm",
         label_order=label_order,
         train_item_count=len(train_items),
         parameters={
             "vectorizer": {"type": "tfidf", "ngram_range": [1, 2]},
             "classifier": {
-                "type": "logistic_regression",
-                "max_iter": 1000,
+                "type": "linear_svc",
+                "max_iter": 10000,
                 "random_state": 42,
             },
         },
@@ -88,7 +90,7 @@ def main() -> int:
         ),
         notes=(
             "Text-only category classification baseline trained on the fixed train split of "
-            "items.v1.jsonl and evaluated on the fixed valid and test splits."
+            "items.v1.jsonl and evaluated on the fixed valid and test splits using LinearSVC."
         ),
     )
 

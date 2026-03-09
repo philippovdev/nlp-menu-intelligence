@@ -10,6 +10,8 @@ into the report.
 | baseline-heuristic-001 | 2026-03-09 | b5c0369 | v0-sample | classification + extraction | heuristic pipeline | test | Macro-F1 = 0.8182 | Acc = 0.9000; price exact = 1.0000; size exact = 1.0000 | artifact: `docs/course/artifacts/baseline-heuristic-results.json`; missed `breakfast` sample |
 | tfidf-logreg-v1-001 | 2026-03-09 | ed9500c | v1 | classification | TF-IDF + Logistic Regression | valid | Macro-F1 = 0.2472 | Acc = 0.2778 | artifact: `docs/course/artifacts/tfidf-logreg-items-v1.json`; train = 36, labels = 12 |
 | tfidf-logreg-v1-001 | 2026-03-09 | ed9500c | v1 | classification | TF-IDF + Logistic Regression | test | Macro-F1 = 0.2790 | Acc = 0.3333 | artifact: `docs/course/artifacts/tfidf-logreg-items-v1.json`; held-out split |
+| tfidf-linear-svm-v1-001 | 2026-03-09 | 2f3f051 | v1 | classification | TF-IDF + Linear SVM | valid | Macro-F1 = 0.2556 | Acc = 0.2778 | artifact: `docs/course/artifacts/tfidf-linear-svm-items-v1.json`; train = 36, labels = 12 |
+| tfidf-linear-svm-v1-001 | 2026-03-09 | 2f3f051 | v1 | classification | TF-IDF + Linear SVM | test | Macro-F1 = 0.3433 | Acc = 0.3889 | artifact: `docs/course/artifacts/tfidf-linear-svm-items-v1.json`; better than TF-IDF + Logistic Regression on held-out test |
 
 ## What To Save For Every Run
 
