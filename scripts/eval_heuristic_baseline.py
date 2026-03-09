@@ -6,10 +6,15 @@ from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict, Field
-
 from app.menu_parser import parse_menu_text
 from app.schemas import FULL_CATEGORY_LABELS, MenuParseRequest
+from dataset_common import (
+    AnnotatedItem,
+    AnnotatedPrice,
+    AnnotatedSize,
+    load_annotated_items,
+)
+from pydantic import BaseModel, ConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATASET = REPO_ROOT / "data/annotated/items.sample.jsonl"
@@ -18,36 +23,6 @@ DEFAULT_OUTPUT = REPO_ROOT / "docs/course/artifacts/baseline-heuristic-results.j
 
 class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
-
-
-class AnnotatedPrice(StrictModel):
-    value: int | float
-    currency: str
-    raw: str | None = None
-
-
-class AnnotatedSize(StrictModel):
-    value: int | float
-    unit: str
-    raw: str | None = None
-
-
-class AnnotatedSlots(StrictModel):
-    name: str | None = None
-    description: str | None = None
-    prices: list[AnnotatedPrice] = Field(default_factory=list)
-    sizes: list[AnnotatedSize] = Field(default_factory=list)
-
-
-class AnnotatedItem(StrictModel):
-    id: str
-    source_id: str
-    restaurant_id: str
-    split: str
-    language: str
-    text: str
-    category: str
-    slots: AnnotatedSlots
 
 
 class ExactMatchMetric(StrictModel):
@@ -86,8 +61,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def load_items(path: Path) -> list[AnnotatedItem]:
-    lines = path.read_text(encoding="utf-8").splitlines()
-    return [AnnotatedItem.model_validate_json(line) for line in lines if line.strip()]
+    return load_annotated_items(path)
 
 
 def infer_currency_hint(item: AnnotatedItem) -> str:
@@ -212,6 +186,12 @@ def detect_commit_sha() -> str | None:
     return completed.stdout.strip() or None
 
 
+def resolve_repo_path(path: Path) -> Path:
+    if path.is_absolute():
+        return path
+    return (REPO_ROOT / path).resolve()
+
+
 def evaluate(items: list[AnnotatedItem]) -> BaselineMetrics:
     gold_categories = [item.category for item in items]
     predicted_categories: list[str | None] = []
@@ -246,11 +226,12 @@ def build_artifact(
     commit_sha: str | None,
     metrics: BaselineMetrics,
 ) -> BaselineArtifact:
+    resolved_dataset_path = resolve_repo_path(dataset_path)
     return BaselineArtifact(
         run_id=run_id,
         run_date=run_date or datetime.now(UTC).date().isoformat(),
         commit_sha=commit_sha or detect_commit_sha(),
-        dataset_file=str(dataset_path.relative_to(REPO_ROOT)),
+        dataset_file=str(resolved_dataset_path.relative_to(REPO_ROOT)),
         method="heuristic_pipeline",
         metrics=metrics,
         notes=(
@@ -295,17 +276,19 @@ def print_summary(artifact: BaselineArtifact, output_path: Path) -> None:
 
 def main() -> None:
     args = parse_args()
-    items = load_items(args.dataset)
+    dataset_path = resolve_repo_path(args.dataset)
+    output_path = resolve_repo_path(args.output)
+    items = load_items(dataset_path)
     metrics = evaluate(items)
     artifact = build_artifact(
-        dataset_path=args.dataset,
+        dataset_path=dataset_path,
         run_id=args.run_id,
         run_date=args.run_date,
         commit_sha=args.commit_sha,
         metrics=metrics,
     )
-    save_artifact(args.output, artifact)
-    print_summary(artifact, args.output)
+    save_artifact(output_path, artifact)
+    print_summary(artifact, output_path)
 
 
 if __name__ == "__main__":

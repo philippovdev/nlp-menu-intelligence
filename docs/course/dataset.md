@@ -172,3 +172,31 @@ baseline:
 
 The current sample file contains 10 realistic item-level annotations and is
 used only as a reproducible starter baseline, not as the final course dataset.
+
+## Dataset v1
+
+The repository now also includes the first real in-repo item-level subset for
+course experiments:
+
+- [items.v1.jsonl](/Users/philippovdev/WebstormProjects/nlp/data/annotated/items.v1.jsonl)
+- [dataset-manifest.v1.csv](/Users/philippovdev/WebstormProjects/nlp/data/raw/dataset-manifest.v1.csv)
+- [dataset-stats.v1.json](/Users/philippovdev/WebstormProjects/nlp/data/interim/dataset-stats.v1.json)
+
+Current factual status of `v1`:
+
+- 72 annotated menu items
+- 12 source documents from 12 restaurants
+- split by source/restaurant, not by random row
+- split sizes: `train=36`, `valid=18`, `test=18`
+- all 12 category labels are present in every split
+- source type mix: `html=6`, `pdf=4`, `image=2`
+- average item length: `7.58` whitespace tokens
+
+This is still a first curated subset, not the final course dataset, but it now
+supports honest first heuristic and classical baseline runs because the
+validation and test splits both cover the full 12-label taxonomy.
+
+The public repository keeps source metadata and split structure, but does not
+re-publish raw crawls or direct source captures. For `v1`, the manifest keeps
+source identifiers, restaurant identifiers, source types, collection dates, and
+public source URLs, while raw captures remain outside git.

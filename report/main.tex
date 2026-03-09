@@ -87,16 +87,23 @@ Describe:
   \item extraction labels
 \end{itemize}
 
+The first real in-repo dataset subset is now available as `items.v1.jsonl`
+with a paired source manifest and generated statistics artifact. This subset
+contains 72 annotated item-level menu entries from 12 restaurant sources, uses
+source-level split assignment to reduce leakage between similar items, and
+keeps public source references in the paired manifest.
+
 \begin{table}[t]
 \centering
 \begin{tabular}{lccc}
 \toprule
 Statistic & Train & Valid & Test \\
 \midrule
-Restaurants & TBD & TBD & TBD \\
-Documents & TBD & TBD & TBD \\
-Items & TBD & TBD & TBD \\
-Avg. tokens per item & TBD & TBD & TBD \\
+Restaurants & 6 & 3 & 3 \\
+Documents & 6 & 3 & 3 \\
+Items & 36 & 18 & 18 \\
+Avg. tokens per item & 7.50 & 7.61 & 7.72 \\
+Categories & 12 & 12 & 12 \\
 \bottomrule
 \end{tabular}
 \caption{Dataset statistics.}

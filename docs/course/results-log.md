@@ -39,3 +39,12 @@ For extraction runs:
 3. TF-IDF + Linear SVM
 4. fastText
 5. first transformer baseline
+
+## Dataset Artifacts
+
+- `dataset-v1-stats-001`: `data/interim/dataset-stats.v1.json`
+  - 72 items
+  - 12 restaurants / 12 documents
+  - split = `36 train / 18 valid / 18 test`
+  - full label coverage in `train`, `valid`, and `test`
+  - average tokens per item = `7.58`

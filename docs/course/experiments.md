@@ -121,3 +121,11 @@ For every serious run, save:
 
 The first measured run is saved in
 [baseline-heuristic-results.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/baseline-heuristic-results.json).
+
+The next baseline runs should use
+[items.v1.jsonl](/Users/philippovdev/WebstormProjects/nlp/data/annotated/items.v1.jsonl)
+with the paired stats artifact
+[dataset-stats.v1.json](/Users/philippovdev/WebstormProjects/nlp/data/interim/dataset-stats.v1.json).
+This subset now has full 12-label coverage in `train`, `valid`, and `test`,
+so Macro-F1 on the held-out splits is meaningful for the first classical
+baselines.
