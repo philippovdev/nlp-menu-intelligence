@@ -7,7 +7,7 @@ into the report.
 
 | Run ID | Date | Commit | Dataset Version | Task | Method | Split | Main Metric | Secondary Metrics | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| baseline-heuristic-001 | TBD | TBD | v0 | classification + extraction | heuristic pipeline | TBD | TBD | TBD | current service baseline |
+| baseline-heuristic-001 | 2026-03-09 | b5c0369 | v0-sample | classification + extraction | heuristic pipeline | test | Macro-F1 = 0.8182 | Acc = 0.9000; price exact = 1.0000; size exact = 1.0000 | artifact: `docs/course/artifacts/baseline-heuristic-results.json`; missed `breakfast` sample |
 
 ## What To Save For Every Run
 

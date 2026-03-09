@@ -18,6 +18,20 @@ DEFAULT_CATEGORY_LABELS = (
     "drinks",
     "other",
 )
+FULL_CATEGORY_LABELS = (
+    "salads",
+    "soups",
+    "mains",
+    "pizza",
+    "pasta",
+    "burgers",
+    "sides",
+    "desserts",
+    "breakfast",
+    "drinks_hot",
+    "drinks_cold",
+    "other",
+)
 
 DEFAULT_LANGUAGE = "ru"
 DEFAULT_CURRENCY = "RUB"

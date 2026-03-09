@@ -96,7 +96,7 @@ Keep one row per experiment run.
 
 | Method | Category Accuracy | Category Macro-F1 | Extraction F1 | Notes |
 | --- | --- | --- | --- | --- |
-| Heuristic baseline | TBD | TBD | TBD | current service baseline |
+| Heuristic baseline | 0.9000 | 0.8182 | N/A | v0 sample set; price exact = 1.0000, size exact = 1.0000 |
 | TF-IDF + Logistic Regression | TBD | TBD | N/A or TBD | |
 | TF-IDF + Linear SVM | TBD | TBD | N/A or TBD | |
 | fastText | TBD | TBD | N/A or TBD | |
@@ -118,3 +118,6 @@ For every serious run, save:
 3. Add the first classical baseline for category classification.
 4. Save the results in a machine-readable table.
 5. Keep sample outputs for the report.
+
+The first measured run is saved in
+[baseline-heuristic-results.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/baseline-heuristic-results.json).

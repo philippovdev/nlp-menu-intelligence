@@ -8,6 +8,7 @@ from uuid import uuid4
 from app.schemas import (
     DEFAULT_CATEGORY_LABELS,
     DEFAULT_CURRENCY,
+    FULL_CATEGORY_LABELS,
     CategoryPrediction,
     Confidence,
     ExtractedFields,
@@ -23,20 +24,7 @@ from app.schemas import (
     Source,
 )
 
-CATEGORY_ORDER = (
-    "salads",
-    "soups",
-    "mains",
-    "pizza",
-    "pasta",
-    "burgers",
-    "sides",
-    "desserts",
-    "breakfast",
-    "drinks_hot",
-    "drinks_cold",
-    "other",
-)
+CATEGORY_ORDER = FULL_CATEGORY_LABELS
 
 CATEGORY_REDUCTION_PATHS: dict[str, tuple[str, ...]] = {
     "salads": ("salads", "other"),

@@ -28,3 +28,5 @@ data/
 Templates already included:
 
 - `data/raw/dataset-manifest-template.csv`
+- `data/raw/dataset-manifest.sample.csv`
+- `data/annotated/items.sample.jsonl`

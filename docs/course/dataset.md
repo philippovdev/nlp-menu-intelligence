@@ -161,3 +161,14 @@ Each annotated item should answer:
 3. Convert those documents into item-level examples.
 4. Annotate the first 300 to 500 items.
 5. Export the first classification dataset.
+
+## Current Starter Files
+
+The repository now includes a minimal starter set for the first measured
+baseline:
+
+- [dataset-manifest.sample.csv](/Users/philippovdev/WebstormProjects/nlp/data/raw/dataset-manifest.sample.csv)
+- [items.sample.jsonl](/Users/philippovdev/WebstormProjects/nlp/data/annotated/items.sample.jsonl)
+
+The current sample file contains 10 realistic item-level annotations and is
+used only as a reproducible starter baseline, not as the final course dataset.

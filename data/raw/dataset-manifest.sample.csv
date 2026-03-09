@@ -1,0 +1,4 @@
+source_id,restaurant_id,source_type,language,source_url,collected_at,license_note,local_path,notes
+menu_000101,rest_000101,html,en,https://example.com/harbor-cafe/menu,2026-03-09,starter manifest sample,,sample source for item-level gold set
+menu_000102,rest_000102,pdf,en,https://example.com/brick-oven/menu.pdf,2026-03-09,starter manifest sample,,sample source for item-level gold set
+menu_000103,rest_000103,image,en,https://example.com/city-brunch/menu.png,2026-03-09,starter manifest sample,,sample source for item-level gold set
