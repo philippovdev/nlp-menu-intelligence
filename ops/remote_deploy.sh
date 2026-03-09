@@ -5,7 +5,8 @@ set -euo pipefail
 
 cd "${DEPLOY_PATH}"
 
-docker compose up -d --build api
+docker compose build --no-cache api
+docker compose up -d --force-recreate api
 
 cd frontend
 npm ci
