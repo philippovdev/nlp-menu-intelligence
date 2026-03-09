@@ -1,0 +1,163 @@
+:root {
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  color: #152220;
+  background:
+    radial-gradient(circle at top left, rgba(255, 221, 120, 0.45), transparent 32%),
+    radial-gradient(circle at top right, rgba(108, 160, 132, 0.35), transparent 28%),
+    linear-gradient(180deg, #f7f2e7 0%, #efe6d5 100%);
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.page-shell {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 72px;
+}
+
+.hero-card,
+.roadmap-card {
+  border: 1px solid rgba(21, 34, 32, 0.08);
+  border-radius: 28px;
+  background: rgba(255, 252, 245, 0.86);
+  box-shadow: 0 24px 60px rgba(58, 54, 38, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.hero-card {
+  padding: 36px;
+}
+
+.roadmap-card {
+  margin-top: 24px;
+  padding: 28px 32px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.74rem;
+  color: #6a7a69;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  line-height: 0.98;
+  color: #152220;
+}
+
+h1 {
+  font-size: clamp(3rem, 7vw, 5.6rem);
+  max-width: 10ch;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.lead {
+  max-width: 58ch;
+  margin: 18px 0 0;
+  font-size: 1.12rem;
+  color: #334844;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 32px;
+}
+
+.status-card {
+  padding: 22px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 238, 226, 0.95));
+  border: 1px solid rgba(21, 34, 32, 0.08);
+}
+
+.status-card strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.15rem;
+}
+
+.status-card p {
+  margin: 10px 0 0;
+  color: #46615c;
+}
+
+.status-label {
+  color: #8b5d23;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.feature-list {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.feature-list li {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(21, 34, 32, 0.08);
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(100% - 20px, 1100px);
+    padding-top: 20px;
+  }
+
+  .hero-card,
+  .roadmap-card {
+    border-radius: 20px;
+  }
+
+  .hero-card {
+    padding: 24px;
+  }
+
+  .roadmap-card {
+    padding: 22px;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
