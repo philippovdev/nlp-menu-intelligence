@@ -25,6 +25,7 @@ const supportedFileTypes = [
 const acceptedFileTypes = supportedFileTypes.join(",");
 const supportedFileTypeSet = new Set<string>(supportedFileTypes);
 const supportedFileExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".webp"];
+const lowConfidenceThreshold = 0.8;
 
 const text = ref("");
 const selectedFile = ref<File | null>(null);
@@ -54,6 +55,43 @@ const documentMetadata = computed(() => result.value?.document ?? null);
 const extractedTextPreview = computed(() => {
   const value = result.value?.document?.extracted_text?.trim();
   return value ? value : null;
+});
+const groupedItems = computed(() => {
+  const groups = new Map<
+    string,
+    {
+      key: string;
+      title: string;
+      items: MenuItemV1[];
+      flaggedCount: number;
+    }
+  >();
+
+  items.value.forEach((item) => {
+    const key =
+      item.category.label ??
+      (item.kind === "noise" ? "noise" : "unassigned");
+    const group =
+      groups.get(key) ??
+      {
+        key,
+        title: formatGroupTitle(key),
+        items: [],
+        flaggedCount: 0,
+      };
+
+    group.items.push(item);
+
+    if (needsAttention(item)) {
+      group.flaggedCount += 1;
+    }
+
+    groups.set(key, group);
+  });
+
+  return [...groups.values()].sort((left, right) => {
+    return getGroupOrder(left.key) - getGroupOrder(right.key);
+  });
 });
 
 function isSupportedFile(file: File): boolean {
@@ -100,13 +138,114 @@ function formatConfidence(value?: number | null): string {
   return `${Math.round(value * 100)}%`;
 }
 
+function getConfidenceValues(item: MenuItemV1): number[] {
+  return [
+    item.confidence.overall,
+    item.category.confidence,
+    item.confidence.fields?.name,
+    item.confidence.fields?.prices,
+    item.confidence.fields?.sizes,
+  ].filter((value): value is number => typeof value === "number");
+}
+
+function isLowConfidence(item: MenuItemV1): boolean {
+  return getConfidenceValues(item).some((value) => value < lowConfidenceThreshold);
+}
+
+function needsAttention(item: MenuItemV1): boolean {
+  return item.issues.some((issue) => issue.level !== "info") || isLowConfidence(item);
+}
+
+function hasIssueLevel(item: MenuItemV1, level: IssueLevel): boolean {
+  return item.issues.some((issue) => issue.level === level);
+}
+
 function issueClass(level: IssueLevel): string {
   return `ds-issue ds-issue--${level}`;
+}
+
+function itemCardClass(item: MenuItemV1): string[] {
+  return [
+    "item-card",
+    "ds-card",
+    hasIssueLevel(item, "error")
+      ? "item-card--error"
+      : needsAttention(item)
+        ? "item-card--warning"
+        : undefined,
+  ].filter((value): value is string => typeof value === "string");
+}
+
+function getGroupOrder(key: string): number {
+  const labelIndex = CATEGORY_LABELS.indexOf(key as (typeof CATEGORY_LABELS)[number]);
+
+  if (labelIndex >= 0) {
+    return labelIndex;
+  }
+
+  if (key === "unassigned") {
+    return CATEGORY_LABELS.length + 1;
+  }
+
+  if (key === "noise") {
+    return CATEGORY_LABELS.length + 2;
+  }
+
+  return CATEGORY_LABELS.length + 3;
+}
+
+function formatGroupTitle(key: string): string {
+  if (key === "unassigned") {
+    return "Unassigned";
+  }
+
+  if (key === "noise") {
+    return "Noise";
+  }
+
+  return key
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 function toNullable(value: string): string | null {
   const next = value.trim();
   return next.length > 0 ? next : null;
+}
+
+function buildExportFilename(): string {
+  const sourceName =
+    result.value?.document?.filename?.replace(/\.[^.]+$/, "") ?? "menu-review";
+  const safeName =
+    sourceName
+      .trim()
+      .replace(/[^a-zA-Z0-9_-]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "menu-review";
+
+  return `${safeName}-${result.value?.request_id ?? "export"}.json`;
+}
+
+function exportJson(): void {
+  if (!result.value) {
+    return;
+  }
+
+  const blob = new Blob([JSON.stringify(result.value, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = buildExportFilename();
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 0);
 }
 
 async function submit(): Promise<void> {
@@ -350,22 +489,35 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
     </section>
 
     <section v-if="result" class="panel panel--compact ds-card">
-      <div class="summary">
-        <div>
-          <span class="ds-label">Request</span>
-          <span>{{ result.request_id }}</span>
+      <div class="result-toolbar">
+        <div class="summary">
+          <div>
+            <span class="ds-label">Request</span>
+            <span>{{ result.request_id }}</span>
+          </div>
+          <div>
+            <span class="ds-label">Items</span>
+            <span>{{ result.items.length }}</span>
+          </div>
+          <div>
+            <span class="ds-label">Lang</span>
+            <span>{{ result.meta.lang }}</span>
+          </div>
+          <div>
+            <span class="ds-label">Currency</span>
+            <span>{{ result.meta.currency }}</span>
+          </div>
         </div>
-        <div>
-          <span class="ds-label">Items</span>
-          <span>{{ result.items.length }}</span>
-        </div>
-        <div>
-          <span class="ds-label">Lang</span>
-          <span>{{ result.meta.lang }}</span>
-        </div>
-        <div>
-          <span class="ds-label">Currency</span>
-          <span>{{ result.meta.currency }}</span>
+
+        <div class="result-actions">
+          <button
+            class="ds-button ds-button--ghost"
+            data-testid="export-json-button"
+            type="button"
+            @click="exportJson"
+          >
+            Export JSON
+          </button>
         </div>
       </div>
 
@@ -400,199 +552,261 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
       </div>
     </section>
 
-    <section v-if="result" class="items" data-testid="items-list">
-      <article v-for="item in items" :key="item.id" class="item-card ds-card">
-        <div class="item-card__top">
+    <section
+      v-if="result"
+      class="review-groups"
+      data-testid="items-list"
+    >
+      <section
+        v-for="group in groupedItems"
+        :key="group.key"
+        class="group-section"
+        :data-testid="`group-${group.key}`"
+      >
+        <div class="group-header ds-card">
           <div>
-            <div class="item-card__meta ds-label">Line {{ item.source.line }}</div>
-            <div class="item-card__raw">{{ item.source.raw }}</div>
+            <p class="ds-label ds-eyebrow">Grouped review</p>
+            <h3 class="group-title">{{ group.title }}</h3>
           </div>
 
-          <div class="confidence-box">
-            <span>Overall {{ formatConfidence(item.confidence.overall) }}</span>
-            <span>Category {{ formatConfidence(item.category.confidence) }}</span>
-            <span>Name {{ formatConfidence(item.confidence.fields?.name) }}</span>
-            <span>Price {{ formatConfidence(item.confidence.fields?.prices) }}</span>
-            <span>Size {{ formatConfidence(item.confidence.fields?.sizes) }}</span>
+          <div class="group-meta">
+            <span class="ds-pill">{{ group.items.length }} items</span>
+            <span
+              v-if="group.flaggedCount"
+              class="ds-issue ds-issue--warning"
+            >
+              {{ group.flaggedCount }} need attention
+            </span>
           </div>
         </div>
 
-        <div class="ds-grid ds-grid--two">
-          <label class="ds-field">
-            <span class="ds-label">Kind</span>
-            <select
-              v-model="item.kind"
-              class="ds-control"
-              :data-testid="`kind-${item.id}`"
-            >
-              <option v-for="kind in KIND_OPTIONS" :key="kind" :value="kind">
-                {{ kind }}
-              </option>
-            </select>
-          </label>
+        <div class="group-items">
+          <article
+            v-for="item in group.items"
+            :key="item.id"
+            :class="itemCardClass(item)"
+          >
+            <div class="item-card__top">
+              <div>
+                <div class="item-card__meta ds-label">Line {{ item.source.line }}</div>
+                <div class="item-card__raw">{{ item.source.raw }}</div>
+              </div>
 
-          <label class="ds-field">
-            <span class="ds-label">Category</span>
-            <select
-              class="ds-control"
-              :value="item.category.label ?? ''"
-              :data-testid="`category-${item.id}`"
-              @change="onCategoryChange(item, $event)"
-            >
-              <option value="">unassigned</option>
-              <option
-                v-for="category in CATEGORY_LABELS"
-                :key="category"
-                :value="category"
-              >
-                {{ category }}
-              </option>
-            </select>
-          </label>
-        </div>
+              <div class="item-status">
+                <div class="item-attention">
+                  <span
+                    v-if="hasIssueLevel(item, 'error')"
+                    class="ds-issue ds-issue--error"
+                  >
+                    Error
+                  </span>
+                  <span
+                    v-else-if="item.issues.some((issue) => issue.level === 'warning')"
+                    class="ds-issue ds-issue--warning"
+                  >
+                    Warning
+                  </span>
+                  <span
+                    v-if="isLowConfidence(item)"
+                    class="ds-issue ds-issue--warning"
+                    :data-testid="`low-confidence-${item.id}`"
+                  >
+                    Low confidence
+                  </span>
+                </div>
 
-        <div class="ds-grid ds-grid--two">
-          <label class="ds-field">
-            <span class="ds-label">Name</span>
-            <input
-              class="ds-control"
-              :value="item.fields.name ?? ''"
-              :data-testid="`name-${item.id}`"
-              type="text"
-              @input="onNameInput(item, $event)"
-            />
-          </label>
-
-          <label class="ds-field ds-field--stacked">
-            <span class="ds-label">Description</span>
-            <textarea
-              class="ds-control"
-              :value="item.fields.description ?? ''"
-              :data-testid="`description-${item.id}`"
-              rows="2"
-              @input="onDescriptionInput(item, $event)"
-            />
-          </label>
-        </div>
-
-        <div class="ds-grid ds-grid--two">
-          <div class="field-group">
-            <div class="field-group__header">
-              <span class="ds-label">First price</span>
-              <button
-                v-if="item.fields.prices[0]"
-                class="ds-button ds-button--ghost"
-                type="button"
-                @click="removePrice(item)"
-              >
-                Remove
-              </button>
-              <button
-                v-else
-                class="ds-button ds-button--ghost"
-                type="button"
-                @click="addPrice(item)"
-              >
-                Add
-              </button>
+                <div class="confidence-box">
+                  <span>Overall {{ formatConfidence(item.confidence.overall) }}</span>
+                  <span>Category {{ formatConfidence(item.category.confidence) }}</span>
+                  <span>Name {{ formatConfidence(item.confidence.fields?.name) }}</span>
+                  <span>Price {{ formatConfidence(item.confidence.fields?.prices) }}</span>
+                  <span>Size {{ formatConfidence(item.confidence.fields?.sizes) }}</span>
+                </div>
+              </div>
             </div>
 
-            <div v-if="item.fields.prices[0]" class="ds-grid ds-grid--two">
+            <div class="ds-grid ds-grid--two">
               <label class="ds-field">
-                <span class="ds-label">Value</span>
-                <input
+                <span class="ds-label">Kind</span>
+                <select
+                  v-model="item.kind"
                   class="ds-control"
-                  :value="item.fields.prices[0].value"
-                  :data-testid="`price-value-${item.id}`"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  @input="onPriceValueInput(item, $event)"
-                />
+                  :data-testid="`kind-${item.id}`"
+                >
+                  <option v-for="kind in KIND_OPTIONS" :key="kind" :value="kind">
+                    {{ kind }}
+                  </option>
+                </select>
               </label>
 
               <label class="ds-field">
-                <span class="ds-label">Currency</span>
+                <span class="ds-label">Category</span>
                 <select
                   class="ds-control"
-                  :value="item.fields.prices[0].currency"
-                  :data-testid="`price-currency-${item.id}`"
-                  @change="onPriceCurrencyChange(item, $event)"
+                  :value="item.category.label ?? ''"
+                  :data-testid="`category-${item.id}`"
+                  @change="onCategoryChange(item, $event)"
                 >
                   <option
-                    v-for="currency in CURRENCY_OPTIONS"
-                    :key="currency"
-                    :value="currency"
+                    value=""
                   >
-                    {{ currency }}
+                    unassigned
+                  </option>
+                  <option
+                    v-for="category in CATEGORY_LABELS"
+                    :key="category"
+                    :value="category"
+                  >
+                    {{ category }}
                   </option>
                 </select>
               </label>
             </div>
-          </div>
 
-          <div class="field-group">
-            <div class="field-group__header">
-              <span class="ds-label">First size</span>
-              <button
-                v-if="item.fields.sizes[0]"
-                class="ds-button ds-button--ghost"
-                type="button"
-                @click="removeSize(item)"
-              >
-                Remove
-              </button>
-              <button
-                v-else
-                class="ds-button ds-button--ghost"
-                type="button"
-                @click="addSize(item)"
-              >
-                Add
-              </button>
-            </div>
-
-            <div v-if="item.fields.sizes[0]" class="ds-grid ds-grid--two">
+            <div class="ds-grid ds-grid--two">
               <label class="ds-field">
-                <span class="ds-label">Value</span>
+                <span class="ds-label">Name</span>
                 <input
                   class="ds-control"
-                  :value="item.fields.sizes[0].value"
-                  :data-testid="`size-value-${item.id}`"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  @input="onSizeValueInput(item, $event)"
+                  :value="item.fields.name ?? ''"
+                  :data-testid="`name-${item.id}`"
+                  type="text"
+                  @input="onNameInput(item, $event)"
                 />
               </label>
 
-              <label class="ds-field">
-                <span class="ds-label">Unit</span>
-                <select
+              <label class="ds-field ds-field--stacked">
+                <span class="ds-label">Description</span>
+                <textarea
                   class="ds-control"
-                  :value="item.fields.sizes[0].unit"
-                  :data-testid="`size-unit-${item.id}`"
-                  @change="onSizeUnitChange(item, $event)"
-                >
-                  <option v-for="unit in SIZE_UNIT_OPTIONS" :key="unit" :value="unit">
-                    {{ unit }}
-                  </option>
-                </select>
+                  :value="item.fields.description ?? ''"
+                  :data-testid="`description-${item.id}`"
+                  rows="2"
+                  @input="onDescriptionInput(item, $event)"
+                />
               </label>
             </div>
-          </div>
-        </div>
 
-        <div v-if="item.issues.length" class="ds-issue-list">
-          <span
-            v-for="issue in item.issues"
-            :key="`${issue.code}-${issue.path ?? issue.message}`"
-            :class="issueClass(issue.level)"
-          >
-            {{ issue.code }}: {{ issue.message }}
-          </span>
+            <div class="ds-grid ds-grid--two">
+              <div class="field-group">
+                <div class="field-group__header">
+                  <span class="ds-label">First price</span>
+                  <button
+                    v-if="item.fields.prices[0]"
+                    class="ds-button ds-button--ghost"
+                    type="button"
+                    @click="removePrice(item)"
+                  >
+                    Remove
+                  </button>
+                  <button
+                    v-else
+                    class="ds-button ds-button--ghost"
+                    type="button"
+                    @click="addPrice(item)"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                <div v-if="item.fields.prices[0]" class="ds-grid ds-grid--two">
+                  <label class="ds-field">
+                    <span class="ds-label">Value</span>
+                    <input
+                      class="ds-control"
+                      :value="item.fields.prices[0].value"
+                      :data-testid="`price-value-${item.id}`"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      @input="onPriceValueInput(item, $event)"
+                    />
+                  </label>
+
+                  <label class="ds-field">
+                    <span class="ds-label">Currency</span>
+                    <select
+                      class="ds-control"
+                      :value="item.fields.prices[0].currency"
+                      :data-testid="`price-currency-${item.id}`"
+                      @change="onPriceCurrencyChange(item, $event)"
+                    >
+                      <option
+                        v-for="currency in CURRENCY_OPTIONS"
+                        :key="currency"
+                        :value="currency"
+                      >
+                        {{ currency }}
+                      </option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <div class="field-group__header">
+                  <span class="ds-label">First size</span>
+                  <button
+                    v-if="item.fields.sizes[0]"
+                    class="ds-button ds-button--ghost"
+                    type="button"
+                    @click="removeSize(item)"
+                  >
+                    Remove
+                  </button>
+                  <button
+                    v-else
+                    class="ds-button ds-button--ghost"
+                    type="button"
+                    @click="addSize(item)"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                <div v-if="item.fields.sizes[0]" class="ds-grid ds-grid--two">
+                  <label class="ds-field">
+                    <span class="ds-label">Value</span>
+                    <input
+                      class="ds-control"
+                      :value="item.fields.sizes[0].value"
+                      :data-testid="`size-value-${item.id}`"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      @input="onSizeValueInput(item, $event)"
+                    />
+                  </label>
+
+                  <label class="ds-field">
+                    <span class="ds-label">Unit</span>
+                    <select
+                      class="ds-control"
+                      :value="item.fields.sizes[0].unit"
+                      :data-testid="`size-unit-${item.id}`"
+                      @change="onSizeUnitChange(item, $event)"
+                    >
+                      <option v-for="unit in SIZE_UNIT_OPTIONS" :key="unit" :value="unit">
+                        {{ unit }}
+                      </option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="item.issues.length" class="ds-issue-list">
+              <span
+                v-for="issue in item.issues"
+                :key="`${issue.code}-${issue.path ?? issue.message}`"
+                :class="issueClass(issue.level)"
+              >
+                {{ issue.code }}: {{ issue.message }}
+              </span>
+            </div>
+          </article>
         </div>
-      </article>
+      </section>
     </section>
   </main>
 </template>
@@ -689,6 +903,16 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   gap: var(--ds-space-1);
 }
 
+.result-toolbar {
+  display: grid;
+  gap: var(--ds-space-6);
+}
+
+.result-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .summary--document {
   margin-top: var(--ds-space-6);
 }
@@ -714,13 +938,53 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   word-break: break-word;
 }
 
-.items {
+.review-groups {
   display: grid;
   gap: var(--ds-space-6);
 }
 
+.group-section {
+  display: grid;
+  gap: var(--ds-space-4);
+}
+
+.group-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--ds-space-6);
+  padding: var(--ds-space-7);
+}
+
+.group-title {
+  margin: 0;
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-display);
+  font-size: 1.4rem;
+}
+
+.group-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ds-space-2);
+}
+
+.group-items {
+  display: grid;
+  gap: var(--ds-space-4);
+}
+
 .item-card {
   padding: var(--ds-space-8);
+}
+
+.item-card--warning {
+  border-color: var(--ds-color-warning-bg);
+}
+
+.item-card--error {
+  border-color: var(--ds-color-error-bg);
 }
 
 .item-card__top {
@@ -735,6 +999,18 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   font-weight: 600;
   color: var(--ds-color-text);
   word-break: break-word;
+}
+
+.item-status {
+  display: grid;
+  gap: var(--ds-space-3);
+}
+
+.item-attention {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ds-space-2);
 }
 
 .confidence-box {
@@ -783,6 +1059,7 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   }
 
   .panel__header,
+  .group-header,
   .item-card__top {
     flex-direction: column;
   }
@@ -790,6 +1067,12 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   .file-state {
     align-items: start;
     flex-direction: column;
+  }
+
+  .group-meta,
+  .item-attention,
+  .result-actions {
+    justify-content: flex-start;
   }
 
   .confidence-box {

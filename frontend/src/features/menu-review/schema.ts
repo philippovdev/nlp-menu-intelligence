@@ -2,8 +2,14 @@ export const CATEGORY_LABELS = [
   "salads",
   "soups",
   "mains",
+  "pizza",
+  "pasta",
+  "burgers",
+  "sides",
   "desserts",
-  "drinks",
+  "breakfast",
+  "drinks_hot",
+  "drinks_cold",
   "other",
 ] as const;
 

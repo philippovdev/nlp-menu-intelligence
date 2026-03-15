@@ -63,10 +63,10 @@ const mockResponse: ParseMenuResponseV1 = {
         sizes: [{ value: 250, unit: "g", raw: "250 г" }],
       },
       confidence: {
-        overall: 0.91,
-        category: 0.94,
+        overall: 0.72,
+        category: 0.74,
         fields: {
-          name: 0.96,
+          name: 0.76,
           prices: 0.89,
           sizes: 0.93,
         },
@@ -79,6 +79,34 @@ const mockResponse: ParseMenuResponseV1 = {
           path: "/items/1/category",
         },
       ],
+    },
+    {
+      id: "item_3",
+      source: {
+        line: 3,
+        raw: "Лимонад 330 мл - 250 ₽",
+      },
+      kind: "menu_item",
+      category: {
+        label: "drinks_cold",
+        confidence: 0.97,
+      },
+      fields: {
+        name: "Лимонад",
+        description: null,
+        prices: [{ value: 250, currency: "RUB", raw: "250 ₽" }],
+        sizes: [{ value: 330, unit: "ml", raw: "330 мл" }],
+      },
+      confidence: {
+        overall: 0.95,
+        category: 0.97,
+        fields: {
+          name: 0.96,
+          prices: 0.94,
+          sizes: 0.95,
+        },
+      },
+      issues: [],
     },
   ],
   issues: [
@@ -105,6 +133,16 @@ const mockFileResponse: ParseMenuFileResponseV1 = {
 function flushPromises(): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, 0);
+  });
+}
+
+function readBlobText(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsText(blob);
   });
 }
 
@@ -239,6 +277,46 @@ describe("MenuReviewPage", () => {
     expect(wrapper.text()).toContain("used");
   });
 
+  it("renders grouped review sections from the flat items response", async () => {
+    mockFetchSuccess(mockResponse);
+
+    const wrapper = mount(MenuReviewPage);
+
+    await wrapper
+      .get('[data-testid="menu-text"]')
+      .setValue(
+        "САЛАТЫ\nЦезарь с курицей 250 г - 390 ₽\nЛимонад 330 мл - 250 ₽",
+      );
+    await wrapper.get('[data-testid="parse-button"]').trigger("click");
+    await flushPromises();
+
+    expect(wrapper.get('[data-testid="group-salads"]').text()).toContain(
+      "Salads",
+    );
+    expect(wrapper.get('[data-testid="group-drinks_cold"]').text()).toContain(
+      "Drinks Cold",
+    );
+  });
+
+  it("surfaces issue and low-confidence states clearly", async () => {
+    mockFetchSuccess(mockResponse);
+
+    const wrapper = mount(MenuReviewPage);
+
+    await wrapper
+      .get('[data-testid="menu-text"]')
+      .setValue(
+        "САЛАТЫ\nЦезарь с курицей 250 г - 390 ₽\nЛимонад 330 мл - 250 ₽",
+      );
+    await wrapper.get('[data-testid="parse-button"]').trigger("click");
+    await flushPromises();
+
+    expect(wrapper.get('[data-testid="low-confidence-item_2"]').text()).toBe(
+      "Low confidence",
+    );
+    expect(wrapper.text()).toContain("LOW_CONFIDENCE_CATEGORY");
+  });
+
   it("shows a readable error when file parsing fails", async () => {
     mockFetchError({
       schema_version: "v1",
@@ -260,61 +338,46 @@ describe("MenuReviewPage", () => {
     expect(wrapper.text()).toContain("Unable to parse file.");
   });
 
-  it("lets the user edit the core review fields", async () => {
+  it("exports the current edited review state as JSON", async () => {
     mockFetchSuccess(mockResponse);
+    const createObjectURL = vi.fn(() => "blob:menu-review");
+    const revokeObjectURL = vi.fn();
+    const clickSpy = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(() => {});
+
+    Object.defineProperty(URL, "createObjectURL", {
+      value: createObjectURL,
+      configurable: true,
+    });
+    Object.defineProperty(URL, "revokeObjectURL", {
+      value: revokeObjectURL,
+      configurable: true,
+    });
 
     const wrapper = mount(MenuReviewPage);
 
     await wrapper
       .get('[data-testid="menu-text"]')
-      .setValue("САЛАТЫ\nЦезарь с курицей 250 г - 390 ₽");
+      .setValue(
+        "САЛАТЫ\nЦезарь с курицей 250 г - 390 ₽\nЛимонад 330 мл - 250 ₽",
+      );
     await wrapper.get('[data-testid="parse-button"]').trigger("click");
     await flushPromises();
 
-    await wrapper.get('[data-testid="kind-item_2"]').setValue("noise");
-    await wrapper.get('[data-testid="category-item_2"]').setValue("other");
+    await wrapper.get('[data-testid="category-item_2"]').setValue("drinks_hot");
     await wrapper.get('[data-testid="name-item_2"]').setValue("Цезарь");
-    await wrapper
-      .get('[data-testid="description-item_2"]')
-      .setValue("Классический салат");
-    await wrapper.get('[data-testid="price-value-item_2"]').setValue("420");
-    await wrapper.get('[data-testid="size-value-item_2"]').setValue("300");
+    await wrapper.get('[data-testid="export-json-button"]').trigger("click");
+    await flushPromises();
 
-    expect(
-      (wrapper.get('[data-testid="kind-item_2"]').element as HTMLSelectElement)
-        .value,
-    ).toBe("noise");
-    expect(
-      (
-        wrapper.get(
-          '[data-testid="category-item_2"]',
-        ).element as HTMLSelectElement
-      ).value,
-    ).toBe("other");
-    expect(
-      (wrapper.get('[data-testid="name-item_2"]').element as HTMLInputElement)
-        .value,
-    ).toBe("Цезарь");
-    expect(
-      (
-        wrapper.get(
-          '[data-testid="description-item_2"]',
-        ).element as HTMLTextAreaElement
-      ).value,
-    ).toBe("Классический салат");
-    expect(
-      (
-        wrapper.get(
-          '[data-testid="price-value-item_2"]',
-        ).element as HTMLInputElement
-      ).value,
-    ).toBe("420");
-    expect(
-      (
-        wrapper.get(
-          '[data-testid="size-value-item_2"]',
-        ).element as HTMLInputElement
-      ).value,
-    ).toBe("300");
+    const exportedBlob = createObjectURL.mock.calls[0]?.[0] as Blob;
+    const exportedText = await readBlobText(exportedBlob);
+    const exportedPayload = JSON.parse(exportedText) as ParseMenuResponseV1;
+    const editedItem = exportedPayload.items.find((item) => item.id === "item_2");
+
+    expect(editedItem?.fields.name).toBe("Цезарь");
+    expect(editedItem?.category.label).toBe("drinks_hot");
+    expect(clickSpy).toHaveBeenCalled();
+    expect(revokeObjectURL).toHaveBeenCalledWith("blob:menu-review");
   });
 });
