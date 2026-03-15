@@ -1,17 +1,14 @@
 from __future__ import annotations
 
 import mimetypes
-import unicodedata
 from io import BytesIO
 
-import pytesseract
 from fastapi import UploadFile
-from PIL import Image, ImageOps, UnidentifiedImageError
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
-from pytesseract.pytesseract import TesseractError, TesseractNotFoundError
 
 from app.category_classifier import CategoryClassifier
+from app.image_ocr import extract_image_text, normalize_extracted_text
 from app.menu_parser import parse_menu_text
 from app.schemas import (
     ApiError,
@@ -22,7 +19,6 @@ from app.schemas import (
 )
 
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
-OCR_LANGUAGES = "rus+eng"
 SUPPORTED_MEDIA_TYPES = {
     "application/pdf": "pdf",
     "image/jpeg": "image",
@@ -53,8 +49,7 @@ async def parse_menu_file(
         extracted_text, extraction_issues = extract_pdf_text(file_bytes)
         ocr_used = False
     else:
-        extracted_text = extract_image_text(file_bytes)
-        extraction_issues = []
+        extracted_text, extraction_issues = extract_image_text(file_bytes)
         ocr_used = True
 
     response = parse_menu_text(
@@ -154,7 +149,7 @@ def extract_pdf_text(file_bytes: bytes) -> tuple[str, list[Issue]]:
             status_code=422,
             code="TEXT_EXTRACTION_FAILED",
             message="PDF does not contain usable embedded text.",
-            details={"source_type": "pdf"},
+            details={"source_type": "pdf", "ocr_fallback_available": False},
         )
 
     issues: list[Issue] = []
@@ -170,49 +165,6 @@ def extract_pdf_text(file_bytes: bytes) -> tuple[str, list[Issue]]:
         )
 
     return extracted_text, issues
-
-
-def extract_image_text(file_bytes: bytes) -> str:
-    try:
-        with Image.open(BytesIO(file_bytes)) as image:
-            image = ImageOps.exif_transpose(image)
-            if image.mode not in {"RGB", "L"}:
-                image = image.convert("RGB")
-            extracted_text = pytesseract.image_to_string(image, lang=OCR_LANGUAGES)
-    except (UnidentifiedImageError, OSError) as exc:
-        raise ApiError(
-            status_code=422,
-            code="TEXT_EXTRACTION_FAILED",
-            message="Unable to open the uploaded image for OCR.",
-            details={"source_type": "image"},
-        ) from exc
-    except TesseractNotFoundError as exc:
-        raise ApiError(
-            status_code=503,
-            code="OCR_UNAVAILABLE",
-            message="Tesseract OCR is not available on the server.",
-            details={"source_type": "image"},
-        ) from exc
-    except TesseractError as exc:
-        raise ApiError(
-            status_code=422,
-            code="TEXT_EXTRACTION_FAILED",
-            message="OCR failed for the uploaded image.",
-            details={"source_type": "image"},
-        ) from exc
-
-    normalized_text = normalize_extracted_text(extracted_text)
-    if not normalized_text:
-        raise ApiError(
-            status_code=422,
-            code="TEXT_EXTRACTION_FAILED",
-            message="OCR did not produce usable text.",
-            details={"source_type": "image"},
-        )
-
-    return normalized_text
-
-
 def normalize_media_type(value: str | None) -> str | None:
     if value is None:
         return None
@@ -229,10 +181,3 @@ def sniff_media_type(file_bytes: bytes) -> str | None:
     if file_bytes.startswith(b"RIFF") and file_bytes[8:12] == b"WEBP":
         return "image/webp"
     return None
-
-
-def normalize_extracted_text(text: str) -> str:
-    normalized = unicodedata.normalize("NFKC", text)
-    normalized = normalized.replace("\r\n", "\n").replace("\r", "\n")
-    lines = [line.strip() for line in normalized.split("\n") if line.strip()]
-    return "\n".join(lines).strip()

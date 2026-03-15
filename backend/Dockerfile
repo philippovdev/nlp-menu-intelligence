@@ -10,12 +10,25 @@ COPY app ./app
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
+        libgl1 \
+        libglib2.0-0 \
         tesseract-ocr \
         tesseract-ocr-eng \
         tesseract-ocr-rus && \
     rm -rf /var/lib/apt/lists/* && \
     python -m pip install --upgrade pip && \
-    pip install .
+    pip install . && \
+    python - <<'PY'
+from rapidocr import LangRec, OCRVersion, RapidOCR
+
+RapidOCR(
+    params={
+        "Global.log_level": "error",
+        "Rec.lang_type": LangRec.CYRILLIC,
+        "Rec.ocr_version": OCRVersion.PPOCRV5,
+    }
+)
+PY
 
 EXPOSE 8010
 

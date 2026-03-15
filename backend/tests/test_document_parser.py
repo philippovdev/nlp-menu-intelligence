@@ -2,6 +2,9 @@ from io import BytesIO
 
 from fastapi.testclient import TestClient
 from PIL import Image
+from pytesseract.pytesseract import TesseractNotFoundError
+
+from app.image_ocr import RapidOcrUnavailableError
 
 
 def build_pdf_bytes(lines: list[str]) -> bytes:
@@ -174,8 +177,8 @@ def test_parse_menu_file_falls_back_to_filename_media_type(client: TestClient) -
 def test_parse_menu_file_uses_ocr_for_images(client: TestClient, monkeypatch) -> None:
     image_bytes = build_png_bytes()
     monkeypatch.setattr(
-        "app.document_parser.pytesseract.image_to_string",
-        lambda image, lang: "SOUPS\nTom Yum 300 ml 450",
+        "app.image_ocr.extract_text_with_rapidocr",
+        lambda image: "SOUPS\nTom Yum 300 ml 450",
     )
 
     response = client.post(
@@ -199,6 +202,7 @@ def test_parse_menu_file_uses_ocr_for_images(client: TestClient, monkeypatch) ->
     assert payload["items"][1]["fields"]["prices"] == [
         {"value": 450, "currency": "RUB", "raw": "450"}
     ]
+    assert payload["issues"] == []
 
 
 def test_parse_menu_file_applies_exif_orientation_before_ocr(
@@ -208,13 +212,13 @@ def test_parse_menu_file_applies_exif_orientation_before_ocr(
     image_bytes = build_oriented_jpeg_bytes()
     seen_sizes: list[tuple[int, int]] = []
 
-    def fake_image_to_string(image: Image.Image, lang: str) -> str:
+    def fake_extract_text_with_rapidocr(image: Image.Image) -> str:
         seen_sizes.append(image.size)
         return "SOUPS\nTom Yum 300 ml 450"
 
     monkeypatch.setattr(
-        "app.document_parser.pytesseract.image_to_string",
-        fake_image_to_string,
+        "app.image_ocr.extract_text_with_rapidocr",
+        fake_extract_text_with_rapidocr,
     )
 
     response = client.post(
@@ -223,4 +227,79 @@ def test_parse_menu_file_applies_exif_orientation_before_ocr(
     )
 
     assert response.status_code == 200
-    assert seen_sizes == [(32, 16)]
+    assert seen_sizes == [(1800, 900)]
+
+
+def test_parse_menu_file_falls_back_to_tesseract_when_primary_ocr_is_unavailable(
+    client: TestClient,
+    monkeypatch,
+) -> None:
+    image_bytes = build_png_bytes()
+
+    def fail_primary(image: Image.Image) -> str:
+        raise RapidOcrUnavailableError("RapidOCR is not installed.")
+
+    monkeypatch.setattr("app.image_ocr.extract_text_with_rapidocr", fail_primary)
+    monkeypatch.setattr(
+        "app.image_ocr.pytesseract.image_to_string",
+        lambda image, lang: "BURGERS\nDouble cheeseburger 290 g 540",
+    )
+
+    response = client.post(
+        "/api/v1/menu/parse-file",
+        files={"file": ("menu.png", image_bytes, "image/png")},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["document"]["ocr_used"] is True
+    assert payload["items"][1]["category"]["label"] == "burgers"
+    assert payload["issues"] == [
+        {
+            "code": "OCR_FALLBACK_TESSERACT",
+            "level": "info",
+            "message": "RapidOCR was not used; Tesseract fallback is active.",
+            "path": "/document",
+            "details": {
+                "primary_engine": "rapidocr-ppocrv5-cyrillic@3.7.0",
+                "fallback_engine": "tesseract-rus+eng",
+                "reason": "primary_unavailable",
+            },
+        }
+    ]
+
+
+def test_parse_menu_file_reports_ocr_unavailable_when_all_engines_are_missing(
+    client: TestClient,
+    monkeypatch,
+) -> None:
+    image_bytes = build_png_bytes()
+
+    def fail_primary(image: Image.Image) -> str:
+        raise RapidOcrUnavailableError("RapidOCR is not installed.")
+
+    monkeypatch.setattr("app.image_ocr.extract_text_with_rapidocr", fail_primary)
+
+    def fail_tesseract(image: Image.Image, lang: str) -> str:
+        raise TesseractNotFoundError()
+
+    monkeypatch.setattr("app.image_ocr.pytesseract.image_to_string", fail_tesseract)
+
+    response = client.post(
+        "/api/v1/menu/parse-file",
+        files={"file": ("menu.png", image_bytes, "image/png")},
+    )
+
+    assert response.status_code == 503
+    assert response.json() == {
+        "schema_version": "v1",
+        "error": {
+            "code": "OCR_UNAVAILABLE",
+            "message": "No OCR engine is available on the server.",
+            "details": {
+                "source_type": "image",
+                "primary_engine": "rapidocr-ppocrv5-cyrillic@3.7.0",
+                "fallback_engine": "tesseract-rus+eng",
+            },
+        },
+    }
