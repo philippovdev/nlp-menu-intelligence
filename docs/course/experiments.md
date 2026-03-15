@@ -96,11 +96,11 @@ Keep one row per experiment run.
 
 | Method | Category Accuracy | Category Macro-F1 | Extraction F1 | Notes |
 | --- | --- | --- | --- | --- |
-| Heuristic baseline | 0.9000 | 0.8182 | N/A | v0 sample set; price exact = 1.0000, size exact = 1.0000 |
-| TF-IDF + Logistic Regression | 0.3333 | 0.2790 | N/A | items.v1 test split; valid acc = 0.2778, valid macro-F1 = 0.2472 |
-| TF-IDF + Linear SVM | 0.3889 | 0.3433 | N/A | items.v1 test split; valid acc = 0.2778, valid macro-F1 = 0.2556 |
+| Heuristic baseline | 0.6181 | 0.6466 | N/A | items.v2 full set; price exact = 1.0000, size exact = 1.0000 |
+| TF-IDF + Logistic Regression | 0.7222 | 0.7009 | N/A | items.v2 test split; valid acc = 0.7361, valid macro-F1 = 0.7302 |
+| TF-IDF + Linear SVM | 0.7083 | 0.6930 | N/A | items.v2 test split; valid acc = 0.7500, valid macro-F1 = 0.7502 |
 | fastText | TBD | TBD | N/A or TBD | |
-| Transformer | TBD | TBD | TBD | |
+| DistilBERT sequence classifier | 0.5556 | 0.5620 | N/A | items.v2 test split; valid acc = 0.6389, valid macro-F1 = 0.6248 |
 
 ## Error Analysis Checklist
 
@@ -122,28 +122,6 @@ For every serious run, save:
 The first measured run is saved in
 [baseline-heuristic-results.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/baseline-heuristic-results.json).
 
-The next baseline runs should use
-[items.v1.jsonl](/Users/philippovdev/WebstormProjects/nlp/data/annotated/items.v1.jsonl)
-with the paired stats artifact
-[dataset-stats.v1.json](/Users/philippovdev/WebstormProjects/nlp/data/interim/dataset-stats.v1.json).
-This subset now has full 12-label coverage in `train`, `valid`, and `test`,
-so Macro-F1 on the held-out splits is meaningful for the first classical
-baselines.
-
-The first classical baseline is now saved in
-[tfidf-logreg-items-v1.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/tfidf-logreg-items-v1.json).
-It uses word-level TF-IDF features with Logistic Regression, fits on the fixed
-`train` split of `items.v1.jsonl`, and reports `0.2778` accuracy / `0.2472`
-Macro-F1 on `valid` plus `0.3333` accuracy / `0.2790` Macro-F1 on `test`.
-
-The second classical baseline is now saved in
-[tfidf-linear-svm-items-v1.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/tfidf-linear-svm-items-v1.json).
-It uses the same TF-IDF feature setup with `LinearSVC`, fits on the fixed
-`train` split of `items.v1.jsonl`, and reports `0.2778` accuracy / `0.2556`
-Macro-F1 on `valid` plus `0.3889` accuracy / `0.3433` Macro-F1 on `test`.
-On the held-out test split it is stronger than the Logistic Regression
-baseline on both accuracy and Macro-F1.
-
 The current training-ready classification dataset is now
 [items.v2.jsonl](/Users/philippovdev/WebstormProjects/nlp/data/annotated/items.v2.jsonl)
 with the paired stats artifact
@@ -153,7 +131,25 @@ assignment (`288 train / 72 valid / 72 test`), keeps the same 12-label schema
 family as `v1`, and preserves full label coverage in all three splits. The
 expanded release is a source-grounded synthetic expansion rather than a
 source-faithful raw crawl, with normalized English text and normalized `RUB`
-prices. The heuristic and classical baseline scripts can already run on `v2`
-via explicit dataset selection, and their defaults can now target `v2` without
-changing the shared evaluation path. The next model step can therefore move to
-transformer training without redesigning the data path.
+prices.
+
+The first direct classical comparison set on `items.v2` is now saved in:
+
+- [baseline-heuristic-items-v2.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/baseline-heuristic-items-v2.json)
+- [tfidf-logreg-items-v2.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/tfidf-logreg-items-v2.json)
+- [tfidf-linear-svm-items-v2.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/tfidf-linear-svm-items-v2.json)
+
+On this fixed split, TF-IDF + Logistic Regression currently gives the strongest
+held-out test result with `0.7222` accuracy and `0.7009` Macro-F1. Linear SVM
+is slightly better on the validation split (`0.7500` accuracy / `0.7502`
+Macro-F1) but slightly worse on the held-out test split (`0.7083` / `0.6930`).
+
+The first transformer result is now saved in
+[transformer-classifier-items-v2.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/transformer-classifier-items-v2.json).
+It fine-tunes `distilbert-base-uncased` on the fixed `train` split of
+`items.v2.jsonl`, uses early stopping on validation Macro-F1, and reaches
+`0.6389` accuracy / `0.6248` Macro-F1 on `valid` plus `0.5556` accuracy /
+`0.5620` Macro-F1 on `test`. On this dataset version, the first transformer
+underperforms the two TF-IDF baselines, so the current evidence does not
+support replacing them yet. The repository keeps the JSON metrics artifact and
+training script, while local checkpoints under `models/` remain unversioned.

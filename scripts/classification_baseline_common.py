@@ -73,6 +73,15 @@ def default_notes(*, dataset_path: Path, classifier_label: str) -> str:
 
 
 def detect_commit_sha() -> str | None:
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if status.returncode != 0 or status.stdout.strip():
+        return None
     completed = subprocess.run(
         ["git", "rev-parse", "HEAD"],
         cwd=REPO_ROOT,
@@ -107,6 +116,15 @@ def evaluate_split(
     texts = [item.text for item in items]
     gold = [item.category for item in items]
     predicted = pipeline.predict(texts).tolist()
+    return build_split_metrics(gold=gold, predicted=predicted, label_order=label_order)
+
+
+def build_split_metrics(
+    *,
+    gold: list[str],
+    predicted: list[str],
+    label_order: list[str],
+) -> SplitMetrics:
     report = classification_report(
         gold,
         predicted,
@@ -116,7 +134,7 @@ def evaluate_split(
     )
 
     return SplitMetrics(
-        item_count=len(items),
+        item_count=len(gold),
         accuracy=round(accuracy_score(gold, predicted), 4),
         macro_f1=round(
             f1_score(gold, predicted, labels=label_order, average="macro", zero_division=0),

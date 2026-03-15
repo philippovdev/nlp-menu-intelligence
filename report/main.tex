@@ -152,6 +152,14 @@ Describe:
   \item model selection policy
 \end{itemize}
 
+For the current fixed classification comparison, all trained models use the
+source-level `items.v2.jsonl` split with 288 training items, 72 validation
+items, and 72 held-out test items. The first transformer run uses
+`distilbert-base-uncased` with a sequence-classification head, maximum sequence
+length 64, batch size 16 for training, batch size 32 for evaluation, learning
+rate $2 \times 10^{-5}$, weight decay 0.01, warmup ratio 0.1, and early
+stopping on validation Macro-F1.
+
 \subsection{Baselines}
 
 List the baselines used in the comparison:
@@ -159,26 +167,30 @@ List the baselines used in the comparison:
   \item heuristic pipeline
   \item TF-IDF + Logistic Regression
   \item TF-IDF + Linear SVM
-  \item fastText
-  \item transformer model
+  \item DistilBERT sequence classifier
 \end{itemize}
 
 \section{Results}
 
-The first measured run now exists for the current heuristic pipeline on the
-in-repo v0 sample item set (10 annotated items): category accuracy is 0.9000,
-category macro-F1 is 0.8182, and exact-match price and size accuracy are both
-1.0000 on this starter subset.
+The first fixed-split comparison on the training-ready `items.v2.jsonl` dataset
+shows that simple TF-IDF baselines remain stronger than the first transformer
+run. On the held-out test split, TF-IDF + Logistic Regression reaches 0.7222
+accuracy and 0.7009 Macro-F1, while TF-IDF + Linear SVM reaches 0.7083
+accuracy and 0.6930 Macro-F1. The first transformer run, a fine-tuned
+DistilBERT classifier, reaches 0.5556 accuracy and 0.5620 Macro-F1 on the same
+test split.
 
-The first classical classifier baseline is now measured on the fixed
-`items.v1.jsonl` split using word-level TF-IDF features and Logistic
-Regression. It reaches 0.2778 accuracy and 0.2472 macro-F1 on the validation
-split, and 0.3333 accuracy with 0.2790 macro-F1 on the held-out test split.
+The heuristic pipeline is still useful as an end-to-end reference because it
+also evaluates price and size extraction, but its current `items.v2` artifact
+is measured on the full dataset rather than on the fixed train/valid/test
+classification split. On that full item set it reaches 0.6181 category
+accuracy, 0.6466 Macro-F1, and exact-match price and size accuracy of 1.0000.
 
-The second classical classifier baseline uses the same TF-IDF feature setup
-with a linear SVM (`LinearSVC`). It reaches 0.2778 accuracy and 0.2556
-macro-F1 on the validation split, and improves the held-out test result to
-0.3889 accuracy with 0.3433 macro-F1.
+On the validation split, TF-IDF + Linear SVM gives the highest score at 0.7500
+accuracy and 0.7502 Macro-F1, slightly above TF-IDF + Logistic Regression at
+0.7361 / 0.7302. DistilBERT validation performance is lower at 0.6389 / 0.6248,
+so the first transformer result does not support replacing the classical
+baselines yet.
 
 \begin{table}[t]
 \centering
@@ -186,11 +198,10 @@ macro-F1 on the validation split, and improves the held-out test result to
 \toprule
 Method & Accuracy & Macro-F1 & Extraction F1 & Notes \\
 \midrule
-Heuristic baseline & 0.9000 & 0.8182 & N/A & v0 sample item set \\
-TF-IDF + Logistic Regression & 0.3333 & 0.2790 & N/A & items.v1 test split; valid = 0.2778 / 0.2472 \\
-TF-IDF + Linear SVM & 0.3889 & 0.3433 & N/A & items.v1 test split; valid = 0.2778 / 0.2556 \\
-fastText & TBD & TBD & TBD & \\
-Transformer & TBD & TBD & TBD & \\
+Heuristic baseline & 0.6181 & 0.6466 & N/A & full items.v2 set; price exact = 1.0000, size exact = 1.0000 \\
+TF-IDF + Logistic Regression & 0.7222 & 0.7009 & N/A & items.v2 test split; valid = 0.7361 / 0.7302 \\
+TF-IDF + Linear SVM & 0.7083 & 0.6930 & N/A & items.v2 test split; valid = 0.7500 / 0.7502 \\
+DistilBERT sequence classifier & 0.5556 & 0.5620 & N/A & items.v2 test split; valid = 0.6389 / 0.6248 \\
 \bottomrule
 \end{tabular}
 \caption{Main experimental results.}

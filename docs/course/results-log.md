@@ -12,6 +12,13 @@ into the report.
 | tfidf-logreg-v1-001 | 2026-03-09 | ed9500c | v1 | classification | TF-IDF + Logistic Regression | test | Macro-F1 = 0.2790 | Acc = 0.3333 | artifact: `docs/course/artifacts/tfidf-logreg-items-v1.json`; held-out split |
 | tfidf-linear-svm-v1-001 | 2026-03-09 | 2f3f051 | v1 | classification | TF-IDF + Linear SVM | valid | Macro-F1 = 0.2556 | Acc = 0.2778 | artifact: `docs/course/artifacts/tfidf-linear-svm-items-v1.json`; train = 36, labels = 12 |
 | tfidf-linear-svm-v1-001 | 2026-03-09 | 2f3f051 | v1 | classification | TF-IDF + Linear SVM | test | Macro-F1 = 0.3433 | Acc = 0.3889 | artifact: `docs/course/artifacts/tfidf-linear-svm-items-v1.json`; better than TF-IDF + Logistic Regression on held-out test |
+| baseline-heuristic-v2-001 | 2026-03-15 | 2cd70b0 | v2 | classification + extraction | heuristic pipeline | full | Macro-F1 = 0.6466 | Acc = 0.6181; price exact = 1.0000; size exact = 1.0000 | artifact: `docs/course/artifacts/baseline-heuristic-items-v2.json`; full `items.v2` run, so not split-matched to train/valid/test model runs |
+| tfidf-logreg-v2-001 | 2026-03-15 | 2cd70b0 | v2 | classification | TF-IDF + Logistic Regression | valid | Macro-F1 = 0.7302 | Acc = 0.7361 | artifact: `docs/course/artifacts/tfidf-logreg-items-v2.json`; train = 288, labels = 12 |
+| tfidf-logreg-v2-001 | 2026-03-15 | 2cd70b0 | v2 | classification | TF-IDF + Logistic Regression | test | Macro-F1 = 0.7009 | Acc = 0.7222 | artifact: `docs/course/artifacts/tfidf-logreg-items-v2.json`; strongest held-out test result so far |
+| tfidf-linear-svm-v2-001 | 2026-03-15 | 2cd70b0 | v2 | classification | TF-IDF + Linear SVM | valid | Macro-F1 = 0.7502 | Acc = 0.7500 | artifact: `docs/course/artifacts/tfidf-linear-svm-items-v2.json`; strongest validation result so far |
+| tfidf-linear-svm-v2-001 | 2026-03-15 | 2cd70b0 | v2 | classification | TF-IDF + Linear SVM | test | Macro-F1 = 0.6930 | Acc = 0.7083 | artifact: `docs/course/artifacts/tfidf-linear-svm-items-v2.json`; slightly behind Logistic Regression on held-out test |
+| transformer-classifier-v2-001 | 2026-03-15 | working-tree | v2 | classification | DistilBERT sequence classifier | valid | Macro-F1 = 0.6248 | Acc = 0.6389 | artifact: `docs/course/artifacts/transformer-classifier-items-v2.json`; `distilbert-base-uncased`, early stopping on validation Macro-F1 |
+| transformer-classifier-v2-001 | 2026-03-15 | working-tree | v2 | classification | DistilBERT sequence classifier | test | Macro-F1 = 0.5620 | Acc = 0.5556 | artifact: `docs/course/artifacts/transformer-classifier-items-v2.json`; underperforms both TF-IDF baselines on held-out test |
 
 ## What To Save For Every Run
 
