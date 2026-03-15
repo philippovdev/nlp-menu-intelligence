@@ -143,3 +143,17 @@ It uses the same TF-IDF feature setup with `LinearSVC`, fits on the fixed
 Macro-F1 on `valid` plus `0.3889` accuracy / `0.3433` Macro-F1 on `test`.
 On the held-out test split it is stronger than the Logistic Regression
 baseline on both accuracy and Macro-F1.
+
+The current training-ready classification dataset is now
+[items.v2.jsonl](/Users/philippovdev/WebstormProjects/nlp/data/annotated/items.v2.jsonl)
+with the paired stats artifact
+[dataset-stats.v2.json](/Users/philippovdev/WebstormProjects/nlp/data/interim/dataset-stats.v2.json).
+This expanded subset contains `432` annotated items with source-level split
+assignment (`288 train / 72 valid / 72 test`), keeps the same 12-label schema
+family as `v1`, and preserves full label coverage in all three splits. The
+expanded release is a source-grounded synthetic expansion rather than a
+source-faithful raw crawl, with normalized English text and normalized `RUB`
+prices. The heuristic and classical baseline scripts can already run on `v2`
+via explicit dataset selection, and their defaults can now target `v2` without
+changing the shared evaluation path. The next model step can therefore move to
+transformer training without redesigning the data path.

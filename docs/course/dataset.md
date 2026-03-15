@@ -200,3 +200,42 @@ The public repository keeps source metadata and split structure, but does not
 re-publish raw crawls or direct source captures. For `v1`, the manifest keeps
 source identifiers, restaurant identifiers, source types, collection dates, and
 public source URLs, while raw captures remain outside git.
+
+## Dataset v2
+
+The repository now also includes the training-ready item-level expansion for
+the final classification model:
+
+- [items.v2.jsonl](/Users/philippovdev/WebstormProjects/nlp/data/annotated/items.v2.jsonl)
+- [dataset-manifest.v2.csv](/Users/philippovdev/WebstormProjects/nlp/data/raw/dataset-manifest.v2.csv)
+- [dataset-stats.v2.json](/Users/philippovdev/WebstormProjects/nlp/data/interim/dataset-stats.v2.json)
+
+Current factual status of `v2`:
+
+- 432 annotated menu items
+- 12 source documents from 12 restaurants
+- split by source and restaurant, never by random row
+- split sizes: `train=288`, `valid=72`, `test=72`
+- all 12 category labels are present in every split
+- no source leakage and no restaurant leakage across splits
+- source type mix: `html=6`, `pdf=6`
+- average item length: `8.70` whitespace tokens overall
+- perfectly balanced class counts at `36` items per label
+- source-grounded synthetic expansion rather than source-faithful raw menu lines
+- normalized English text and normalized `RUB` prices for public-repo-safe release
+
+`v2` is intentionally a source-grounded synthetic expansion: public menu pages
+and PDFs are used as provenance anchors and lexical references, while the
+released item texts are normalized into a consistent English format with
+normalized `RUB` prices. This keeps the public repository clean and reusable
+for classification experiments, but it also means that `v2` should be described
+in the report as a training-ready derived dataset rather than a source-faithful
+raw crawl.
+
+`v2` is still an intermediate public subset, not the final production dataset,
+but it is large enough to support the next transformer classification step
+without changing the item-level schema, split policy, or manifest format.
+
+As in `v1`, the public repository stores only the manifest, annotations, and
+derived statistics. Raw page captures and large intermediate files remain
+outside git.

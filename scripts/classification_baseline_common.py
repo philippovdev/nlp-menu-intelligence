@@ -47,6 +47,31 @@ def resolve_repo_path(path: Path) -> Path:
     return (REPO_ROOT / path).resolve()
 
 
+def dataset_version_tag(dataset_path: Path) -> str:
+    stem = dataset_path.stem
+    if "." in stem:
+        return stem.split(".")[-1]
+    return stem
+
+
+def default_output_path(*, prefix: str, dataset_path: Path) -> Path:
+    dataset_tag = dataset_version_tag(dataset_path)
+    return REPO_ROOT / f"docs/course/artifacts/{prefix}-items-{dataset_tag}.json"
+
+
+def default_run_id(*, prefix: str, dataset_path: Path) -> str:
+    dataset_tag = dataset_version_tag(dataset_path)
+    return f"{prefix}-{dataset_tag}-001"
+
+
+def default_notes(*, dataset_path: Path, classifier_label: str) -> str:
+    return (
+        "Text-only category classification baseline trained on the fixed train split of "
+        f"{dataset_path.name} and evaluated on the fixed valid and test splits using "
+        f"{classifier_label}."
+    )
+
+
 def detect_commit_sha() -> str | None:
     completed = subprocess.run(
         ["git", "rev-parse", "HEAD"],

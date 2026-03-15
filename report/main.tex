@@ -102,11 +102,17 @@ Describe:
   \item extraction labels
 \end{itemize}
 
-The first real in-repo dataset subset is now available as `items.v1.jsonl`
-with a paired source manifest and generated statistics artifact. This subset
-contains 72 annotated item-level menu entries from 12 restaurant sources, uses
-source-level split assignment to reduce leakage between similar items, and
-keeps public source references in the paired manifest.
+The current training-ready item-level dataset is now available as
+`items.v2.jsonl` with a paired source manifest and generated statistics
+artifact. This subset contains 432 annotated item-level menu entries from 12
+public restaurant or hotel dining sources, uses source-level split assignment
+to reduce leakage between similar items, and keeps public source references in
+the paired manifest. The released `v2` file is a source-grounded synthetic
+expansion rather than a source-faithful raw crawl: item texts are normalized
+into consistent English surface forms and prices are normalized to `RUB` for a
+public-repo-safe classification dataset. The earlier `v1` subset remains useful
+as the first small classical-baseline set, but `v2` is the fixed dataset
+intended for the next transformer training step.
 
 \begin{table}[t]
 \centering
@@ -114,10 +120,10 @@ keeps public source references in the paired manifest.
 \toprule
 Statistic & Train & Valid & Test \\
 \midrule
-Restaurants & 6 & 3 & 3 \\
-Documents & 6 & 3 & 3 \\
-Items & 36 & 18 & 18 \\
-Avg. tokens per item & 7.50 & 7.61 & 7.72 \\
+Restaurants & 8 & 2 & 2 \\
+Documents & 8 & 2 & 2 \\
+Items & 288 & 72 & 72 \\
+Avg. tokens per item & 8.70 & 8.72 & 8.68 \\
 Categories & 12 & 12 & 12 \\
 \bottomrule
 \end{tabular}

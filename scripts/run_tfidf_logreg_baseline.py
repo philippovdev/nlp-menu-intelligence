@@ -7,6 +7,9 @@ from classification_baseline_common import (
     REPO_ROOT,
     build_artifact,
     build_label_order,
+    default_notes,
+    default_output_path,
+    default_run_id,
     evaluate_split,
     print_summary,
     resolve_repo_path,
@@ -18,15 +21,14 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 
-DEFAULT_DATASET = REPO_ROOT / "data/annotated/items.v1.jsonl"
-DEFAULT_OUTPUT = REPO_ROOT / "docs/course/artifacts/tfidf-logreg-items-v1.json"
+DEFAULT_DATASET = REPO_ROOT / "data/annotated/items.v2.jsonl"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--run-id", default="tfidf-logreg-v1-001")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--run-id")
     parser.add_argument("--run-date")
     parser.add_argument("--commit-sha")
     return parser.parse_args()
@@ -45,10 +47,14 @@ def build_pipeline() -> Pipeline:
             ),
         ]
     )
+
+
 def main() -> int:
     args = parse_args()
     dataset_path = resolve_repo_path(args.dataset)
-    output_path = resolve_repo_path(args.output)
+    output_path = resolve_repo_path(
+        args.output or default_output_path(prefix="tfidf-logreg", dataset_path=dataset_path)
+    )
     items = load_annotated_items(dataset_path)
     items_by_split = split_items(items)
     label_order = build_label_order(items)
@@ -62,7 +68,7 @@ def main() -> int:
 
     artifact = build_artifact(
         dataset_path=dataset_path,
-        run_id=args.run_id,
+        run_id=args.run_id or default_run_id(prefix="tfidf-logreg", dataset_path=dataset_path),
         run_date=args.run_date,
         commit_sha=args.commit_sha,
         method="tfidf_logistic_regression",
@@ -86,10 +92,7 @@ def main() -> int:
             items=items_by_split["test"],
             label_order=label_order,
         ),
-        notes=(
-            "Text-only category classification baseline trained on the fixed train split of "
-            "items.v1.jsonl and evaluated on the fixed valid and test splits."
-        ),
+        notes=default_notes(dataset_path=dataset_path, classifier_label="LogisticRegression"),
     )
 
     save_artifact(output_path, artifact)

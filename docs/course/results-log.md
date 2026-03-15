@@ -52,3 +52,12 @@ For extraction runs:
   - split = `36 train / 18 valid / 18 test`
   - full label coverage in `train`, `valid`, and `test`
   - average tokens per item = `7.58`
+
+- `dataset-v2-stats-001`: `data/interim/dataset-stats.v2.json`
+  - 432 items
+  - 12 restaurants / 12 documents
+  - split = `288 train / 72 valid / 72 test`
+  - full label coverage in `train`, `valid`, and `test`
+  - no source leakage and no restaurant leakage across splits
+  - average tokens per item = `8.70`
+  - source-grounded synthetic expansion with normalized English text and normalized `RUB` prices
