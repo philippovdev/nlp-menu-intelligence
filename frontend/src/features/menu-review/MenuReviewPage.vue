@@ -147,6 +147,30 @@ function formatConfidence(value?: number | null): string {
   return `${Math.round(value * 100)}%`;
 }
 
+function getConfidenceEntries(
+  item: MenuItemV1,
+): Array<{ label: string; low: boolean; value: number }> {
+  return [
+    { label: "Overall", value: item.confidence.overall },
+    { label: "Category", value: item.category.confidence },
+    { label: "Name", value: item.confidence.fields?.name },
+    { label: "Price", value: item.confidence.fields?.prices },
+    { label: "Size", value: item.confidence.fields?.sizes },
+  ]
+    .filter(
+      (
+        entry,
+      ): entry is {
+        label: string;
+        value: number;
+      } => typeof entry.value === "number",
+    )
+    .map((entry) => ({
+      ...entry,
+      low: entry.value < lowConfidenceThreshold,
+    }));
+}
+
 function getConfidenceValues(item: MenuItemV1): number[] {
   return [
     item.confidence.overall,
@@ -228,6 +252,10 @@ function formatSourceType(value: string): string {
   }
 
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function formatCount(value: number, singular: string, plural = `${singular}s`): string {
+  return `${value} ${value === 1 ? singular : plural}`;
 }
 
 function toNullable(value: string): string | null {
@@ -491,20 +519,21 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   <main class="page">
     <section class="hero panel ds-card">
       <div class="hero__copy">
-        <p class="ds-label ds-eyebrow">Slice 2 Intake + Review</p>
+        <p class="ds-label ds-eyebrow">Menu Intelligence Demo</p>
         <h1 class="ds-title ds-title--hero">
-          Intake can start from pasted text or a single uploaded file.
+          Parse menus, review model output, and export clean structured data.
         </h1>
         <p class="ds-lead">
-          Keep one review screen, route both intake paths through the backend,
-          and land in the same structured editing state.
+          Pasted text and single-file upload land in the same grouped review
+          flow, with editable fields, quality signals, and export from the
+          reviewed state.
         </p>
       </div>
       <div class="hero__meta">
-        <span class="ds-pill">POST /api/v1/menu/parse</span>
-        <span class="ds-pill">POST /api/v1/menu/parse-file</span>
+        <span class="ds-pill">text + file intake</span>
+        <span class="ds-pill">model-backed categories</span>
         <span class="ds-pill">same-origin /api</span>
-        <span class="ds-pill">manual review enabled</span>
+        <span class="ds-pill">review + export</span>
       </div>
     </section>
 
@@ -631,32 +660,38 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
         </div>
       </div>
 
-      <div class="summary summary--document">
-        <div>
-          <span class="ds-label">Request</span>
-          <span class="summary__value summary__value--meta">
-            {{ result.request_id }}
-          </span>
-        </div>
-        <div>
-          <span class="ds-label">Fields parser</span>
-          <span class="summary__value summary__value--meta">
-            {{ result.model_version.ner_model }}
-          </span>
-        </div>
-        <div v-if="documentMetadata?.filename">
-          <span class="ds-label">Filename</span>
-          <span>{{ documentMetadata.filename }}</span>
-        </div>
-        <div v-if="documentMetadata?.ocr_used != null">
-          <span class="ds-label">OCR</span>
-          <span>{{ documentMetadata.ocr_used ? "used" : "not used" }}</span>
-        </div>
-      </div>
+      <details class="parse-details">
+        <summary class="ds-label">Parse details</summary>
 
-      <details v-if="extractedTextPreview" class="document-preview">
-        <summary class="ds-label">Extracted text</summary>
-        <pre>{{ extractedTextPreview }}</pre>
+        <div class="parse-details__content">
+          <div class="summary summary--document">
+            <div>
+              <span class="ds-label">Request</span>
+              <span class="summary__value summary__value--meta">
+                {{ result.request_id }}
+              </span>
+            </div>
+            <div>
+              <span class="ds-label">Fields parser</span>
+              <span class="summary__value summary__value--meta">
+                {{ result.model_version.ner_model }}
+              </span>
+            </div>
+            <div v-if="documentMetadata?.filename">
+              <span class="ds-label">Filename</span>
+              <span>{{ documentMetadata.filename }}</span>
+            </div>
+            <div v-if="documentMetadata?.ocr_used != null">
+              <span class="ds-label">OCR</span>
+              <span>{{ documentMetadata.ocr_used ? "used" : "not used" }}</span>
+            </div>
+          </div>
+
+          <div v-if="extractedTextPreview" class="parse-details__preview">
+            <span class="ds-label">Extracted text</span>
+            <pre>{{ extractedTextPreview }}</pre>
+          </div>
+        </div>
       </details>
 
       <div v-if="result.issues.length" class="ds-issue-list issue-list--global">
@@ -688,12 +723,14 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
           </div>
 
           <div class="group-meta">
-            <span class="ds-pill">{{ group.items.length }} items</span>
+            <span class="ds-pill">
+              {{ formatCount(group.items.length, "item") }}
+            </span>
             <span
               v-if="group.flaggedCount"
               class="ds-issue ds-issue--warning"
             >
-              {{ group.flaggedCount }} need attention
+              {{ formatCount(group.flaggedCount, "flagged item") }}
             </span>
           </div>
         </div>
@@ -734,11 +771,13 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
                 </div>
 
                 <div class="confidence-box">
-                  <span>Overall {{ formatConfidence(item.confidence.overall) }}</span>
-                  <span>Category {{ formatConfidence(item.category.confidence) }}</span>
-                  <span>Name {{ formatConfidence(item.confidence.fields?.name) }}</span>
-                  <span>Price {{ formatConfidence(item.confidence.fields?.prices) }}</span>
-                  <span>Size {{ formatConfidence(item.confidence.fields?.sizes) }}</span>
+                  <span
+                    v-for="entry in getConfidenceEntries(item)"
+                    :key="entry.label"
+                    :class="entry.low ? 'confidence-box__value--low' : undefined"
+                  >
+                    {{ entry.label }} {{ formatConfidence(entry.value) }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -1046,16 +1085,27 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   margin-top: var(--ds-space-6);
 }
 
-.document-preview {
+.parse-details {
   margin-top: var(--ds-space-6);
 }
 
-.document-preview summary {
+.parse-details summary {
   cursor: pointer;
 }
 
-.document-preview pre {
-  margin: var(--ds-space-4) 0 0;
+.parse-details__content {
+  display: grid;
+  gap: var(--ds-space-5);
+  margin-top: var(--ds-space-4);
+}
+
+.parse-details__preview {
+  display: grid;
+  gap: var(--ds-space-2);
+}
+
+.parse-details pre {
+  margin: 0;
   padding: var(--ds-space-5);
   border: 1px solid var(--ds-color-border);
   border-radius: var(--ds-radius-group);
@@ -1149,6 +1199,11 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   color: var(--ds-color-text-muted);
   font-size: var(--ds-font-size-small);
   text-align: right;
+}
+
+.confidence-box__value--low {
+  color: var(--ds-color-warning-fg);
+  font-weight: 600;
 }
 
 .ds-grid + .ds-grid,
