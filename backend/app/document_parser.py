@@ -11,6 +11,7 @@ from pypdf import PdfReader
 from pypdf.errors import PdfReadError
 from pytesseract.pytesseract import TesseractError, TesseractNotFoundError
 
+from app.category_classifier import CategoryClassifier
 from app.menu_parser import parse_menu_text
 from app.schemas import (
     ApiError,
@@ -37,6 +38,7 @@ async def parse_menu_file(
     lang: str = "ru",
     currency_hint: str = "RUB",
     category_labels: list[str] | None = None,
+    category_classifier: CategoryClassifier | None = None,
 ) -> MenuParseResponse:
     file_bytes = await file.read()
     validate_file_bytes(file_bytes)
@@ -62,7 +64,8 @@ async def parse_menu_file(
             lang=lang,
             currency_hint=currency_hint,
             category_labels=category_labels,
-        )
+        ),
+        category_classifier=category_classifier,
     )
     response.document = ParsedDocument(
         source_type=source_type,

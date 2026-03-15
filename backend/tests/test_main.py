@@ -1,11 +1,9 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
-
-client = TestClient(app)
+from app.main import create_app
 
 
-def test_health_and_version_endpoints() -> None:
+def test_health_and_version_endpoints(client: TestClient) -> None:
     health_response = client.get("/api/v1/health")
     version_response = client.get("/api/v1/version")
     status_response = client.get("/api/status")
@@ -14,7 +12,12 @@ def test_health_and_version_endpoints() -> None:
     assert health_response.json() == {"status": "ok"}
 
     assert version_response.status_code == 200
-    assert version_response.json() == {"version": "0.0.1"}
+    assert version_response.json() == {
+        "version": "0.0.1",
+        "category_model": "tfidf-logreg-items-v2@1.0.0",
+        "configured_category_model": "tfidf-logreg-items-v2@1.0.0",
+        "category_model_ready": True,
+    }
 
     assert status_response.status_code == 200
     assert status_response.json() == {
@@ -24,7 +27,7 @@ def test_health_and_version_endpoints() -> None:
     }
 
 
-def test_parse_menu_returns_slice1_contract_and_header_context() -> None:
+def test_parse_menu_returns_slice1_contract_and_header_context(client: TestClient) -> None:
     response = client.post(
         "/api/v1/menu/parse",
         json={
@@ -47,7 +50,7 @@ def test_parse_menu_returns_slice1_contract_and_header_context() -> None:
         "split_strategy": "lines",
     }
     assert payload["model_version"] == {
-        "category_model": "slice1-keyword-baseline@0.1.0",
+        "category_model": "tfidf-logreg-items-v2@1.0.0",
         "ner_model": "slice1-deterministic-fields@0.1.0",
     }
     assert len(payload["items"]) == 4
@@ -78,7 +81,7 @@ def test_parse_menu_returns_slice1_contract_and_header_context() -> None:
         "raw": "Цезарь с курицей 250 г - 390 ₽",
         "normalized": "Цезарь с курицей 250 г - 390 ₽",
     }
-    assert caesar["category"] == {"label": "salads", "confidence": 0.92}
+    assert caesar["category"] == {"label": "salads", "confidence": 0.72}
     assert caesar["fields"] == {
         "name": "Цезарь с курицей",
         "description": None,
@@ -86,8 +89,8 @@ def test_parse_menu_returns_slice1_contract_and_header_context() -> None:
         "sizes": [{"value": 250, "unit": "g", "raw": "250 г"}],
     }
     assert caesar["confidence"] == {
-        "overall": 0.99,
-        "category": 0.92,
+        "overall": 0.93,
+        "category": 0.72,
         "fields": {
             "name": 0.96,
             "description": None,
@@ -95,10 +98,18 @@ def test_parse_menu_returns_slice1_contract_and_header_context() -> None:
             "sizes": 0.88,
         },
     }
-    assert caesar["issues"] == []
+    assert caesar["issues"] == [
+        {
+            "code": "CATEGORY_MODEL_LOW_CONFIDENCE",
+            "level": "info",
+            "message": "Category model confidence was too low; heuristic fallback was used.",
+            "path": "/items/1/category",
+            "details": None,
+        }
+    ]
 
 
-def test_parse_menu_uses_keyword_fallback_and_category_reduction() -> None:
+def test_parse_menu_uses_keyword_fallback_and_category_reduction(client: TestClient) -> None:
     response = client.post(
         "/api/v1/menu/parse",
         json={
@@ -114,7 +125,7 @@ def test_parse_menu_uses_keyword_fallback_and_category_reduction() -> None:
 
     line = payload["items"][0]
     assert line["kind"] == "menu_item"
-    assert line["category"] == {"label": "drinks", "confidence": 0.78}
+    assert line["category"] == {"label": "drinks", "confidence": 0.4}
     assert line["fields"] == {
         "name": "Americano",
         "description": None,
@@ -124,7 +135,7 @@ def test_parse_menu_uses_keyword_fallback_and_category_reduction() -> None:
     assert line["issues"] == []
 
 
-def test_parse_menu_detects_noise_and_multiple_values() -> None:
+def test_parse_menu_detects_noise_and_multiple_values(client: TestClient) -> None:
     response = client.post(
         "/api/v1/menu/parse",
         json={
@@ -150,7 +161,7 @@ def test_parse_menu_detects_noise_and_multiple_values() -> None:
 
     pizza = payload["items"][1]
     assert pizza["kind"] == "menu_item"
-    assert pizza["category"] == {"label": "mains", "confidence": 0.78}
+    assert pizza["category"] == {"label": "mains", "confidence": 0.71}
     assert pizza["fields"]["prices"] == [
         {"value": 590, "currency": "RUB", "raw": "590"},
         {"value": 790, "currency": "RUB", "raw": "790"},
@@ -177,7 +188,7 @@ def test_parse_menu_detects_noise_and_multiple_values() -> None:
     ]
 
 
-def test_parse_menu_keeps_header_context_across_noise_lines() -> None:
+def test_parse_menu_keeps_header_context_across_noise_lines(client: TestClient) -> None:
     response = client.post(
         "/api/v1/menu/parse",
         json={
@@ -192,10 +203,19 @@ def test_parse_menu_keeps_header_context_across_noise_lines() -> None:
     payload = response.json()
 
     assert payload["items"][1]["kind"] == "noise"
-    assert payload["items"][2]["category"] == {"label": "salads", "confidence": 0.92}
+    assert payload["items"][2]["category"] == {"label": "salads", "confidence": 0.72}
+    assert payload["items"][2]["issues"] == [
+        {
+            "code": "CATEGORY_MODEL_LOW_CONFIDENCE",
+            "level": "info",
+            "message": "Category model confidence was too low; heuristic fallback was used.",
+            "path": "/items/2/category",
+            "details": None,
+        }
+    ]
 
 
-def test_parse_menu_rejects_blank_text_with_api_error_shape() -> None:
+def test_parse_menu_rejects_blank_text_with_api_error_shape(client: TestClient) -> None:
     response = client.post(
         "/api/v1/menu/parse",
         json={"schema_version": "v1", "text": "   \n  "},
@@ -206,7 +226,7 @@ def test_parse_menu_rejects_blank_text_with_api_error_shape() -> None:
     assert response.json()["error"]["code"] == "VALIDATION_ERROR"
 
 
-def test_parse_menu_uses_full_default_taxonomy_when_labels_are_omitted() -> None:
+def test_parse_menu_uses_full_default_taxonomy_when_labels_are_omitted(client: TestClient) -> None:
     response = client.post(
         "/api/v1/menu/parse",
         json={
@@ -219,5 +239,49 @@ def test_parse_menu_uses_full_default_taxonomy_when_labels_are_omitted() -> None
     assert response.status_code == 200
     assert response.json()["items"][0]["category"] == {
         "label": "pizza",
-        "confidence": 0.78,
+        "confidence": 0.5,
     }
+
+
+def test_parse_menu_falls_back_to_heuristic_when_model_is_unavailable() -> None:
+    app = create_app(category_classifier_loader=lambda: None)
+
+    with TestClient(app) as client:
+        version_response = client.get("/api/v1/version")
+        parse_response = client.post(
+            "/api/v1/menu/parse",
+            json={
+                "schema_version": "v1",
+                "text": "Americano 300 ml 180",
+                "currency_hint": "RUB",
+                "category_labels": ["salads", "soups", "mains", "desserts", "drinks", "other"],
+            },
+        )
+
+    assert version_response.status_code == 200
+    assert version_response.json() == {
+        "version": "0.0.1",
+        "category_model": "slice1-keyword-baseline@0.1.0",
+        "configured_category_model": "tfidf-logreg-items-v2@1.0.0",
+        "category_model_ready": False,
+    }
+
+    assert parse_response.status_code == 200
+    payload = parse_response.json()
+    assert payload["model_version"] == {
+        "category_model": "slice1-keyword-baseline@0.1.0",
+        "ner_model": "slice1-deterministic-fields@0.1.0",
+    }
+    assert payload["items"][0]["category"] == {"label": "drinks", "confidence": 0.78}
+    assert payload["issues"] == [
+        {
+            "code": "CATEGORY_MODEL_UNAVAILABLE",
+            "level": "info",
+            "message": (
+                "Configured category classifier is unavailable; "
+                "heuristic fallback is active."
+            ),
+            "path": None,
+            "details": {"configured_model": "tfidf-logreg-items-v2@1.0.0"},
+        }
+    ]

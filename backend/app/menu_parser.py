@@ -5,6 +5,11 @@ import unicodedata
 from collections.abc import Iterable
 from uuid import uuid4
 
+from app.category_classifier import (
+    CONFIGURED_CATEGORY_MODEL_ID,
+    HEURISTIC_CATEGORY_MODEL_ID,
+    CategoryClassifier,
+)
 from app.schemas import (
     DEFAULT_CATEGORY_LABELS,
     DEFAULT_CURRENCY,
@@ -275,7 +280,12 @@ ISSUE_DEFINITIONS = {
     ),
     "CATEGORY_CONFLICT_WITH_HEADER": (
         "warning",
-        "Line keywords conflict with the active header category.",
+        "Predicted item category conflicts with the active header category.",
+        "/items/{index}/category",
+    ),
+    "CATEGORY_MODEL_LOW_CONFIDENCE": (
+        "info",
+        "Category model confidence was too low; heuristic fallback was used.",
         "/items/{index}/category",
     ),
     "MISSING_PRICE": (
@@ -310,18 +320,33 @@ ISSUE_DEFINITIONS = {
     ),
 }
 
-MODEL_VERSION = ModelVersion(
-    category_model="slice1-keyword-baseline@0.1.0",
-    ner_model="slice1-deterministic-fields@0.1.0",
-)
+NER_MODEL_ID = "slice1-deterministic-fields@0.1.0"
+CATEGORY_MODEL_HEADER_OVERRIDE_CONFIDENCE = 0.6
 
 
-def parse_menu_text(request: MenuParseRequest) -> MenuParseResponse:
+def parse_menu_text(
+    request: MenuParseRequest,
+    *,
+    category_classifier: CategoryClassifier | None = None,
+) -> MenuParseResponse:
     indexed_lines, skipped_empty_lines = split_lines(request.text)
     active_header_category: str | None = None
     items: list[MenuItem] = []
     top_level_issues: list[Issue] = []
     allowed_labels = tuple(request.category_labels or DEFAULT_CATEGORY_LABELS)
+
+    if category_classifier is None:
+        top_level_issues.append(
+            Issue(
+                code="CATEGORY_MODEL_UNAVAILABLE",
+                level="info",
+                message=(
+                    "Configured category classifier is unavailable; "
+                    "heuristic fallback is active."
+                ),
+                details={"configured_model": CONFIGURED_CATEGORY_MODEL_ID},
+            )
+        )
 
     for item_index, (source_line_number, raw_line) in enumerate(indexed_lines):
         normalized = normalize_line(raw_line)
@@ -342,7 +367,9 @@ def parse_menu_text(request: MenuParseRequest) -> MenuParseResponse:
         issue_codes: list[str] = []
         internal_category: str | None = None
         category_source: str | None = None
+        output_category: str | None = None
         keyword_category = guess_item_category(normalized)
+        model_confidence: float | None = None
 
         if kind == "category_header":
             internal_category = header_category
@@ -353,7 +380,47 @@ def parse_menu_text(request: MenuParseRequest) -> MenuParseResponse:
                 active_header_category = internal_category
                 category_source = "header_keyword"
         elif kind == "menu_item":
-            if active_header_category is not None:
+            model_prediction = None
+            header_output_category = (
+                reduce_category(active_header_category, allowed_labels)
+                if active_header_category is not None
+                else None
+            )
+            if category_classifier is not None:
+                model_prediction = category_classifier.predict(
+                    text=normalized,
+                    allowed_labels=allowed_labels,
+                    reducer=reduce_category,
+                )
+
+            should_use_model = (
+                model_prediction is not None and category_classifier.is_confident(model_prediction)
+            )
+            if (
+                should_use_model
+                and header_output_category is not None
+                and model_prediction.label != header_output_category
+                and model_prediction.confidence < CATEGORY_MODEL_HEADER_OVERRIDE_CONFIDENCE
+            ):
+                should_use_model = False
+                issue_codes.append("CATEGORY_MODEL_LOW_CONFIDENCE")
+
+            if should_use_model:
+                output_category = model_prediction.label
+                category_source = "model"
+                model_confidence = model_prediction.confidence
+                if header_output_category is not None and header_output_category != output_category:
+                    issue_codes.append("CATEGORY_CONFLICT_WITH_HEADER")
+            else:
+                if (
+                    model_prediction is not None
+                    and "CATEGORY_MODEL_LOW_CONFIDENCE" not in issue_codes
+                ):
+                    issue_codes.append("CATEGORY_MODEL_LOW_CONFIDENCE")
+
+            if output_category is not None:
+                pass
+            elif active_header_category is not None:
                 internal_category = active_header_category
                 category_source = "header_context"
                 if keyword_category and keyword_category != active_header_category:
@@ -368,7 +435,8 @@ def parse_menu_text(request: MenuParseRequest) -> MenuParseResponse:
         else:
             pass
 
-        output_category = reduce_category(internal_category, allowed_labels)
+        if output_category is None:
+            output_category = reduce_category(internal_category, allowed_labels)
         name = (
             derive_name(normalized, size_fragments, price_fragments)
             if kind == "menu_item"
@@ -392,6 +460,7 @@ def parse_menu_text(request: MenuParseRequest) -> MenuParseResponse:
             category_source=category_source,
             category=output_category,
             issue_codes=issue_codes,
+            model_confidence=model_confidence,
         )
         field_confidence = build_field_confidence(
             kind=kind,
@@ -402,6 +471,7 @@ def parse_menu_text(request: MenuParseRequest) -> MenuParseResponse:
         overall_confidence = calculate_overall_confidence(
             kind=kind,
             category_source=category_source,
+            category_confidence=category_confidence,
             prices=prices,
             sizes=sizes,
             issue_codes=issue_codes,
@@ -458,9 +528,20 @@ def parse_menu_text(request: MenuParseRequest) -> MenuParseResponse:
     return MenuParseResponse(
         request_id=f"req_{uuid4().hex[:12]}",
         meta=ParseMenuMeta(lang=request.lang, currency=request.currency_hint),
-        model_version=MODEL_VERSION,
+        model_version=build_model_version(category_classifier),
         items=items,
         issues=top_level_issues,
+    )
+
+
+def build_model_version(category_classifier: CategoryClassifier | None) -> ModelVersion:
+    return ModelVersion(
+        category_model=(
+            category_classifier.model_id
+            if category_classifier is not None
+            else HEURISTIC_CATEGORY_MODEL_ID
+        ),
+        ner_model=NER_MODEL_ID,
     )
 
 
@@ -674,9 +755,15 @@ def calculate_category_confidence(
     category_source: str | None,
     category: str | None,
     issue_codes: list[str],
+    model_confidence: float | None = None,
 ) -> float | None:
     if kind == "noise" or category is None:
         return None
+
+    if category_source == "model":
+        if model_confidence is None:
+            return None
+        return round(max(0.01, min(model_confidence, 0.99)), 2)
 
     if kind == "category_header":
         score = 0.95 if category_source == "header_keyword" else 0.58
@@ -689,6 +776,8 @@ def calculate_category_confidence(
 
     if "CATEGORY_CONFLICT_WITH_HEADER" in issue_codes:
         score -= 0.18
+    if "CATEGORY_MODEL_LOW_CONFIDENCE" in issue_codes:
+        score -= 0.2
     if "UNCATEGORIZED" in issue_codes:
         score -= 0.1
 
@@ -720,6 +809,7 @@ def calculate_overall_confidence(
     *,
     kind: str,
     category_source: str | None,
+    category_confidence: float | None,
     prices: list[Price],
     sizes: list[Size],
     issue_codes: list[str],
@@ -734,7 +824,10 @@ def calculate_overall_confidence(
         else:
             score -= 0.14
     else:
-        score = 0.45
+        if category_source == "model":
+            score = 0.2 + 0.5 * (category_confidence or 0.0)
+        else:
+            score = 0.45
         if has_name:
             score += 0.1
         if prices:
@@ -745,11 +838,12 @@ def calculate_overall_confidence(
             score += 0.18
         elif category_source == "keyword_fallback":
             score += 0.1
-        else:
+        elif category_source != "model":
             score -= 0.06
 
     penalty_map = {
         "UNKNOWN_HEADER_CATEGORY": 0.08,
+        "CATEGORY_MODEL_LOW_CONFIDENCE": 0.08,
         "MISSING_PRICE": 0.12,
         "MULTIPLE_PRICES": 0.05,
         "MULTIPLE_SIZES": 0.04,

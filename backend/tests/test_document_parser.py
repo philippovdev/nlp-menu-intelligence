@@ -3,10 +3,6 @@ from io import BytesIO
 from fastapi.testclient import TestClient
 from PIL import Image
 
-from app.main import app
-
-client = TestClient(app)
-
 
 def build_pdf_bytes(lines: list[str]) -> bytes:
     content_lines = ["BT", "/F1 12 Tf", "72 720 Td"]
@@ -80,7 +76,7 @@ def build_oriented_jpeg_bytes() -> bytes:
     return buffer.getvalue()
 
 
-def test_parse_menu_file_rejects_unsupported_media_type() -> None:
+def test_parse_menu_file_rejects_unsupported_media_type(client: TestClient) -> None:
     response = client.post(
         "/api/v1/menu/parse-file",
         files={"file": ("menu.txt", b"hello", "text/plain")},
@@ -97,7 +93,7 @@ def test_parse_menu_file_rejects_unsupported_media_type() -> None:
     }
 
 
-def test_parse_menu_file_rejects_empty_file() -> None:
+def test_parse_menu_file_rejects_empty_file(client: TestClient) -> None:
     response = client.post(
         "/api/v1/menu/parse-file",
         files={"file": ("menu.pdf", b"", "application/pdf")},
@@ -114,7 +110,10 @@ def test_parse_menu_file_rejects_empty_file() -> None:
     }
 
 
-def test_parse_menu_file_rejects_oversized_file(monkeypatch) -> None:
+def test_parse_menu_file_rejects_oversized_file(
+    client: TestClient,
+    monkeypatch,
+) -> None:
     monkeypatch.setattr("app.document_parser.MAX_FILE_SIZE_BYTES", 4)
 
     response = client.post(
@@ -133,7 +132,7 @@ def test_parse_menu_file_rejects_oversized_file(monkeypatch) -> None:
     }
 
 
-def test_parse_menu_file_parses_pdf_text() -> None:
+def test_parse_menu_file_parses_pdf_text(client: TestClient) -> None:
     pdf_bytes = build_pdf_bytes(["SALADS", "Caesar 250 g 390 RUB"])
 
     response = client.post(
@@ -159,7 +158,7 @@ def test_parse_menu_file_parses_pdf_text() -> None:
     ]
 
 
-def test_parse_menu_file_falls_back_to_filename_media_type() -> None:
+def test_parse_menu_file_falls_back_to_filename_media_type(client: TestClient) -> None:
     pdf_bytes = build_pdf_bytes(["SALADS", "Caesar 250 g 390 RUB"])
 
     response = client.post(
@@ -171,7 +170,7 @@ def test_parse_menu_file_falls_back_to_filename_media_type() -> None:
     assert response.json()["document"]["media_type"] == "application/pdf"
 
 
-def test_parse_menu_file_uses_ocr_for_images(monkeypatch) -> None:
+def test_parse_menu_file_uses_ocr_for_images(client: TestClient, monkeypatch) -> None:
     image_bytes = build_png_bytes()
     monkeypatch.setattr(
         "app.document_parser.pytesseract.image_to_string",
@@ -200,7 +199,10 @@ def test_parse_menu_file_uses_ocr_for_images(monkeypatch) -> None:
     ]
 
 
-def test_parse_menu_file_applies_exif_orientation_before_ocr(monkeypatch) -> None:
+def test_parse_menu_file_applies_exif_orientation_before_ocr(
+    client: TestClient,
+    monkeypatch,
+) -> None:
     image_bytes = build_oriented_jpeg_bytes()
     seen_sizes: list[tuple[int, int]] = []
 
