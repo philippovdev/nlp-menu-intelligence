@@ -5,6 +5,7 @@ import logging
 import pickle
 from collections.abc import Callable
 from dataclasses import dataclass
+from json import JSONDecodeError
 from pathlib import Path
 
 from sklearn.pipeline import Pipeline
@@ -76,6 +77,45 @@ class CategoryClassifier:
         return prediction.confidence >= self.minimum_confidence
 
 
+def load_category_classifier_metadata(metadata_path: Path) -> tuple[str, float]:
+    try:
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    except JSONDecodeError as exc:
+        raise RuntimeError("Category classifier metadata is invalid.") from exc
+
+    if not isinstance(metadata, dict):
+        raise RuntimeError("Category classifier metadata is invalid.")
+
+    model_id = metadata.get("model_id")
+    minimum_confidence = metadata.get("minimum_confidence")
+
+    if not isinstance(model_id, str) or not model_id.strip():
+        raise RuntimeError("Category classifier metadata is incomplete.")
+    if not isinstance(minimum_confidence, int | float):
+        raise RuntimeError("Category classifier metadata is incomplete.")
+
+    minimum_confidence = float(minimum_confidence)
+    if minimum_confidence < 0 or minimum_confidence > 1:
+        raise RuntimeError("Category classifier metadata is invalid.")
+
+    return model_id.strip(), minimum_confidence
+
+
+def load_category_classifier_pipeline(classifier_path: Path) -> Pipeline:
+    try:
+        with classifier_path.open("rb") as file_pointer:
+            pipeline = pickle.load(file_pointer)
+    except (AttributeError, EOFError, ImportError, OSError, pickle.PickleError) as exc:
+        raise RuntimeError("Category classifier artifact could not be loaded.") from exc
+
+    if not hasattr(pipeline, "predict_proba"):
+        raise RuntimeError("Persisted category classifier does not support predict_proba().")
+    if getattr(pipeline, "classes_", None) is None:
+        raise RuntimeError("Persisted category classifier does not expose fitted classes_.")
+
+    return pipeline
+
+
 def load_category_classifier(
     *,
     classifier_path: Path = DEFAULT_CLASSIFIER_PATH,
@@ -96,19 +136,9 @@ def load_category_classifier(
     if classifier_exists != metadata_exists:
         raise RuntimeError("Category classifier assets are incomplete.")
 
-    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
-    with classifier_path.open("rb") as file_pointer:
-        pipeline = pickle.load(file_pointer)
-
-    if not hasattr(pipeline, "predict_proba"):
-        raise RuntimeError("Persisted category classifier does not support predict_proba().")
-
-    classes = getattr(pipeline, "classes_", None)
-    if classes is None:
-        raise RuntimeError("Persisted category classifier does not expose fitted classes_.")
-
-    model_id = str(metadata.get("model_id") or CONFIGURED_CATEGORY_MODEL_ID)
-    minimum_confidence = float(metadata.get("minimum_confidence") or DEFAULT_MINIMUM_CONFIDENCE)
+    model_id, minimum_confidence = load_category_classifier_metadata(metadata_path)
+    pipeline = load_category_classifier_pipeline(classifier_path)
+    classes = getattr(pipeline, "classes_", ())
 
     return CategoryClassifier(
         pipeline=pipeline,

@@ -150,6 +150,7 @@ def test_parse_menu_file_parses_pdf_text(client: TestClient) -> None:
         "ocr_used": False,
         "extracted_text": "SALADS\nCaesar 250 g 390 RUB",
     }
+    assert payload["model_version"]["category_model"] == "tfidf-logreg-items-v2@1.0.0"
     assert payload["items"][0]["kind"] == "category_header"
     assert payload["items"][1]["kind"] == "menu_item"
     assert payload["items"][1]["fields"]["name"] == "Caesar"
@@ -192,6 +193,7 @@ def test_parse_menu_file_uses_ocr_for_images(client: TestClient, monkeypatch) ->
         "ocr_used": True,
         "extracted_text": "SOUPS\nTom Yum 300 ml 450",
     }
+    assert payload["model_version"]["category_model"] == "tfidf-logreg-items-v2@1.0.0"
     assert payload["items"][1]["kind"] == "menu_item"
     assert payload["items"][1]["fields"]["name"] == "Tom Yum"
     assert payload["items"][1]["fields"]["prices"] == [
