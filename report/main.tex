@@ -3,131 +3,196 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
+\usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{booktabs}
+\usepackage{tabularx}
 
 \title{Menu Intelligence: Structured Menu Extraction and Categorization}
 \author{Philipp Philippov}
-\date{\today}
+\date{March 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This report describes Menu Intelligence, a web service for turning raw menu
-text or menu documents into a structured menu representation. The project is
-framed as a pipeline of NLP tasks: menu item categorization, structured field
-extraction, and final menu aggregation. The repository is available at
+Menu Intelligence is an end-to-end service for converting pasted menu text,
+PDF menus, and menu images into a structured JSON menu representation. The
+project is framed as an NLP pipeline with three main layers: document text
+extraction, item-level category classification, and deterministic structured
+field extraction for names, prices, and sizes. The final course dataset is
+\texttt{items.v2.jsonl}, a source-grounded synthetic item-level dataset with
+432 annotated menu items from 12 public restaurant or hotel dining sources,
+using source-level train/validation/test splits. On the held-out
+\texttt{items.v2} test split, the strongest model is TF-IDF with Logistic
+Regression, which reaches 0.7222 accuracy and 0.7009 Macro-F1, outperforming
+the first transformer benchmark and becoming the shipped classifier in the
+backend service. The repository is available at
 \url{https://github.com/philippovdev/nlp-menu-intelligence}.
-
-Main points to fill:
-\begin{itemize}
-  \item dataset size and source summary
-  \item strongest baseline and final model
-  \item key quantitative results
-\end{itemize}
 \end{abstract}
 
 \section{Introduction}
 
-Explain why menu structuring matters for restaurant tooling, digital menus, and
-catalog maintenance. State that the project targets both a real deployable
-service and a measurable NLP pipeline.
+Restaurant menus are still frequently published as free-form text, PDFs, or
+images intended for human reading rather than structured reuse. This creates
+friction for digital menu management, catalog maintenance, search, delivery
+integration, and downstream analytics. The practical goal of this project is
+to build a web service that accepts raw menu content and returns structured
+menu items that can be reviewed and edited in a browser.
+
+From an NLP perspective, the task is not a single model problem. It is a
+pipeline that begins with raw document text, continues through line splitting
+and menu-item detection, predicts a fixed category label for each candidate
+item, and extracts structured fields such as item name, price, and size. This
+report therefore treats the system as a composition of measurable tasks rather
+than as a monolithic application.
+
+\paragraph{Contributions.}
+This project makes four concrete contributions. First, it implements a working
+menu-structuring service with a deployed frontend and FastAPI backend. Second,
+it defines a stable item-level JSONL schema and two public dataset slices,
+culminating in the training-ready \texttt{items.v2.jsonl} release. Third, it
+measures heuristic, classical, and transformer classification baselines on a
+fixed split. Fourth, it integrates the best measured classifier into the real
+backend parsing pipeline while preserving deterministic field extraction and
+the existing API contract.
 
 \subsection{Team}
 
-State the team members and responsibilities. If the project is solo, describe
-the roles covered by the single contributor.
+This is a solo project. All work was completed by one contributor: problem
+definition, dataset curation, annotation design, baseline experiments, model
+training, backend and frontend implementation, deployment, and report
+preparation.
 
 \section{Related Work}
 
-The closest published work to this project does not come from one single
-benchmark. Instead, it splits across three literatures. First, short text and
-product-title categorization papers motivate efficient text baselines and show
-that catalog-style titles can be classified with strong simple models or
-specialized neural architectures \cite{joulin-etal-2017-bag,xia-etal-2017-large,cevahir-murakami-2016-large}.
-Second, food-domain NLP is real but fragmented: the nearest tasks are food-item
-healthiness classification, dish name recognition from recipe text, and
-large-scale menu normalization or clustering
-\cite{wiegand-klakow-2013-towards,hu-etal-2023-diner,latif-etal-2025-restaurant}.
-Third, structured extraction work is better represented by restaurant order
-extraction and document or receipt understanding resources such as FUNSD, CORD,
-and SROIE \cite{peng-etal-2017-may,jaume2019funsd,park2019cord,huang2019icdar2019}.
+The closest published work to Menu Intelligence does not come from one single
+benchmark. Instead, the relevant literature splits across three neighboring
+areas: short text and product-title categorization, food-domain language
+understanding, and structured extraction from semi-structured restaurant or
+document text.
 
-The important gap is that I did not find a public paper that matches the exact
-task shape of this project: short menu item text, fixed menu taxonomy labels,
-deterministic slot extraction, and later OCR-noisy document inputs. The
-literature therefore supports the project mostly through adjacent tasks rather
-than one established benchmark.
+Short text and product categorization work motivates the classical baselines
+used in this project. fastText shows that linear text models remain strong and
+efficient on short classification inputs \cite{joulin-etal-2017-bag}. Product
+title categorization papers report high accuracy on fixed taxonomies and
+provide the closest mature analog to menu item classification, even though
+their domains are e-commerce rather than restaurant menus
+\cite{xia-etal-2017-large,cevahir-murakami-2016-large}.
+
+Food-domain NLP is more fragmented. Prior work includes food-item healthiness
+classification \cite{wiegand-klakow-2013-towards}, recipe-to-dish-name
+recognition \cite{hu-etal-2023-diner}, and large-scale menu normalization or
+clustering \cite{latif-etal-2025-restaurant}. These papers confirm that food
+text has domain-specific lexical and compositional structure, but they do not
+define the same supervised fixed-label classification task used here.
+
+Structured extraction evidence is stronger in adjacent domains than in menus
+themselves. Restaurant-order extraction from dialogue
+\cite{peng-etal-2017-may} and receipt or form understanding resources such as
+FUNSD, CORD, and SROIE \cite{jaume2019funsd,park2019cord,huang2019icdar2019}
+are useful analogs for recovering prices and other fields from noisy,
+semi-structured text. However, they still do not match the full task shape of
+this project: short menu item text, fixed category labels, deterministic slot
+extraction, and upstream OCR support in one public benchmark.
 
 \begin{table}[t]
 \centering
-\begin{tabular}{p{0.18\linewidth}p{0.15\linewidth}p{0.16\linewidth}p{0.12\linewidth}p{0.14\linewidth}p{0.17\linewidth}}
+\small
+\begin{tabularx}{\linewidth}{p{0.15\linewidth}p{0.15\linewidth}p{0.17\linewidth}p{0.12\linewidth}p{0.16\linewidth}X}
 \toprule
-Approach & Task & Dataset & Metric & Result & Notes \\
+Approach & Task & Dataset & Metric & Reported result & Relevance to this project \\
 \midrule
-fastText \cite{joulin-etal-2017-bag} & short text classification & AG / DBPedia and related benchmarks & Accuracy & 92.5 on AG with bigrams & strong CPU baseline motivation \\
-Xia et al. \cite{xia-etal-2017-large} & product title categorization & millions of Japanese titles, 35 classes & Accuracy & $>$96\% & close product-title analog \\
-Hu et al. \cite{hu-etal-2023-diner} & dish name recognition & DiNeR & F1 / EM & 59.2 / 23.2 on OOD split & food-domain analog, not menu categorization \\
-Latif et al. \cite{latif-etal-2025-restaurant} & menu clustering & $>$700k menu items & similarity / coverage & 0.98 intra-cluster sim.; 100\% coverage & closest menu-domain paper, but clustering not fixed-label classification \\
+fastText \cite{joulin-etal-2017-bag} & short text classification & AG / DBPedia and related benchmarks & Accuracy & 92.5\% on AG with bigrams & strong justification for CPU-friendly linear baselines \\
+Xia et al. \cite{xia-etal-2017-large} & product title categorization & millions of Japanese titles, 35 classes & Accuracy & $>$96\% & closest catalog-title analog to fixed menu labels \\
+Latif et al. \cite{latif-etal-2025-restaurant} & menu normalization and clustering & $>$700k menu items & similarity / coverage & 0.98 intra-cluster similarity; 100\% coverage & closest menu-domain paper, but clustering rather than supervised classification \\
+Peng et al. \cite{peng-etal-2017-may} & restaurant-domain structured extraction & restaurant conversations to order records & F1 / whole-order accuracy & 71.2 F1 / 51.8 whole-order accuracy & domain-near extraction analog, but not menu-line classification \\
+FUNSD / CORD / SROIE \cite{jaume2019funsd,park2019cord,huang2019icdar2019} & document information extraction & forms and receipts & benchmark-specific IE metrics & dataset or competition references rather than one shared score & useful analogs for OCR-noisy field extraction \\
 \bottomrule
-\end{tabular}
-\caption{Related work summary.}
+\end{tabularx}
+\caption{Related work summary. All sources are conceptually relevant, but none is a direct public benchmark match for fixed-label menu item categorization with deterministic slot extraction.}
 \label{tab:related-work}
 \end{table}
 
 \section{Model Description}
 
-Describe the working pipeline:
-\begin{itemize}
-  \item document ingestion
-  \item text extraction
-  \item line normalization
-  \item category prediction
-  \item structured field extraction
-  \item JSON aggregation and human review
-\end{itemize}
+The implemented system is a hybrid pipeline rather than an end-to-end language
+model. Raw input can arrive as pasted text, embedded-text PDF, or image. PDF
+files are processed through embedded text extraction first; images are passed
+through OCR. The extracted text is then normalized and split into candidate
+lines. Each line is classified as a category header, a menu item, or noise.
+Menu-item lines are assigned a category label, and deterministic parsing
+extracts the item name, price list, and size list before the service returns a
+structured JSON response for review.
 
-Include a pipeline diagram here when it is ready.
+The deployed classification stage is now model-backed. The backend ships a
+TF-IDF + Logistic Regression classifier trained on \texttt{items.v2.jsonl},
+loads it at application startup, and uses it as the default item-level
+category predictor. Deterministic extraction remains rule-based. If the
+classifier artifact is unavailable or model confidence is too weak, the parser
+falls back to conservative heuristic categorization. This design keeps category
+prediction learned, field extraction deterministic, and runtime behavior
+explicit.
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.93\linewidth}{
+\textbf{Current system pipeline.}
+Text / PDF / image input $\rightarrow$ text extraction $\rightarrow$ line
+splitting and normalization $\rightarrow$ header, item, and noise detection
+$\rightarrow$ TF-IDF + Logistic Regression category prediction with heuristic
+fallback $\rightarrow$ deterministic name, price, and size extraction
+$\rightarrow$ structured JSON response and review UI.
+}}
+\caption{Pipeline overview. The final PDF can replace this placeholder with a rendered diagram without changing the described stages.}
+\label{fig:pipeline}
+\end{figure}
 
 \section{Dataset}
 
-Describe:
-\begin{itemize}
-  \item source collection policy
-  \item annotation format
-  \item split policy
-  \item category labels
-  \item extraction labels
-\end{itemize}
+The main course dataset is an item-level JSONL corpus built for menu
+classification and deterministic slot evaluation. Each record stores a stable
+item identifier, source identifier, restaurant identifier, split assignment,
+language tag, raw item text, one category label, and structured slots for
+name, prices, and sizes. The active label set contains 12 classes:
+\texttt{salads}, \texttt{soups}, \texttt{mains}, \texttt{pizza},
+\texttt{pasta}, \texttt{burgers}, \texttt{sides}, \texttt{desserts},
+\texttt{breakfast}, \texttt{drinks\_hot}, \texttt{drinks\_cold}, and
+\texttt{other}.
 
-The current training-ready item-level dataset is now available as
-`items.v2.jsonl` with a paired source manifest and generated statistics
-artifact. This subset contains 432 annotated item-level menu entries from 12
-public restaurant or hotel dining sources, uses source-level split assignment
-to reduce leakage between similar items, and keeps public source references in
-the paired manifest. The released `v2` file is a source-grounded synthetic
-expansion rather than a source-faithful raw crawl: item texts are normalized
-into consistent English surface forms and prices are normalized to `RUB` for a
-public-repo-safe classification dataset. The earlier `v1` subset remains useful
-as the first small classical-baseline set, but `v2` is the fixed dataset
-intended for the next transformer training step.
+Two dataset slices are present in the repository. \texttt{items.v1.jsonl} is a
+small first experimental subset used for early classical baselines.
+\texttt{items.v2.jsonl} is the training-ready release used for the final
+classification comparison and the shipped backend model. The paired manifest
+stores public source provenance, collection date, source type, license note,
+and notes, while raw captures remain outside git.
+
+The report uses \texttt{items.v2} as the fixed evaluation dataset. It contains
+432 annotated menu items from 12 public restaurant or hotel dining sources,
+split by source and restaurant to avoid leakage between similar items. The
+release is intentionally a source-grounded synthetic expansion rather than a
+source-faithful raw crawl: public menus are used as provenance anchors and
+lexical references, but the released item texts are normalized into consistent
+English forms with normalized \texttt{RUB} prices. This keeps the public
+repository lightweight and reproducible, but it also limits how directly the
+dataset reflects raw restaurant menu wording.
 
 \begin{table}[t]
 \centering
-\begin{tabular}{lccc}
+\small
+\begin{tabular}{lcccc}
 \toprule
-Statistic & Train & Valid & Test \\
+Statistic & Total & Train & Valid & Test \\
 \midrule
-Restaurants & 8 & 2 & 2 \\
-Documents & 8 & 2 & 2 \\
-Items & 288 & 72 & 72 \\
-Avg. tokens per item & 8.70 & 8.72 & 8.68 \\
-Categories & 12 & 12 & 12 \\
+Restaurants & 12 & 8 & 2 & 2 \\
+Documents & 12 & 8 & 2 & 2 \\
+Items & 432 & 288 & 72 & 72 \\
+Avg. tokens per item & 8.70 & 8.70 & 8.72 & 8.68 \\
+Categories covered & 12 & 12 & 12 & 12 \\
 \bottomrule
 \end{tabular}
-\caption{Dataset statistics.}
+\caption{Dataset statistics for \texttt{items.v2}. Class counts are perfectly balanced at 36 items per label overall and 24/6/6 per label across train/valid/test.}
 \label{tab:dataset-stats}
 \end{table}
 
@@ -135,106 +200,133 @@ Categories & 12 & 12 & 12 \\
 
 \subsection{Metrics}
 
-Define the metrics used for category classification and extraction:
+The main classification metrics are accuracy and Macro-F1. Macro-F1 is the
+primary model-selection metric because the project treats all 12 categories as
+equally important. For the heuristic end-to-end pipeline, the report also
+tracks exact-match accuracy for price and size extraction on normalized
+item-level gold annotations.
+
+\subsection{Setup}
+
+All trained classifiers use the fixed \texttt{items.v2} source-level split:
+288 training items, 72 validation items, and 72 held-out test items. The
+classical baselines use raw item text as input and predict one category label
+per item. The first transformer benchmark fine-tunes
+\texttt{distilbert-base-uncased} as a sequence classifier with maximum
+sequence length 64, batch size 16 for training, batch size 32 for evaluation,
+learning rate $2 \times 10^{-5}$, weight decay 0.01, warmup ratio 0.1, and
+early stopping on validation Macro-F1.
+
+The product system itself is broader than the classification experiments: it
+also supports PDF and image intake, embedded PDF text extraction, OCR for
+images, deterministic line segmentation, and deterministic slot extraction.
+However, OCR quality is not the main evaluated contribution of this report.
+The quantitative comparison therefore focuses on item-level category
+classification and reports deterministic extraction only for the heuristic
+pipeline.
+
+\subsection{Methods}
+
+Four methods are compared in the final report:
 \begin{itemize}
-  \item Accuracy
-  \item Macro-F1
-  \item extraction Precision, Recall, and F1
+  \item heuristic end-to-end parser with keyword category rules,
+  \item TF-IDF + Logistic Regression,
+  \item TF-IDF + Linear SVM,
+  \item DistilBERT sequence classifier.
 \end{itemize}
 
-\subsection{Experiment Setup}
-
-Describe:
-\begin{itemize}
-  \item train, valid, and test split
-  \item hardware
-  \item run configuration
-  \item model selection policy
-\end{itemize}
-
-For the current fixed classification comparison, all trained models use the
-source-level `items.v2.jsonl` split with 288 training items, 72 validation
-items, and 72 held-out test items. The first transformer run uses
-`distilbert-base-uncased` with a sequence-classification head, maximum sequence
-length 64, batch size 16 for training, batch size 32 for evaluation, learning
-rate $2 \times 10^{-5}$, weight decay 0.01, warmup ratio 0.1, and early
-stopping on validation Macro-F1.
-
-\subsection{Baselines}
-
-List the baselines used in the comparison:
-\begin{itemize}
-  \item heuristic pipeline
-  \item TF-IDF + Logistic Regression
-  \item TF-IDF + Linear SVM
-  \item DistilBERT sequence classifier
-\end{itemize}
+The heuristic system is useful as a product baseline because it runs through
+the real parser and produces both category and slot outputs. The two TF-IDF
+baselines provide direct classical comparisons on the fixed split. The
+DistilBERT run is included as the first transformer benchmark on the same
+dataset and split.
 
 \section{Results}
 
-The first fixed-split comparison on the training-ready `items.v2.jsonl` dataset
-shows that simple TF-IDF baselines remain stronger than the first transformer
-run. On the held-out test split, TF-IDF + Logistic Regression reaches 0.7222
-accuracy and 0.7009 Macro-F1, while TF-IDF + Linear SVM reaches 0.7083
-accuracy and 0.6930 Macro-F1. The first transformer run, a fine-tuned
-DistilBERT classifier, reaches 0.5556 accuracy and 0.5620 Macro-F1 on the same
-test split.
-
-The heuristic pipeline is still useful as an end-to-end reference because it
-also evaluates price and size extraction, but its current `items.v2` artifact
-is measured on the full dataset rather than on the fixed train/valid/test
-classification split. On that full item set it reaches 0.6181 category
-accuracy, 0.6466 Macro-F1, and exact-match price and size accuracy of 1.0000.
-
-On the validation split, TF-IDF + Linear SVM gives the highest score at 0.7500
-accuracy and 0.7502 Macro-F1, slightly above TF-IDF + Logistic Regression at
-0.7361 / 0.7302. DistilBERT validation performance is lower at 0.6389 / 0.6248,
-so the first transformer result does not support replacing the classical
-baselines yet.
+Table~\ref{tab:main-results} summarizes the measured results already saved in
+the repository artifacts. The strongest held-out test result on
+\texttt{items.v2} is TF-IDF + Logistic Regression with 0.7222 accuracy and
+0.7009 Macro-F1. TF-IDF + Linear SVM is slightly better on the validation
+split but slightly worse on the held-out test split. The first transformer
+benchmark underperforms both classical baselines on the same data.
 
 \begin{table}[t]
 \centering
-\begin{tabular}{lcccc}
+\small
+\begin{tabularx}{\linewidth}{p{0.22\linewidth}p{0.14\linewidth}p{0.1\linewidth}p{0.1\linewidth}X}
 \toprule
-Method & Accuracy & Macro-F1 & Extraction F1 & Notes \\
+Method & Evaluation set & Accuracy & Macro-F1 & Notes \\
 \midrule
-Heuristic baseline & 0.6181 & 0.6466 & N/A & full items.v2 set; price exact = 1.0000, size exact = 1.0000 \\
-TF-IDF + Logistic Regression & 0.7222 & 0.7009 & N/A & items.v2 test split; valid = 0.7361 / 0.7302 \\
-TF-IDF + Linear SVM & 0.7083 & 0.6930 & N/A & items.v2 test split; valid = 0.7500 / 0.7502 \\
-DistilBERT sequence classifier & 0.5556 & 0.5620 & N/A & items.v2 test split; valid = 0.6389 / 0.6248 \\
+Heuristic pipeline & full \texttt{items.v2} & 0.6181 & 0.6466 & price exact = 1.0000; size exact = 1.0000; not split-comparable \\
+TF-IDF + Logistic Regression & test split & 0.7222 & 0.7009 & valid = 0.7361 / 0.7302; strongest held-out test result \\
+TF-IDF + Linear SVM & test split & 0.7083 & 0.6930 & valid = 0.7500 / 0.7502; strongest validation result \\
+DistilBERT sequence classifier & test split & 0.5556 & 0.5620 & valid = 0.6389 / 0.6248; below both TF-IDF baselines \\
 \bottomrule
 \end{tabular}
-\caption{Main experimental results.}
+\caption{Main measured results. The heuristic pipeline is reported for end-to-end reference but is not directly split-comparable with the trained classification runs because its \texttt{items.v2} artifact is measured on the full dataset.}
 \label{tab:main-results}
 \end{table}
 
-Interpret:
-\begin{itemize}
-  \item which methods work best and why
-  \item which categories remain difficult
-  \item where OCR quality limits downstream NLP
-\end{itemize}
+The per-class F1 scores show that the task is not uniformly difficult.
+TF-IDF + Logistic Regression reaches perfect test F1 on \texttt{burgers} and
+\texttt{pizza}, and high scores on \texttt{salads} (0.9091) and
+\texttt{soups} (0.8333). The hardest class is \texttt{sides}, where the model
+reaches 0.0 test F1, followed by broader labels such as \texttt{other}
+(0.5333) and \texttt{mains} (0.5455). This pattern suggests that short menu
+texts with strong lexical anchors are easier than context-dependent categories
+whose boundaries overlap with other savory dishes.
+
+The first transformer result does not support switching away from classical
+methods yet. DistilBERT reaches only 0.5556 test accuracy and 0.5620 test
+Macro-F1 on the same fixed split. On this dataset size and label taxonomy, the
+measured evidence favors sparse lexical features over the first transformer
+configuration.
 
 \begin{table}[t]
 \centering
-\begin{tabular}{p{0.9\linewidth}}
+\small
+\begin{tabularx}{\linewidth}{p{0.31\linewidth}p{0.14\linewidth}X}
 \toprule
-Sample output goes here. \\
+Input text & Predicted category & Structured output \\
+\midrule
+Caesar with grilled chicken 210 g - 340 RUB & salads & name = Caesar with grilled chicken; price = 340 RUB; size = 210 g \\
+Tomato basil soup 300 ml - 295 RUB & soups & name = Tomato basil soup; price = 295 RUB; size = 300 ml \\
+Double cheeseburger 290 g - 540 RUB & burgers & name = Double cheeseburger; price = 540 RUB; size = 290 g \\
 \bottomrule
-\end{tabular}
-\caption{Output samples.}
-\label{tab:output}
+\end{tabularx}
+\caption{Representative outputs from the current backend parser. The service returns the same item schema for text and file-based parsing.}
+\label{tab:output-samples}
 \end{table}
+
+\subsection{Limitations}
+
+The report has four important limitations. First, \texttt{items.v2} is a
+source-grounded synthetic expansion rather than a source-faithful raw crawl, so
+the released public text is cleaner and more regular than uncontrolled menu
+captures. Second, the heuristic extraction metrics are measured on normalized
+item-level annotations and should not be read as a direct OCR robustness
+result. Third, the first transformer run is only one practical benchmark, not
+an exhaustive transformer search. Fourth, the current production parser is a
+hybrid system: category assignment is learned, but name, price, and size
+extraction remain deterministic by design.
 
 \section{Conclusion}
 
-Summarize:
-\begin{itemize}
-  \item dataset created
-  \item baselines evaluated
-  \item best-performing approach
-  \item remaining work and future improvements
-\end{itemize}
+Menu Intelligence delivers a real menu-structuring service and a measurable NLP
+pipeline behind it. The project now has a stable item-level schema, public
+dataset releases, a fixed training-ready classification dataset, measured
+heuristic and learned baselines, and a backend that uses the best measured
+classifier in production. The strongest held-out result on \texttt{items.v2}
+is TF-IDF + Logistic Regression at 0.7222 accuracy and 0.7009 Macro-F1, which
+outperforms both the Linear SVM test score and the first DistilBERT benchmark.
+
+The main remaining work is not to redesign the service but to deepen the
+evaluation. Future steps should focus on richer error analysis, better OCR
+stress tests, possible transformer follow-up experiments only if they improve
+over the classical baseline, and export of the shipped classifier to the
+planned CPU-first inference target. The core report claim is therefore modest
+but well supported: for this dataset and taxonomy, a hybrid parser with a
+classical text classifier is currently the most practical solution.
 
 \bibliographystyle{apalike}
 \bibliography{lit}
