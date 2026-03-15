@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -20,7 +21,7 @@ def test_verify_backend_runtime_script_runs() -> None:
     )
 
     completed = subprocess.run(
-        [str(REPO_ROOT / "backend/.venv/bin/python"), str(SCRIPT_PATH)],
+        [sys.executable, str(SCRIPT_PATH)],
         cwd=REPO_ROOT,
         env=environment,
         capture_output=True,
