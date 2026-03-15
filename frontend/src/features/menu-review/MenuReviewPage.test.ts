@@ -169,6 +169,29 @@ function mockFetchError(payload: ApiErrorResponseV1) {
   return fetchMock;
 }
 
+function mockDownloadApis() {
+  const createObjectURL = vi.fn(() => "blob:menu-review");
+  const revokeObjectURL = vi.fn();
+  const clickSpy = vi
+    .spyOn(HTMLAnchorElement.prototype, "click")
+    .mockImplementation(() => {});
+
+  Object.defineProperty(URL, "createObjectURL", {
+    value: createObjectURL,
+    configurable: true,
+  });
+  Object.defineProperty(URL, "revokeObjectURL", {
+    value: revokeObjectURL,
+    configurable: true,
+  });
+
+  return {
+    clickSpy,
+    createObjectURL,
+    revokeObjectURL,
+  };
+}
+
 async function selectFile(
   wrapper: ReturnType<typeof mount>,
   file: File,
@@ -340,20 +363,7 @@ describe("MenuReviewPage", () => {
 
   it("exports the current edited review state as JSON", async () => {
     mockFetchSuccess(mockResponse);
-    const createObjectURL = vi.fn(() => "blob:menu-review");
-    const revokeObjectURL = vi.fn();
-    const clickSpy = vi
-      .spyOn(HTMLAnchorElement.prototype, "click")
-      .mockImplementation(() => {});
-
-    Object.defineProperty(URL, "createObjectURL", {
-      value: createObjectURL,
-      configurable: true,
-    });
-    Object.defineProperty(URL, "revokeObjectURL", {
-      value: revokeObjectURL,
-      configurable: true,
-    });
+    const { clickSpy, createObjectURL, revokeObjectURL } = mockDownloadApis();
 
     const wrapper = mount(MenuReviewPage);
 
@@ -377,6 +387,36 @@ describe("MenuReviewPage", () => {
 
     expect(editedItem?.fields.name).toBe("Цезарь");
     expect(editedItem?.category.label).toBe("drinks_hot");
+    expect(clickSpy).toHaveBeenCalled();
+    expect(revokeObjectURL).toHaveBeenCalledWith("blob:menu-review");
+  });
+
+  it("exports the current reviewed items as CSV", async () => {
+    mockFetchSuccess(mockResponse);
+    const { createObjectURL, revokeObjectURL, clickSpy } = mockDownloadApis();
+
+    const wrapper = mount(MenuReviewPage);
+
+    await wrapper
+      .get('[data-testid="menu-text"]')
+      .setValue(
+        "САЛАТЫ\nЦезарь с курицей 250 г - 390 ₽\nЛимонад 330 мл - 250 ₽",
+      );
+    await wrapper.get('[data-testid="parse-button"]').trigger("click");
+    await flushPromises();
+
+    await wrapper.get('[data-testid="category-item_2"]').setValue("mains");
+    await wrapper.get('[data-testid="name-item_2"]').setValue("Цезарь XL");
+    await wrapper.get('[data-testid="export-csv-button"]').trigger("click");
+    await flushPromises();
+
+    const exportedBlob = createObjectURL.mock.calls[0]?.[0] as Blob;
+    const exportedText = await readBlobText(exportedBlob);
+
+    expect(exportedText).toContain("category_label");
+    expect(exportedText).toContain("\"mains\"");
+    expect(exportedText).toContain("\"Цезарь XL\"");
+    expect(exportedText).toContain("\"LOW_CONFIDENCE_CATEGORY\"");
     expect(clickSpy).toHaveBeenCalled();
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:menu-review");
   });

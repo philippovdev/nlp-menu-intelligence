@@ -52,6 +52,14 @@ const selectedFileName = computed(
   () => selectedFile.value?.name ?? "No file selected",
 );
 const documentMetadata = computed(() => result.value?.document ?? null);
+const sourceLabel = computed(() =>
+  documentMetadata.value?.source_type
+    ? formatSourceType(documentMetadata.value.source_type)
+    : "Text",
+);
+const flaggedItemsCount = computed(() =>
+  items.value.filter((item) => needsAttention(item)).length,
+);
 const extractedTextPreview = computed(() => {
   const value = result.value?.document?.extracted_text?.trim();
   return value ? value : null;
@@ -93,6 +101,7 @@ const groupedItems = computed(() => {
     return getGroupOrder(left.key) - getGroupOrder(right.key);
   });
 });
+const groupCount = computed(() => groupedItems.value.length);
 
 function isSupportedFile(file: File): boolean {
   if (supportedFileTypeSet.has(file.type)) {
@@ -209,12 +218,24 @@ function formatGroupTitle(key: string): string {
     .join(" ");
 }
 
+function formatSourceType(value: string): string {
+  if (value === "pdf") {
+    return "PDF";
+  }
+
+  if (value === "image") {
+    return "Image";
+  }
+
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
 function toNullable(value: string): string | null {
   const next = value.trim();
   return next.length > 0 ? next : null;
 }
 
-function buildExportFilename(): string {
+function buildExportFilename(extension: "csv" | "json"): string {
   const sourceName =
     result.value?.document?.filename?.replace(/\.[^.]+$/, "") ?? "menu-review";
   const safeName =
@@ -223,22 +244,20 @@ function buildExportFilename(): string {
       .replace(/[^a-zA-Z0-9_-]+/g, "-")
       .replace(/^-+|-+$/g, "") || "menu-review";
 
-  return `${safeName}-${result.value?.request_id ?? "export"}.json`;
+  return `${safeName}-${result.value?.request_id ?? "export"}.${extension}`;
 }
 
-function exportJson(): void {
-  if (!result.value) {
-    return;
-  }
-
-  const blob = new Blob([JSON.stringify(result.value, null, 2)], {
-    type: "application/json",
-  });
+function downloadFile(
+  content: string,
+  type: string,
+  extension: "csv" | "json",
+): void {
+  const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
 
   link.href = url;
-  link.download = buildExportFilename();
+  link.download = buildExportFilename(extension);
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -246,6 +265,75 @@ function exportJson(): void {
   setTimeout(() => {
     URL.revokeObjectURL(url);
   }, 0);
+}
+
+function exportJson(): void {
+  if (!result.value) {
+    return;
+  }
+
+  downloadFile(
+    JSON.stringify(result.value, null, 2),
+    "application/json",
+    "json",
+  );
+}
+
+function escapeCsvValue(value: number | string | null | undefined): string {
+  const normalized = value == null ? "" : String(value);
+  return `"${normalized.replace(/"/g, '""')}"`;
+}
+
+function exportCsv(): void {
+  if (!result.value) {
+    return;
+  }
+
+  const header = [
+    "id",
+    "line",
+    "raw",
+    "kind",
+    "category_label",
+    "category_confidence",
+    "name",
+    "description",
+    "price_value",
+    "price_currency",
+    "size_value",
+    "size_unit",
+    "overall_confidence",
+    "issue_codes",
+  ];
+  const rows = result.value.items.map((item) => {
+    const firstPrice = item.fields.prices[0];
+    const firstSize = item.fields.sizes[0];
+
+    return [
+      item.id,
+      item.source.line,
+      item.source.raw,
+      item.kind,
+      item.category.label,
+      item.category.confidence,
+      item.fields.name,
+      item.fields.description,
+      firstPrice?.value,
+      firstPrice?.currency,
+      firstSize?.value,
+      firstSize?.unit,
+      item.confidence.overall,
+      item.issues.map((issue) => issue.code).join("|"),
+    ]
+      .map((value) => escapeCsvValue(value))
+      .join(",");
+  });
+
+  downloadFile(
+    [`\uFEFF${header.join(",")}`, ...rows].join("\n"),
+    "text/csv;charset=utf-8",
+    "csv",
+  );
 }
 
 async function submit(): Promise<void> {
@@ -492,12 +580,20 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
       <div class="result-toolbar">
         <div class="summary">
           <div>
-            <span class="ds-label">Request</span>
-            <span>{{ result.request_id }}</span>
-          </div>
-          <div>
             <span class="ds-label">Items</span>
             <span>{{ result.items.length }}</span>
+          </div>
+          <div>
+            <span class="ds-label">Groups</span>
+            <span>{{ groupCount }}</span>
+          </div>
+          <div>
+            <span class="ds-label">Need review</span>
+            <span>{{ flaggedItemsCount }}</span>
+          </div>
+          <div>
+            <span class="ds-label">Source</span>
+            <span>{{ sourceLabel }}</span>
           </div>
           <div>
             <span class="ds-label">Lang</span>
@@ -506,6 +602,12 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
           <div>
             <span class="ds-label">Currency</span>
             <span>{{ result.meta.currency }}</span>
+          </div>
+          <div>
+            <span class="ds-label">Category model</span>
+            <span class="summary__value summary__value--meta">
+              {{ result.model_version.category_model }}
+            </span>
           </div>
         </div>
 
@@ -518,19 +620,35 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
           >
             Export JSON
           </button>
+          <button
+            class="ds-button ds-button--ghost"
+            data-testid="export-csv-button"
+            type="button"
+            @click="exportCsv"
+          >
+            Export CSV
+          </button>
         </div>
       </div>
 
-      <div v-if="documentMetadata" class="summary summary--document">
+      <div class="summary summary--document">
         <div>
-          <span class="ds-label">Source</span>
-          <span>{{ documentMetadata.source_type }}</span>
+          <span class="ds-label">Request</span>
+          <span class="summary__value summary__value--meta">
+            {{ result.request_id }}
+          </span>
         </div>
-        <div v-if="documentMetadata.filename">
+        <div>
+          <span class="ds-label">Fields parser</span>
+          <span class="summary__value summary__value--meta">
+            {{ result.model_version.ner_model }}
+          </span>
+        </div>
+        <div v-if="documentMetadata?.filename">
           <span class="ds-label">Filename</span>
           <span>{{ documentMetadata.filename }}</span>
         </div>
-        <div v-if="documentMetadata.ocr_used != null">
+        <div v-if="documentMetadata?.ocr_used != null">
           <span class="ds-label">OCR</span>
           <span>{{ documentMetadata.ocr_used ? "used" : "not used" }}</span>
         </div>
@@ -903,6 +1021,15 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
   gap: var(--ds-space-1);
 }
 
+.summary__value {
+  word-break: break-word;
+}
+
+.summary__value--meta {
+  color: var(--ds-color-text-soft);
+  font-size: var(--ds-font-size-small);
+}
+
 .result-toolbar {
   display: grid;
   gap: var(--ds-space-6);
@@ -910,7 +1037,9 @@ function onSizeUnitChange(item: MenuItemV1, event: Event): void {
 
 .result-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
+  gap: var(--ds-space-3);
 }
 
 .summary--document {
