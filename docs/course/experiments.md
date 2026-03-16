@@ -29,6 +29,19 @@ Secondary layer for the product pipeline.
 
 This should be reported, but not replace the item-level NLP evaluation.
 
+The repository now also includes a small real-world-style end-to-end slice:
+
+- [realworld-manifest.v1.csv](/Users/philippovdev/WebstormProjects/nlp/data/eval/realworld-manifest.v1.csv)
+- [realworld-gold.v1.jsonl](/Users/philippovdev/WebstormProjects/nlp/data/eval/realworld-gold.v1.jsonl)
+- [realworld-eval-v1.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/realworld-eval-v1.json)
+
+This slice contains `12` source-grounded examples: `4` pasted-text snippets,
+`4` embedded-text PDF fixtures, and `4` rendered image fixtures. It is meant
+to expose end-to-end OCR and parsing behavior and to provide a lightweight
+rerun path after backend changes. It should be treated as a regression-oriented
+quality check rather than as the primary benchmark, because the file-based
+examples are compact rendered fixtures rather than arbitrary real phone photos.
+
 ## Metrics
 
 ### Classification
@@ -153,3 +166,12 @@ It fine-tunes `distilbert-base-uncased` on the fixed `train` split of
 underperforms the two TF-IDF baselines, so the current evidence does not
 support replacing them yet. The repository keeps the JSON metrics artifact and
 training script, while local checkpoints under `models/` remain unversioned.
+
+The first end-to-end real-world evaluation artifact is now saved in
+[realworld-eval-v1.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/realworld-eval-v1.json).
+On this small `12`-example slice, the current deployed backend reaches exact
+text recovery, exact item-count recovery, `1.0000` category accuracy /
+`1.0000` Macro-F1, and exact normalized price/size recovery on all examples.
+Because the PDF and image cases are rendered source-grounded fixtures rather
+than arbitrary raw captures, this result is useful as a regression check but
+is still easier than open-ended production traffic.

@@ -19,6 +19,7 @@ into the report.
 | tfidf-linear-svm-v2-001 | 2026-03-15 | 2cd70b0 | v2 | classification | TF-IDF + Linear SVM | test | Macro-F1 = 0.6930 | Acc = 0.7083 | artifact: `docs/course/artifacts/tfidf-linear-svm-items-v2.json`; slightly behind Logistic Regression on held-out test |
 | transformer-classifier-v2-001 | 2026-03-15 | working-tree | v2 | classification | DistilBERT sequence classifier | valid | Macro-F1 = 0.6248 | Acc = 0.6389 | artifact: `docs/course/artifacts/transformer-classifier-items-v2.json`; `distilbert-base-uncased`, early stopping on validation Macro-F1 |
 | transformer-classifier-v2-001 | 2026-03-15 | working-tree | v2 | classification | DistilBERT sequence classifier | test | Macro-F1 = 0.5620 | Acc = 0.5556 | artifact: `docs/course/artifacts/transformer-classifier-items-v2.json`; underperforms both TF-IDF baselines on held-out test |
+| realworld-eval-v1-001 | 2026-03-15 | working-tree | realworld-v1 | end-to-end OCR + parsing | deployed backend pipeline | overall | Text token F1 = 1.0000 | Category acc = 1.0000; category Macro-F1 = 1.0000; price exact = 1.0000; size exact = 1.0000 | artifact: `docs/course/artifacts/realworld-eval-v1.json`; `12` examples (`4` text / `4` PDF / `4` image); source-grounded rendered fixtures, so this is a regression slice rather than a full raw-capture benchmark |
 
 ## What To Save For Every Run
 
@@ -68,3 +69,10 @@ For extraction runs:
   - no source leakage and no restaurant leakage across splits
   - average tokens per item = `8.70`
   - source-grounded synthetic expansion with normalized English text and normalized `RUB` prices
+
+- `realworld-eval-v1-001`: `docs/course/artifacts/realworld-eval-v1.json`
+  - 12 source-grounded examples
+  - 4 pasted-text cases, 4 embedded-text PDF cases, 4 rendered image cases
+  - paired inputs: `data/eval/realworld-manifest.v1.csv` and `data/eval/realworld-gold.v1.jsonl`
+  - perfect end-to-end recovery on the current slice
+  - intended as a small regression-oriented real-world check, not a raw phone-photo benchmark

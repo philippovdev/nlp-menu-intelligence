@@ -1,0 +1,432 @@
+{
+  "run_id": "realworld-eval-v1-001",
+  "run_date": "2026-03-16",
+  "commit_sha": null,
+  "eval_manifest_file": "data/eval/realworld-manifest.v1.csv",
+  "eval_gold_file": "data/eval/realworld-gold.v1.jsonl",
+  "example_count": 12,
+  "input_type_counts": {
+    "text": 4,
+    "pdf": 4,
+    "image": 4
+  },
+  "runtime": {
+    "version": "0.0.1",
+    "category_model": "tfidf-logreg-items-v2@1.0.0",
+    "configured_category_model": "tfidf-logreg-items-v2@1.0.0",
+    "category_model_ready": true
+  },
+  "metrics": {
+    "overall": {
+      "example_count": 12,
+      "text_quality": {
+        "exact_match_examples": 12,
+        "example_count": 12,
+        "exact_match_rate": 1.0,
+        "token_precision": 1.0,
+        "token_recall": 1.0,
+        "token_f1": 1.0
+      },
+      "item_count": {
+        "exact_match_examples": 12,
+        "example_count": 12,
+        "exact_match_rate": 1.0,
+        "gold_item_count": 24,
+        "predicted_item_count": 24
+      },
+      "category": {
+        "item_count": 24,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "per_class_f1": {
+          "breakfast": 1.0,
+          "burgers": 1.0,
+          "desserts": 1.0,
+          "drinks_cold": 1.0,
+          "drinks_hot": 1.0,
+          "mains": 1.0,
+          "other": 1.0,
+          "pasta": 1.0,
+          "pizza": 1.0,
+          "salads": 1.0,
+          "sides": 1.0,
+          "soups": 1.0
+        }
+      },
+      "field_quality": {
+        "price_exact_match": {
+          "correct": 24,
+          "total": 24,
+          "accuracy": 1.0
+        },
+        "size_exact_match": {
+          "correct": 24,
+          "total": 24,
+          "accuracy": 1.0
+        }
+      }
+    },
+    "text": {
+      "example_count": 4,
+      "text_quality": {
+        "exact_match_examples": 4,
+        "example_count": 4,
+        "exact_match_rate": 1.0,
+        "token_precision": 1.0,
+        "token_recall": 1.0,
+        "token_f1": 1.0
+      },
+      "item_count": {
+        "exact_match_examples": 4,
+        "example_count": 4,
+        "exact_match_rate": 1.0,
+        "gold_item_count": 8,
+        "predicted_item_count": 8
+      },
+      "category": {
+        "item_count": 8,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "per_class_f1": {
+          "breakfast": 1.0,
+          "burgers": 1.0,
+          "desserts": 1.0,
+          "drinks_cold": 1.0,
+          "drinks_hot": 1.0,
+          "salads": 1.0,
+          "sides": 1.0,
+          "soups": 1.0
+        }
+      },
+      "field_quality": {
+        "price_exact_match": {
+          "correct": 8,
+          "total": 8,
+          "accuracy": 1.0
+        },
+        "size_exact_match": {
+          "correct": 8,
+          "total": 8,
+          "accuracy": 1.0
+        }
+      }
+    },
+    "pdf": {
+      "example_count": 4,
+      "text_quality": {
+        "exact_match_examples": 4,
+        "example_count": 4,
+        "exact_match_rate": 1.0,
+        "token_precision": 1.0,
+        "token_recall": 1.0,
+        "token_f1": 1.0
+      },
+      "item_count": {
+        "exact_match_examples": 4,
+        "example_count": 4,
+        "exact_match_rate": 1.0,
+        "gold_item_count": 8,
+        "predicted_item_count": 8
+      },
+      "category": {
+        "item_count": 8,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "per_class_f1": {
+          "breakfast": 1.0,
+          "drinks_hot": 1.0,
+          "mains": 1.0,
+          "other": 1.0,
+          "pasta": 1.0,
+          "pizza": 1.0,
+          "salads": 1.0,
+          "soups": 1.0
+        }
+      },
+      "field_quality": {
+        "price_exact_match": {
+          "correct": 8,
+          "total": 8,
+          "accuracy": 1.0
+        },
+        "size_exact_match": {
+          "correct": 8,
+          "total": 8,
+          "accuracy": 1.0
+        }
+      }
+    },
+    "image": {
+      "example_count": 4,
+      "text_quality": {
+        "exact_match_examples": 4,
+        "example_count": 4,
+        "exact_match_rate": 1.0,
+        "token_precision": 1.0,
+        "token_recall": 1.0,
+        "token_f1": 1.0
+      },
+      "item_count": {
+        "exact_match_examples": 4,
+        "example_count": 4,
+        "exact_match_rate": 1.0,
+        "gold_item_count": 8,
+        "predicted_item_count": 8
+      },
+      "category": {
+        "item_count": 8,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "per_class_f1": {
+          "burgers": 1.0,
+          "desserts": 1.0,
+          "drinks_cold": 1.0,
+          "mains": 1.0,
+          "pasta": 1.0,
+          "pizza": 1.0,
+          "salads": 1.0,
+          "sides": 1.0
+        }
+      },
+      "field_quality": {
+        "price_exact_match": {
+          "correct": 8,
+          "total": 8,
+          "accuracy": 1.0
+        },
+        "size_exact_match": {
+          "correct": 8,
+          "total": 8,
+          "accuracy": 1.0
+        }
+      }
+    }
+  },
+  "error_summary": {
+    "failed_requests": [],
+    "text_mismatch_eval_ids": [],
+    "item_count_mismatch_eval_ids": [],
+    "category_mismatches": [],
+    "price_mismatch_examples": [],
+    "size_mismatch_examples": []
+  },
+  "examples": [
+    {
+      "eval_id": "rw_001",
+      "input_type": "text",
+      "source_id": "menu_001002",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": null
+    },
+    {
+      "eval_id": "rw_002",
+      "input_type": "text",
+      "source_id": "menu_001003",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": null
+    },
+    {
+      "eval_id": "rw_003",
+      "input_type": "text",
+      "source_id": "menu_001005",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": null
+    },
+    {
+      "eval_id": "rw_004",
+      "input_type": "text",
+      "source_id": "menu_001007",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": null
+    },
+    {
+      "eval_id": "rw_005",
+      "input_type": "pdf",
+      "source_id": "menu_001001",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": false
+    },
+    {
+      "eval_id": "rw_006",
+      "input_type": "pdf",
+      "source_id": "menu_001004",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": false
+    },
+    {
+      "eval_id": "rw_007",
+      "input_type": "pdf",
+      "source_id": "menu_001008",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": false
+    },
+    {
+      "eval_id": "rw_008",
+      "input_type": "pdf",
+      "source_id": "menu_001011",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": false
+    },
+    {
+      "eval_id": "rw_009",
+      "input_type": "image",
+      "source_id": "menu_001006",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": true
+    },
+    {
+      "eval_id": "rw_010",
+      "input_type": "image",
+      "source_id": "menu_001009",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": true
+    },
+    {
+      "eval_id": "rw_011",
+      "input_type": "image",
+      "source_id": "menu_001010",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": true
+    },
+    {
+      "eval_id": "rw_012",
+      "input_type": "image",
+      "source_id": "menu_001012",
+      "request_ok": true,
+      "status_code": 200,
+      "error_code": null,
+      "text_exact_match": true,
+      "text_token_f1": 1.0,
+      "gold_item_count": 2,
+      "predicted_item_count": 2,
+      "correct_category_count": 2,
+      "correct_price_count": 2,
+      "correct_size_count": 2,
+      "issue_codes": [],
+      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "ocr_used": true
+    }
+  ],
+  "notes": "Small source-grounded real-world evaluation slice. Text cases are pasted snippets; PDF and image cases use compact rendered fixtures anchored to the same public-source menu lines, so OCR quality here is informative but easier than arbitrary phone photos. Category, price, and size comparisons are aligned by predicted menu-item order."
+}

@@ -225,6 +225,14 @@ The quantitative comparison therefore focuses on item-level category
 classification and reports deterministic extraction only for the heuristic
 pipeline.
 
+To keep end-to-end product quality visible, the repository also includes a
+small real-world evaluation slice with 12 source-grounded examples: four
+pasted-text cases, four embedded-text PDF fixtures, and four rendered image
+fixtures. On this slice, the current deployed backend recovers text, category,
+price, and size exactly on every example. This set is useful as a lightweight
+regression check, but it is easier than arbitrary real phone photos and is not
+used as the main benchmark.
+
 \subsection{Methods}
 
 Four methods are compared in the final report:
