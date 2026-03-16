@@ -15,6 +15,8 @@ the final NLP specialization submission.
 - `results-log.md`: running experiment log template for commits, datasets, and metrics
 - `report-checklist.md`: section-by-section checklist for the final written
   report
+- `live-smoke-checklist.md`: production-facing smoke checklist for final demo
+  and submission verification
 - `workstreams.md`: implementation order for dataset, experiments, and report
   evidence
 

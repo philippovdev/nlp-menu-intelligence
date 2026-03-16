@@ -114,3 +114,4 @@ Must include:
 - reproducibility instructions are present in the repo
 - final results table is filled
 - dataset description is complete
+- live smoke is completed using `docs/course/live-smoke-checklist.md`
