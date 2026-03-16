@@ -52,7 +52,7 @@ def test_realworld_eval_script_runs_and_writes_artifact(tmp_path: Path) -> None:
 
     completed = subprocess.run(
         [
-            str(REPO_ROOT / "backend/.venv/bin/python"),
+            sys.executable,
             str(SCRIPT_PATH),
             "--output",
             str(output_path),
