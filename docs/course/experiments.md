@@ -114,6 +114,7 @@ Keep one row per experiment run.
 | TF-IDF + Linear SVM | 0.7083 | 0.6930 | N/A | items.v2 test split; valid acc = 0.7500, valid macro-F1 = 0.7502 |
 | fastText | TBD | TBD | N/A or TBD | |
 | DistilBERT sequence classifier | 0.5556 | 0.5620 | N/A | items.v2 test split; valid acc = 0.6389, valid macro-F1 = 0.6248 |
+| XLM-RoBERTa sequence classifier | 0.5556 | 0.5462 | N/A | items.v2 test split; valid acc = 0.6250, valid macro-F1 = 0.6155 |
 
 ## Error Analysis Checklist
 
@@ -166,6 +167,15 @@ It fine-tunes `distilbert-base-uncased` on the fixed `train` split of
 underperforms the two TF-IDF baselines, so the current evidence does not
 support replacing them yet. The repository keeps the JSON metrics artifact and
 training script, while local checkpoints under `models/` remain unversioned.
+
+The multilingual follow-up run is now saved in
+[transformer-multilingual-items-v2.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/transformer-multilingual-items-v2.json).
+It fine-tunes `FacebookAI/xlm-roberta-base` on the same fixed split, trains on
+`mps`, and reaches `0.6250` accuracy / `0.6155` Macro-F1 on `valid` plus
+`0.5556` accuracy / `0.5462` Macro-F1 on `test`. This remains below the
+shipped TF-IDF + Logistic Regression baseline and is also slightly below the
+earlier DistilBERT run on held-out Macro-F1, so the current evidence still
+favors the classical shipped classifier.
 
 The first end-to-end real-world evaluation artifact is now saved in
 [realworld-eval-v1.json](/Users/philippovdev/WebstormProjects/nlp/docs/course/artifacts/realworld-eval-v1.json).

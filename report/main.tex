@@ -235,19 +235,20 @@ used as the main benchmark.
 
 \subsection{Methods}
 
-Four methods are compared in the final report:
+Five methods are compared in the final report:
 \begin{itemize}
   \item heuristic end-to-end parser with keyword category rules,
   \item TF-IDF + Logistic Regression,
   \item TF-IDF + Linear SVM,
-  \item DistilBERT sequence classifier.
+  \item DistilBERT sequence classifier,
+  \item XLM-RoBERTa sequence classifier.
 \end{itemize}
 
 The heuristic system is useful as a product baseline because it runs through
 the real parser and produces both category and slot outputs. The two TF-IDF
 baselines provide direct classical comparisons on the fixed split. The
-DistilBERT run is included as the first transformer benchmark on the same
-dataset and split.
+DistilBERT and XLM-RoBERTa runs are included as practical transformer
+benchmarks on the same dataset and split.
 
 \section{Results}
 
@@ -255,8 +256,8 @@ Table~\ref{tab:main-results} summarizes the measured results already saved in
 the repository artifacts. The strongest held-out test result on
 \texttt{items.v2} is TF-IDF + Logistic Regression with 0.7222 accuracy and
 0.7009 Macro-F1. TF-IDF + Linear SVM is slightly better on the validation
-split but slightly worse on the held-out test split. The first transformer
-benchmark underperforms both classical baselines on the same data.
+split but slightly worse on the held-out test split. Both transformer runs
+underperform the classical baselines on the same data.
 
 \begin{table}[t]
 \centering
@@ -269,6 +270,7 @@ Heuristic pipeline & full \texttt{items.v2} & 0.6181 & 0.6466 & price exact = 1.
 TF-IDF + Logistic Regression & test split & 0.7222 & 0.7009 & valid = 0.7361 / 0.7302; strongest held-out test result \\
 TF-IDF + Linear SVM & test split & 0.7083 & 0.6930 & valid = 0.7500 / 0.7502; strongest validation result \\
 DistilBERT sequence classifier & test split & 0.5556 & 0.5620 & valid = 0.6389 / 0.6248; below both TF-IDF baselines \\
+XLM-RoBERTa sequence classifier & test split & 0.5556 & 0.5462 & valid = 0.6250 / 0.6155; multilingual follow-up also below the classical baselines \\
 \bottomrule
 \end{tabular}
 \caption{Main measured results. The heuristic pipeline is reported for end-to-end reference but is not directly split-comparable with the trained classification runs because its \texttt{items.v2} artifact is measured on the full dataset.}
@@ -284,11 +286,12 @@ reaches 0.0 test F1, followed by broader labels such as \texttt{other}
 texts with strong lexical anchors are easier than context-dependent categories
 whose boundaries overlap with other savory dishes.
 
-The first transformer result does not support switching away from classical
-methods yet. DistilBERT reaches only 0.5556 test accuracy and 0.5620 test
-Macro-F1 on the same fixed split. On this dataset size and label taxonomy, the
-measured evidence favors sparse lexical features over the first transformer
-configuration.
+The transformer results do not support switching away from classical methods
+yet. DistilBERT reaches 0.5556 test accuracy and 0.5620 test Macro-F1, while
+the multilingual XLM-RoBERTa follow-up reaches the same 0.5556 test accuracy
+but only 0.5462 test Macro-F1 on the same fixed split. On this dataset size
+and label taxonomy, the measured evidence still favors sparse lexical features
+over the tested transformer configurations.
 
 \begin{table}[t]
 \centering
