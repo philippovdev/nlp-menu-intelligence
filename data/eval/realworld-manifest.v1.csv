@@ -1,0 +1,13 @@
+eval_id,source_id,restaurant_id,source_type,input_type,fixture_path,source_url,subset,notes
+rw_001,menu_001002,rest_001002,html,text,,https://brunchroombistro.com/menu,text,Source-grounded pasted-text snippet with two menu items and explicit category headers.
+rw_002,menu_001003,rest_001003,html,text,,https://bistronota.com/restaurant-fort-wayne/,text,Source-grounded pasted-text snippet mixing breakfast and hot-drink items.
+rw_003,menu_001005,rest_001005,html,text,,https://www.thebistroec.com/menu,text,Source-grounded pasted-text snippet with burger and side-dish items.
+rw_004,menu_001007,rest_001007,html,text,,https://bistromenil.com/menus/,text,Source-grounded pasted-text snippet with dessert and cold-drink items.
+rw_005,menu_001001,rest_001001,pdf,pdf,data/eval/fixtures/rw_005.pdf,https://www.julii.com/pdfmenu,pdf,Rendered embedded-text PDF fixture anchored to public-source menu lines.
+rw_006,menu_001004,rest_001004,pdf,pdf,data/eval/fixtures/rw_006.pdf,https://www.parkbistrolafayette.com/eat,pdf,Rendered embedded-text PDF fixture anchored to public-source menu lines.
+rw_007,menu_001008,rest_001008,pdf,pdf,data/eval/fixtures/rw_007.pdf,https://bistronj.com/download-menus/,pdf,Rendered embedded-text PDF fixture anchored to public-source menu lines.
+rw_008,menu_001011,rest_001011,pdf,pdf,data/eval/fixtures/rw_008.pdf,https://www.ihg.com/hotelmedia/repository/concierge/MIDHA/5540/1618078762_menu.pdf,pdf,Rendered embedded-text PDF fixture anchored to public-source menu lines.
+rw_009,menu_001006,rest_001006,pdf,image,data/eval/fixtures/rw_009.jpg,https://www.fourthstreetrestaurant.com/menu/,image,"Rendered JPEG fixture with mild rotation and blur, anchored to public-source menu lines."
+rw_010,menu_001009,rest_001009,html,image,data/eval/fixtures/rw_010.png,https://bistro-72.com/menus/family-style-menu/,image,"Rendered PNG fixture with light contrast variation, anchored to public-source menu lines."
+rw_011,menu_001010,rest_001010,html,image,data/eval/fixtures/rw_011.jpg,https://www.cheersamericanbistro.com/all-day-dining/,image,"Rendered JPEG fixture with mild scan-style softness, anchored to public-source menu lines."
+rw_012,menu_001012,rest_001012,pdf,image,data/eval/fixtures/rw_012.png,https://www.ahstatic.com/pdf/9101_rsr002_00_t_x_gb.pdf,image,"Rendered PNG fixture with mild rotation and warm background, anchored to public-source menu lines."

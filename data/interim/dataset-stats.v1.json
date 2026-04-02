@@ -1,0 +1,45 @@
+{
+  "dataset_version": "v1",
+  "generated_at": "2026-03-09",
+  "dataset_file": "data/annotated/items.v1.jsonl",
+  "manifest_file": "data/raw/dataset-manifest.v1.csv",
+  "item_count": 72,
+  "restaurant_count": 12,
+  "document_count": 12,
+  "split_counts": {
+    "train": 36,
+    "valid": 18,
+    "test": 18
+  },
+  "category_counts": {
+    "breakfast": 6,
+    "burgers": 6,
+    "desserts": 6,
+    "drinks_cold": 6,
+    "drinks_hot": 6,
+    "mains": 6,
+    "other": 6,
+    "pasta": 6,
+    "pizza": 6,
+    "salads": 6,
+    "sides": 6,
+    "soups": 6
+  },
+  "category_coverage_by_split": {
+    "train": 12,
+    "valid": 12,
+    "test": 12
+  },
+  "source_type_counts": {
+    "html": 6,
+    "image": 2,
+    "pdf": 4
+  },
+  "average_tokens_per_item": 7.58,
+  "average_tokens_by_split": {
+    "train": 7.5,
+    "valid": 7.61,
+    "test": 7.72
+  },
+  "notes": "Dataset v1 is the first in-repo item-level subset with source-level split assignment. Counts are derived from annotated JSONL plus the paired source manifest."
+}

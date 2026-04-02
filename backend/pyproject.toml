@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "menu-intelligence-api"
+version = "0.0.1"
+description = "FastAPI backend for the NLP menu intelligence project"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.116.1,<1.0.0",
+  "onnxruntime>=1.24.3,<2.0.0",
+  "pillow>=11.0.0,<12.0.0",
+  "pypdf>=5.9.0,<6.0.0",
+  "pytesseract>=0.3.13,<1.0.0",
+  "python-multipart>=0.0.20,<1.0.0",
+  "rapidocr>=3.7.0,<4.0.0",
+  "scikit-learn>=1.8.0,<1.9.0",
+  "uvicorn[standard]>=0.35.0,<1.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "accelerate>=1.10.0,<2.0.0",
+  "datasets>=4.4.0,<5.0.0",
+  "httpx>=0.28.1,<1.0.0",
+  "pytest>=8.4.1,<9.0.0",
+  "scikit-learn>=1.8.0,<1.9.0",
+  "torch>=2.8.0,<3.0.0",
+  "transformers>=4.51.3,<5.0.0",
+  "ruff>=0.12.5,<1.0.0"
+]
+
+[tool.setuptools]
+packages = ["app"]
+
+[tool.setuptools.package-data]
+app = ["model_assets/*.json", "model_assets/*.pkl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]

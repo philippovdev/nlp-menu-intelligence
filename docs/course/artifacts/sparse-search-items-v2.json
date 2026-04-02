@@ -1,0 +1,5535 @@
+{
+  "run_id": "sparse-search-v2-001",
+  "run_date": "2026-03-27",
+  "dataset_file": "data/annotated/items.v2.jsonl",
+  "cv_splits": 4,
+  "candidate_count": 128,
+  "best_candidate": {
+    "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=3_5-cmin=1-C=3.0",
+    "family": "union_logreg",
+    "parameters": {
+      "word_ngram_range": [
+        1,
+        2
+      ],
+      "word_min_df": 2,
+      "word_max_df": 1.0,
+      "char_ngram_range": [
+        3,
+        5
+      ],
+      "char_min_df": 1,
+      "C": 3.0
+    },
+    "valid_accuracy": 0.7778,
+    "valid_macro_f1": 0.7781,
+    "test_accuracy": 0.7222,
+    "test_macro_f1": 0.7141
+  },
+  "candidates": [
+    {
+      "rank_index": 110,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=3_5-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6852,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6595
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.76
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7007
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6206
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 109,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=3_5-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6835,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6401
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7726
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7007
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6206
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 74,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=3_5-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6827,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6512
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7585
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7007
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6206
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 121,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=3_5-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6808,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6401
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7617
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7007
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6206
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 127,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=4_6-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6787,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6423
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7762
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6774
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6191
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 122,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=3_5-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6776,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6595
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7295
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7007
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6206
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 116,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=4_6-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6748,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6432
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7626
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6665
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6271
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 71,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=3_5-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6711,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6607
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7124
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6826
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6287
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 77,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=4_6-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6661,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6806,
+          "macro_f1": 0.659
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7182
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6616
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6255
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 128,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=4_6-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6644,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6432
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.746
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6665
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6018
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 125,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=4_6-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6643,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6708
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7172
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6616
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6077
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 113,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=4_6-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6615,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6708
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7061
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6616
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6077
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 124,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=4_6-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6566,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6425
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7265
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6616
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5959
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7781
+    },
+    {
+      "rank_index": 73,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=3_5-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6865,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6395
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7867
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7007
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6191
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 62,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=3_5-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6827,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6512
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7585
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7007
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6206
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 59,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=3_5-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6795,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6634
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7432
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6826
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6287
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 115,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=4_6-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6787,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6423
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7762
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6774
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6191
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 68,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=4_6-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6774,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6591
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.758
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6665
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6258
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 80,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=4_6-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6758,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6711
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7396
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6665
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6258
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 58,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=3_5-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6663,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6244
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7587
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6686
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6137
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 65,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=4_6-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6661,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6806,
+          "macro_f1": 0.659
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7182
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6616
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6255
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 70,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=3_5-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6619,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.622
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7432
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6686
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6137
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 112,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=4_6-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6572,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6425
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7265
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6484
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6112
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7749
+    },
+    {
+      "rank_index": 98,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=3_5-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6559,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6201
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7426
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6828
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5782
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7722
+    },
+    {
+      "rank_index": 49,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=3_5-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6788,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6576
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7548
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6774
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6256
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 37,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=3_5-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6787,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6576
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7548
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6774
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6249
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 120,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=3_5-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6779,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6054
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7777
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6705
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6581
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 108,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=3_5-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6776,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6043
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7777
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6705
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6581
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 105,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=3_5-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6759,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.62
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7642
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6785
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6409
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 117,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=3_5-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6739,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.62
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7642
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6705
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6409
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 97,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=3_5-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.673,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6549
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7561
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6774
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6036
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 85,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=3_5-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6701,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6549
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7561
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6658
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6036
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 86,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=3_5-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6559,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6201
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7426
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6828
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5782
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 94,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=3_5-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6492,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6363
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7288
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6162
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6156
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7689
+    },
+    {
+      "rank_index": 36,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=3_5-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6824,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6386
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7781
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.679
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.634
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 96,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=3_5-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6762,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6522
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7658
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6769
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.61
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 84,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=3_5-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6756,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6522
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7658
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6769
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6077
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 48,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=3_5-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6755,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6386
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7658
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6636
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.634
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 35,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=3_5-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6664,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6526
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7309
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.65
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6323
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 47,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=3_5-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6656,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6658
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7309
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.65
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6158
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 50,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=3_5-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6644,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6395
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7443
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.6955
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5782
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 81,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=3_5-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6518,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5971
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7405
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6237
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.646
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 93,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=3_5-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6498,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6077
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7405
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6237
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6274
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7659
+    },
+    {
+      "rank_index": 72,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=3_5-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6845,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6168
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7917,
+          "macro_f1": 0.792
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6705
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6587
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7657
+    },
+    {
+      "rank_index": 57,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=3_5-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6841,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.62
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7642
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6785
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6737
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7657
+    },
+    {
+      "rank_index": 60,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=3_5-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6828,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6032
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7917,
+          "macro_f1": 0.792
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6705
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6654
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7657
+    },
+    {
+      "rank_index": 69,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=3_5-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6799,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.62
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7642
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6785
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.657
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7657
+    },
+    {
+      "rank_index": 33,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=3_5-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6575,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6062
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7382
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6237
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6618
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7657
+    },
+    {
+      "rank_index": 45,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=3_5-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6575,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6062
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7382
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6237
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6618
+        }
+      ],
+      "valid_accuracy": 0.7778,
+      "valid_macro_f1": 0.7657
+    },
+    {
+      "rank_index": 107,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=3_5-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6735,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6728
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7292
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6826
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6093
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7642
+    },
+    {
+      "rank_index": 119,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=3_5-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.672,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6728
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7111
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.695
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6093
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7642
+    },
+    {
+      "rank_index": 118,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=3_5-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6672,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6506
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.742
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6686
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6077
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7642
+    },
+    {
+      "rank_index": 106,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=3_5-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6635,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6358
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.742
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6686
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6077
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7611
+    },
+    {
+      "rank_index": 16,
+      "name": "word-logreg-ngram=1_2-min_df=2-max_df=1.0-C=10.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 10.0
+      },
+      "cv_macro_f1": 0.6391,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6025
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6522
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6611
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6406
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7586
+    },
+    {
+      "rank_index": 43,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=4_6-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6749,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6076
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7835
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6736
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6348
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7573
+    },
+    {
+      "rank_index": 55,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=4_6-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6749,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6076
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7835
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6736
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6348
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7573
+    },
+    {
+      "rank_index": 91,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=4_6-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6708,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6098
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7551
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6736
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6449
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7573
+    },
+    {
+      "rank_index": 103,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=4_6-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6704,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6098
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7673
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6598
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6449
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7573
+    },
+    {
+      "rank_index": 104,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=4_6-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.648,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6114
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7486
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6468
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5851
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7573
+    },
+    {
+      "rank_index": 92,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=4_6-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6444,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.608
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7376
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6468
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5851
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7573
+    },
+    {
+      "rank_index": 61,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=3_5-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6825,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6244
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7917,
+          "macro_f1": 0.8001
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6866
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6191
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7572
+    },
+    {
+      "rank_index": 67,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=4_6-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6762,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6322
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7762
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6774
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6191
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7572
+    },
+    {
+      "rank_index": 79,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=4_6-cmin=2-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6734,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6211
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7762
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6774
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6191
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7572
+    },
+    {
+      "rank_index": 64,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=4_6-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6581,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6307
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7245
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6484
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6289
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7572
+    },
+    {
+      "rank_index": 76,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=4_6-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6554,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6196
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7246
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6484
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6289
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7572
+    },
+    {
+      "rank_index": 88,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=4_6-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6262,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5892
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.713
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5846
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.618
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7557
+    },
+    {
+      "rank_index": 100,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=4_6-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6262,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5892
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.713
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5846
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.618
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7557
+    },
+    {
+      "rank_index": 82,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=3_5-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6543,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6363
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7288
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6162
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6359
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.755
+    },
+    {
+      "rank_index": 95,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=3_5-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6447,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.637
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7288
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6188
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5943
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.752
+    },
+    {
+      "rank_index": 63,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=4_6-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6759,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6285
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7525
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6594
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6633
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7515
+    },
+    {
+      "rank_index": 75,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=4_6-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6759,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6285
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7525
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6594
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6633
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7515
+    },
+    {
+      "rank_index": 42,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=4_6-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6673,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6162
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7629
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6587
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6314
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7515
+    },
+    {
+      "rank_index": 54,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=4_6-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6673,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6162
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7629
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6587
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6314
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7515
+    },
+    {
+      "rank_index": 102,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=4_6-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6538,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5955
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7455
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6397
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6343
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7515
+    },
+    {
+      "rank_index": 90,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=4_6-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.651,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5955
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7455
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6397
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6233
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7515
+    },
+    {
+      "rank_index": 38,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=3_5-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6606,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6244
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7361,
+          "macro_f1": 0.7443
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.7083,
+          "macro_f1": 0.6955
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5782
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7474
+    },
+    {
+      "rank_index": 34,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=3_5-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6574,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6386
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7288
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6285
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6339
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7474
+    },
+    {
+      "rank_index": 46,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=3_5-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6574,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6386
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7288
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6285
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6339
+        }
+      ],
+      "valid_accuracy": 0.7639,
+      "valid_macro_f1": 0.7474
+    },
+    {
+      "rank_index": 15,
+      "name": "word-logreg-ngram=1_2-min_df=2-max_df=1.0-C=3.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6521,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6014
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6843
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6859
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6366
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.743
+    },
+    {
+      "rank_index": 11,
+      "name": "word-logreg-ngram=1_2-min_df=2-max_df=0.95-C=3.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.652,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6014
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6986
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6712
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6366
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.743
+    },
+    {
+      "rank_index": 30,
+      "name": "word-logreg-ngram=1_3-min_df=2-max_df=1.0-C=1.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6483,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5886
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6638
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6849
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.656
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.743
+    },
+    {
+      "rank_index": 26,
+      "name": "word-logreg-ngram=1_3-min_df=2-max_df=0.95-C=1.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6471,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5887
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6729
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6707
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.656
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.743
+    },
+    {
+      "rank_index": 12,
+      "name": "word-logreg-ngram=1_2-min_df=2-max_df=0.95-C=10.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 10.0
+      },
+      "cv_macro_f1": 0.6441,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6014
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6531
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6724
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6494
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7428
+    },
+    {
+      "rank_index": 31,
+      "name": "word-logreg-ngram=1_3-min_df=2-max_df=1.0-C=3.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.629,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6019
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6426
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6611
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.5972,
+          "macro_f1": 0.6103
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7428
+    },
+    {
+      "rank_index": 78,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=1.0-char=4_6-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.69,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6181
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7763
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6758
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6898
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7393
+    },
+    {
+      "rank_index": 66,
+      "name": "union-logreg-word=1_2-wmin=2-wmax=0.95-char=4_6-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6873,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6181
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7763
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6758
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6789
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7393
+    },
+    {
+      "rank_index": 114,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=4_6-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6822,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6181
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7778,
+          "macro_f1": 0.7767
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6758
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6583
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7393
+    },
+    {
+      "rank_index": 126,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=4_6-cmin=2-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6772,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6181
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7549
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6774
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6582
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7393
+    },
+    {
+      "rank_index": 123,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=1.0-char=4_6-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.674,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6423
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7525
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6379
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6633
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7393
+    },
+    {
+      "rank_index": 111,
+      "name": "union-logreg-word=1_3-wmin=2-wmax=0.95-char=4_6-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 2,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6705,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6285
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.75,
+          "macro_f1": 0.7525
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6379
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6633
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7393
+    },
+    {
+      "rank_index": 39,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=4_6-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6389,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5869
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7298
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.625,
+          "macro_f1": 0.5955
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6433
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7363
+    },
+    {
+      "rank_index": 51,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=4_6-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6389,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5869
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7298
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.625,
+          "macro_f1": 0.5955
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6433
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7363
+    },
+    {
+      "rank_index": 44,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=4_6-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6527,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6113
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7677
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6468
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5851
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7356
+    },
+    {
+      "rank_index": 56,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=4_6-cmin=2-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 2,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6527,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6113
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7639,
+          "macro_f1": 0.7677
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6468
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5851
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7356
+    },
+    {
+      "rank_index": 40,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=4_6-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6331,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6054
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.713
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5888
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6254
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7349
+    },
+    {
+      "rank_index": 52,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=4_6-cmin=1-C=1.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6271,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.6054
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.713
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5888
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6014
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7349
+    },
+    {
+      "rank_index": 83,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=3_5-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          3,
+          5
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.649,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.637
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7222,
+          "macro_f1": 0.7288
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6358
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5943
+        }
+      ],
+      "valid_accuracy": 0.75,
+      "valid_macro_f1": 0.7335
+    },
+    {
+      "rank_index": 28,
+      "name": "word-logreg-ngram=1_3-min_df=2-max_df=0.95-C=10.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 10.0
+      },
+      "cv_macro_f1": 0.6425,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6055
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6694
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6724
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6229
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7325
+    },
+    {
+      "rank_index": 32,
+      "name": "word-logreg-ngram=1_3-min_df=2-max_df=1.0-C=10.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 10.0
+      },
+      "cv_macro_f1": 0.6348,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6055
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6606
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6611
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.5972,
+          "macro_f1": 0.612
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7325
+    },
+    {
+      "rank_index": 14,
+      "name": "word-logreg-ngram=1_2-min_df=2-max_df=1.0-C=1.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6505,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5688
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7076
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6697
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.656
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 10,
+      "name": "word-logreg-ngram=1_2-min_df=2-max_df=0.95-C=1.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.647,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5688
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7076
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6555
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.656
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 2,
+      "name": "word-logreg-ngram=1_2-min_df=1-max_df=0.95-C=1.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 1,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6194,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5935
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6452
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6187
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6201
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 3,
+      "name": "word-logreg-ngram=1_2-min_df=1-max_df=0.95-C=3.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 1,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6182,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6101
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6452
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.5972,
+          "macro_f1": 0.59
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6277
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 7,
+      "name": "word-logreg-ngram=1_2-min_df=1-max_df=1.0-C=3.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 1,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6182,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6101
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6452
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.5972,
+          "macro_f1": 0.59
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6277
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 6,
+      "name": "word-logreg-ngram=1_2-min_df=1-max_df=1.0-C=1.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 1,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6174,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5935
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6452
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.625,
+          "macro_f1": 0.6107
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6201
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 8,
+      "name": "word-logreg-ngram=1_2-min_df=1-max_df=1.0-C=10.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 1,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 10.0
+      },
+      "cv_macro_f1": 0.6169,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6046
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6452
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.5972,
+          "macro_f1": 0.59
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6277
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 4,
+      "name": "word-logreg-ngram=1_2-min_df=1-max_df=0.95-C=10.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 1,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 10.0
+      },
+      "cv_macro_f1": 0.6128,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5881
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6452
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.5972,
+          "macro_f1": 0.59
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6277
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 24,
+      "name": "word-logreg-ngram=1_3-min_df=1-max_df=1.0-C=10.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 1,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 10.0
+      },
+      "cv_macro_f1": 0.6028,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5838
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6298
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5873
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6104
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 20,
+      "name": "word-logreg-ngram=1_3-min_df=1-max_df=0.95-C=10.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 1,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 10.0
+      },
+      "cv_macro_f1": 0.6019,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5838
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6263
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5873
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6104
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 19,
+      "name": "word-logreg-ngram=1_3-min_df=1-max_df=0.95-C=3.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 1,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.601,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.5764
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6298
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5873
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6104
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 23,
+      "name": "word-logreg-ngram=1_3-min_df=1-max_df=1.0-C=3.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 1,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.601,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.5764
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6298
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.5972,
+          "macro_f1": 0.5873
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6104
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7302
+    },
+    {
+      "rank_index": 27,
+      "name": "word-logreg-ngram=1_3-min_df=2-max_df=0.95-C=3.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6372,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6014
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6426
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6859
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.6189
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7277
+    },
+    {
+      "rank_index": 41,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=0.95-char=4_6-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6313,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6332
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.713
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5888
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5904
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7222
+    },
+    {
+      "rank_index": 53,
+      "name": "union-logreg-word=1_2-wmin=1-wmax=1.0-char=4_6-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          2
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6279,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6195
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.713
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5888
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5904
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7222
+    },
+    {
+      "rank_index": 89,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=4_6-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6261,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6174
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.713
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5888
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5853
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7221
+    },
+    {
+      "rank_index": 87,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=0.95-char=4_6-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 0.95,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6299,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5923
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7144
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5845
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6284
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7214
+    },
+    {
+      "rank_index": 99,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=4_6-cmin=1-C=0.3",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.625,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5923
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.7144
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5845
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6088
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.7214
+    },
+    {
+      "rank_index": 1,
+      "name": "word-logreg-ngram=1_2-min_df=1-max_df=0.95-C=0.3",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 1,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6095,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5915
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.625,
+          "macro_f1": 0.6051
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6049
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6365
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.717
+    },
+    {
+      "rank_index": 5,
+      "name": "word-logreg-ngram=1_2-min_df=1-max_df=1.0-C=0.3",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 1,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6095,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5915
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.625,
+          "macro_f1": 0.6051
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6049
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6365
+        }
+      ],
+      "valid_accuracy": 0.7361,
+      "valid_macro_f1": 0.717
+    },
+    {
+      "rank_index": 29,
+      "name": "word-logreg-ngram=1_3-min_df=2-max_df=1.0-C=0.3",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6481,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5946
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6464
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6835
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6667,
+          "macro_f1": 0.6678
+        }
+      ],
+      "valid_accuracy": 0.7222,
+      "valid_macro_f1": 0.7153
+    },
+    {
+      "rank_index": 22,
+      "name": "word-logreg-ngram=1_3-min_df=1-max_df=1.0-C=1.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 1,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6086,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5897
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6259
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5988
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6201
+        }
+      ],
+      "valid_accuracy": 0.7222,
+      "valid_macro_f1": 0.7121
+    },
+    {
+      "rank_index": 18,
+      "name": "word-logreg-ngram=1_3-min_df=1-max_df=0.95-C=1.0",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 1,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 1.0
+      },
+      "cv_macro_f1": 0.6077,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5897
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6221
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5988
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.625,
+          "macro_f1": 0.6201
+        }
+      ],
+      "valid_accuracy": 0.7222,
+      "valid_macro_f1": 0.7121
+    },
+    {
+      "rank_index": 13,
+      "name": "word-logreg-ngram=1_2-min_df=2-max_df=1.0-C=0.3",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6584,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5946
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6836
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6803
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6752
+        }
+      ],
+      "valid_accuracy": 0.7222,
+      "valid_macro_f1": 0.711
+    },
+    {
+      "rank_index": 9,
+      "name": "word-logreg-ngram=1_2-min_df=2-max_df=0.95-C=0.3",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          2
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6578,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.5946
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6944,
+          "macro_f1": 0.6812
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6803
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6752
+        }
+      ],
+      "valid_accuracy": 0.7222,
+      "valid_macro_f1": 0.711
+    },
+    {
+      "rank_index": 101,
+      "name": "union-logreg-word=1_3-wmin=1-wmax=1.0-char=4_6-cmin=1-C=3.0",
+      "family": "union_logreg",
+      "parameters": {
+        "word_ngram_range": [
+          1,
+          3
+        ],
+        "word_min_df": 1,
+        "word_max_df": 1.0,
+        "char_ngram_range": [
+          4,
+          6
+        ],
+        "char_min_df": 1,
+        "C": 3.0
+      },
+      "cv_macro_f1": 0.6261,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6174
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.7083,
+          "macro_f1": 0.713
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5888
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5853
+        }
+      ],
+      "valid_accuracy": 0.7222,
+      "valid_macro_f1": 0.7103
+    },
+    {
+      "rank_index": 21,
+      "name": "word-logreg-ngram=1_3-min_df=1-max_df=1.0-C=0.3",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 1,
+        "max_df": 1.0,
+        "sublinear_tf": true,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6037,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.625,
+          "macro_f1": 0.5784
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.625,
+          "macro_f1": 0.6051
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5949
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6365
+        }
+      ],
+      "valid_accuracy": 0.7222,
+      "valid_macro_f1": 0.7058
+    },
+    {
+      "rank_index": 17,
+      "name": "word-logreg-ngram=1_3-min_df=1-max_df=0.95-C=0.3",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 1,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6009,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5671
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.625,
+          "macro_f1": 0.6051
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6111,
+          "macro_f1": 0.5949
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6389,
+          "macro_f1": 0.6365
+        }
+      ],
+      "valid_accuracy": 0.7222,
+      "valid_macro_f1": 0.7058
+    },
+    {
+      "rank_index": 25,
+      "name": "word-logreg-ngram=1_3-min_df=2-max_df=0.95-C=0.3",
+      "family": "word_logreg",
+      "parameters": {
+        "ngram_range": [
+          1,
+          3
+        ],
+        "min_df": 2,
+        "max_df": 0.95,
+        "sublinear_tf": true,
+        "C": 0.3
+      },
+      "cv_macro_f1": 0.6453,
+      "cv_folds": [
+        {
+          "fold": 1,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6066
+        },
+        {
+          "fold": 2,
+          "accuracy": 0.6528,
+          "macro_f1": 0.6464
+        },
+        {
+          "fold": 3,
+          "accuracy": 0.6806,
+          "macro_f1": 0.6803
+        },
+        {
+          "fold": 4,
+          "accuracy": 0.6528,
+          "macro_f1": 0.648
+        }
+      ],
+      "valid_accuracy": 0.7083,
+      "valid_macro_f1": 0.6972
+    }
+  ]
+}

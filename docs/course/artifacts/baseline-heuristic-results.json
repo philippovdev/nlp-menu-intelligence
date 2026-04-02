@@ -1,0 +1,36 @@
+{
+  "run_id": "baseline-heuristic-001",
+  "run_date": "2026-03-09",
+  "commit_sha": "b5c036946a983ae909e363df02124d2d31038633",
+  "dataset_file": "data/annotated/items.sample.jsonl",
+  "method": "heuristic_pipeline",
+  "metrics": {
+    "item_count": 10,
+    "category_accuracy": 0.9,
+    "category_macro_f1": 0.8182,
+    "category_per_class_f1": {
+      "breakfast": 0.0,
+      "desserts": 1.0,
+      "drinks_cold": 1.0,
+      "drinks_hot": 1.0,
+      "mains": 1.0,
+      "other": 0.0,
+      "pasta": 1.0,
+      "pizza": 1.0,
+      "salads": 1.0,
+      "sides": 1.0,
+      "soups": 1.0
+    },
+    "price_exact_match": {
+      "correct": 10,
+      "total": 10,
+      "accuracy": 1.0
+    },
+    "size_exact_match": {
+      "correct": 10,
+      "total": 10,
+      "accuracy": 1.0
+    }
+  },
+  "notes": "Item-level heuristic baseline using the current deterministic parser and keyword categorizer. Macro-F1 is computed over labels observed in this evaluation file. Price and size use exact-match on normalized lists."
+}
