@@ -25,11 +25,13 @@ field extraction for names, prices, and sizes. The final course dataset is
 \texttt{items.v2.jsonl}, a derived item-level dataset with
 432 annotated menu items from 12 public restaurant or hotel dining sources,
 using source-level train/validation/test splits. On the held-out
-\texttt{items.v2} test split, the strongest model is a TF-IDF word/character
-n-gram feature union with Logistic Regression, which reaches 0.7361 accuracy
-and 0.7254 Macro-F1. This classifier is the current backend category model,
-while menu item field extraction remains deterministic. The repository is
-available at
+\texttt{items.v2} test split, the strongest category model is an enriched
+sparse Logistic Regression pipeline that combines raw-text TF-IDF, cleaned
+item-name TF-IDF, and structured slot-derived features; it reaches 0.8750
+accuracy and 0.8708 Macro-F1. For Task B, the repository includes a BIO2
+export of the item-level dataset together with deterministic and learned BIO2
+extraction baselines. Both reach perfect token-level and entity-level F1 on
+the normalized validation and test splits. The repository is available at
 \url{https://github.com/philippovdev/nlp-menu-intelligence}.
 \end{abstract}
 
@@ -128,14 +130,16 @@ extracts the item name, price list, and size list before the service returns a
 structured JSON response for review.
 
 The deployed classification stage is now model-backed. The backend ships a
-scikit-learn TF-IDF word/character feature union with Logistic Regression
-trained on \texttt{items.v2.jsonl}, loads it at application startup, and uses
-it as the default item-level category predictor. Deterministic extraction
-remains rule-based. If the classifier artifact is unavailable or model
-confidence is too weak, the parser falls back to conservative heuristic
+scikit-learn enriched sparse Logistic Regression classifier trained on
+\texttt{items.v2.jsonl}, loads it at application startup, and uses it as the
+default item-level category predictor. The feature set combines raw item text,
+cleaned item name, and deterministic slot-derived indicators such as size
+bucket, unit type, and small category-specific lexical flags. Deterministic
+extraction remains rule-based. If the classifier artifact is unavailable or
+model confidence is too weak, the parser falls back to conservative heuristic
 categorization. This design keeps category prediction learned, field
 extraction deterministic, and runtime behavior explicit. ONNX remains a future
-export target rather than the current shipped runtime.
+export target rather than the deployed runtime.
 
 \begin{figure}[t]
 \centering
@@ -143,8 +147,8 @@ export target rather than the current shipped runtime.
 \textbf{Current system pipeline.}
 Text / PDF / image input $\rightarrow$ text extraction $\rightarrow$ line
 splitting and normalization $\rightarrow$ header, item, and noise detection
-$\rightarrow$ TF-IDF word/character union + Logistic Regression category
-prediction with heuristic fallback $\rightarrow$ deterministic name, price,
+$\rightarrow$ enriched sparse Logistic Regression category prediction with
+heuristic fallback $\rightarrow$ deterministic name, price,
 and size extraction $\rightarrow$ structured JSON response and review UI.
 }}
 \caption{Pipeline overview of the current parsing pipeline from document intake to structured JSON output.}
@@ -169,6 +173,12 @@ small first experimental subset used for early classical baselines.
 classification comparison and the shipped backend model. The paired manifest
 stores public source provenance, collection date, source type, license note,
 and notes, while raw captures remain outside git.
+
+The project also exports \texttt{data/interim/items.v2.bio2.jsonl}, which
+aligns the structured slots back to whitespace-tokenized menu item text using
+BIO2 tags for \texttt{NAME}, \texttt{PRICE}, and \texttt{SIZE}. The released
+dataset does not contain description spans, so \texttt{DESC} remains part of
+the annotation policy but not of the active BIO2 label set.
 
 The report uses \texttt{items.v2} as the fixed evaluation dataset. It contains
 432 annotated menu items from 12 public restaurant or hotel dining sources,
@@ -237,33 +247,42 @@ used as the main benchmark.
 
 \subsection{Methods}
 
-Seven methods are compared:
+Eight methods are compared for category classification:
 \begin{itemize}
   \item heuristic end-to-end parser with keyword category rules,
   \item TF-IDF + Logistic Regression,
   \item TF-IDF + Linear SVM,
   \item TF-IDF word/char union + Logistic Regression,
+  \item enriched sparse Logistic Regression,
   \item TF-IDF + sigmoid-calibrated Linear SVM,
   \item DistilBERT sequence classifier,
   \item XLM-RoBERTa sequence classifier.
 \end{itemize}
 
 The heuristic system is useful as a product baseline because it runs through
-the real parser and produces both category and slot outputs. The two TF-IDF
-baselines provide direct classical comparisons on the fixed split. The
-DistilBERT and XLM-RoBERTa runs are included as practical transformer
-benchmarks on the same dataset and split.
+the real parser and produces both category and slot outputs. The sparse
+classical runs range from plain TF-IDF baselines to richer text-plus-slot
+feature pipelines. The DistilBERT and XLM-RoBERTa runs are included as
+transformer comparison baselines on the same dataset and split.
+
+For Task B, the report uses a BIO2 export to evaluate the deterministic
+extractor in token-labeling form and to train a small contextual
+LogisticRegression tagger on the same BIO2 records. This gives a consistent
+extraction benchmark and shows that slot recovery on the released dataset is
+considerably easier than category classification.
 
 \section{Results}
 
-Table~\ref{tab:main-results} summarizes the measured results already saved in
-the repository artifacts. The strongest held-out test result on
-\texttt{items.v2} is TF-IDF word/char union + Logistic Regression with 0.7361
-accuracy and 0.7254 Macro-F1. Plain TF-IDF + Logistic Regression reaches
+Table~\ref{tab:main-results} summarizes the measured results saved in the
+repository artifacts. The best test result on
+\texttt{items.v2} is the enriched sparse Logistic Regression model with 0.8750
+accuracy and 0.8708 Macro-F1. Plain TF-IDF + Logistic Regression reaches
 0.7222 accuracy and 0.7009 Macro-F1, while TF-IDF + Linear SVM reaches 0.7083
-accuracy and 0.6930 Macro-F1 on the same test split. The probability-aware
-calibrated Linear SVM remains below the union model, and the two tested
-transformer baselines also underperform the strongest sparse feature pipeline.
+accuracy and 0.6930 Macro-F1 on the same test split. The earlier TF-IDF
+word/char union model improves over the plain baseline but remains well below
+the enriched feature set. The probability-aware calibrated Linear SVM also
+stays below the best sparse model, and the two tested transformer baselines
+underperform the strongest classical pipeline.
 
 \begin{table}[t]
 \centering
@@ -275,38 +294,48 @@ Method & Evaluation set & Accuracy & Macro-F1 & Notes \\
 Heuristic pipeline & full \texttt{items.v2} & 0.6181 & 0.6466 & price exact = 1.0000; size exact = 1.0000; not split-comparable \\
 TF-IDF + Logistic Regression & test split & 0.7222 & 0.7009 & valid = 0.7361 / 0.7302; strongest plain word-TF-IDF baseline \\
 TF-IDF + Linear SVM & test split & 0.7083 & 0.6930 & valid = 0.7500 / 0.7502; stronger validation than plain logistic regression, weaker held-out test \\
-TF-IDF word/char union + Logistic Regression & test split & 0.7361 & 0.7254 & valid = 0.7778 / 0.7749; strongest held-out test result and current shipped classifier \\
+TF-IDF word/char union + Logistic Regression & test split & 0.7361 & 0.7254 & valid = 0.7778 / 0.7749; previous shipped sparse baseline \\
+Enriched sparse Logistic Regression & test split & 0.8750 & 0.8708 & valid = 0.8056 / 0.8065; backend classifier using text, name, and slot-derived features \\
 TF-IDF + sigmoid-calibrated Linear SVM & test split & 0.7083 & 0.6900 & valid = 0.7500 / 0.7431; probability-aware SVM comparison, still below the union model \\
 DistilBERT sequence classifier & test split & 0.5556 & 0.5620 & valid = 0.6389 / 0.6248; below both TF-IDF baselines \\
-XLM-RoBERTa sequence classifier & test split & 0.5556 & 0.5462 & valid = 0.6250 / 0.6155; multilingual follow-up also below the classical baselines \\
+XLM-RoBERTa sequence classifier & test split & 0.5556 & 0.5462 & valid = 0.6250 / 0.6155; multilingual baseline also below the classical baselines \\
 \bottomrule
 \end{tabularx}
 \caption{Main measured results. The heuristic pipeline is reported for end-to-end reference but is not directly split-comparable with the trained classification runs because its \texttt{items.v2} artifact is measured on the full dataset.}
 \label{tab:main-results}
 \end{table}
 
-The per-class F1 scores show that the task is not uniformly difficult. The
-shipped TF-IDF word/char union + Logistic Regression model reaches perfect
-test F1 on \texttt{burgers} and \texttt{pizza}, and strong scores on
-\texttt{desserts}, \texttt{drinks\_cold}, and \texttt{salads} (all 0.9091).
-The hardest classes are \texttt{sides} (0.0), \texttt{mains} (0.3636), and
-\texttt{other} (0.5263). The dominant confusion is \texttt{sides}
-$\rightarrow$ \texttt{other}, with smaller overlaps between
-\texttt{drinks\_cold} and \texttt{drinks\_hot}, and between broad savory
-categories such as \texttt{mains}, \texttt{soups}, and \texttt{breakfast}.
-This pattern suggests that short menu texts with strong lexical anchors are
-easier than context-dependent categories whose boundaries overlap with other
-savory dishes.
+The per-class F1 scores show that the task is still not uniformly difficult,
+but the enriched sparse model reduces several of the earlier failure modes. It
+reaches perfect held-out F1 on \texttt{breakfast}, \texttt{burgers},
+\texttt{desserts}, \texttt{drinks\_hot}, \texttt{pizza}, and
+\texttt{salads}, while the weakest remaining labels are \texttt{sides}
+(0.4444), \texttt{other} (0.6250), \texttt{soups} (0.8000), and
+\texttt{mains} (0.8000). The dominant residual confusion remains
+\texttt{sides} $\rightarrow$ \texttt{other}, which suggests that item text
+alone is still insufficient to fully separate those two categories without
+section-header context or a tighter label policy.
 
 The transformer results do not support switching away from classical methods
 yet. DistilBERT reaches 0.5556 test accuracy and 0.5620 test Macro-F1, while
-the multilingual XLM-RoBERTa follow-up reaches the same 0.5556 test accuracy
+the multilingual XLM-RoBERTa baseline reaches the same 0.5556 test accuracy
 but only 0.5462 test Macro-F1 on the same fixed split. On this dataset size
 and label taxonomy, the measured evidence still favors sparse lexical features
-over the tested transformer configurations. The union model likely benefits
-from the combination of short menu texts, strong lexical anchors, and
-character n-grams that help absorb noisy spelling, morphology, transliteration,
-and OCR-like variation.
+over the tested transformer configurations. The strongest model benefits from
+the combination of short menu texts, strong lexical anchors, char n-grams, and
+deterministic slot-derived features that inject structure without requiring a
+large learned encoder.
+
+Task B is much easier on the released dataset. After exporting
+\texttt{items.v2} into BIO2 tags for \texttt{NAME}, \texttt{PRICE}, and
+\texttt{SIZE}, both the deterministic extractor and the contextual
+LogisticRegression token tagger reach 1.0000 token-level and entity-level
+micro-F1 on validation and test. This serves as a consistency check and also
+shows that the released dataset is comparatively simple for slot recovery:
+the normalized item texts and deterministic slot rules align closely, and even
+a small learned tagger recovers the same spans without difficulty. The main
+modeling challenge in this project is therefore category prediction rather
+than slot extraction.
 
 \begin{table}[t]
 \centering
@@ -342,18 +371,23 @@ Menu Intelligence delivers a real menu-structuring service and a measurable NLP
 pipeline behind it. The project now has a stable item-level schema, public
 dataset releases, a fixed training-ready classification dataset, measured
 heuristic and learned baselines, and a backend that uses the best measured
-classifier in production. The strongest held-out result on \texttt{items.v2}
-is TF-IDF word/char union + Logistic Regression at 0.7361 accuracy and 0.7254
-Macro-F1, which outperforms the plain TF-IDF baselines, the calibrated Linear
-SVM comparison, and the tested transformer runs.
+classifier in production. The best category result on
+\texttt{items.v2} is the enriched sparse Logistic Regression model at 0.8750
+accuracy and 0.8708 Macro-F1, which outperforms the plain TF-IDF baselines,
+the earlier word/char union model, the calibrated Linear SVM comparison, and
+the tested transformer runs. Task B is covered by a BIO2 export and by both
+deterministic and learned extraction baselines, which confirm perfect slot
+recovery on the normalized validation and test splits.
 
 The main remaining work is not to redesign the service but to deepen the
 evaluation. Future steps should focus on richer error analysis, better OCR
-stress tests, possible transformer follow-up experiments only if they improve
-over the classical baseline, and ONNX export only after it can preserve the
-current sparse-model quality. The core report claim is therefore modest but
-well supported: for this dataset and taxonomy, a hybrid parser with OCR or PDF
-ingestion upstream, a sparse learned category model, and deterministic field
+stress tests, context-aware category modeling for labels such as
+\texttt{sides} and \texttt{other}, possible transformer comparisons
+only if they improve over the classical baseline, and ONNX export only after
+it can preserve the current sparse-model quality. The core report claim is
+therefore modest but well supported: for this dataset and taxonomy, a hybrid
+parser with OCR or PDF ingestion upstream, a sparse learned category model,
+and deterministic field
 extraction is currently the most practical solution.
 
 \bibliographystyle{apalike}

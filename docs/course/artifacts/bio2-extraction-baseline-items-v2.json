@@ -1,0 +1,59 @@
+{
+  "run_id": "bio2-extraction-baseline-v2-001",
+  "run_date": "2026-04-03",
+  "commit_sha": "working-tree",
+  "dataset_file": "data/annotated/items.v2.jsonl",
+  "method": "deterministic_bio2_extraction_baseline",
+  "entity_labels": [
+    "NAME",
+    "PRICE",
+    "SIZE"
+  ],
+  "valid_metrics": {
+    "item_count": 72,
+    "token_count": 628,
+    "entity_count": 216,
+    "token_micro_precision": 1.0,
+    "token_micro_recall": 1.0,
+    "token_micro_f1": 1.0,
+    "token_macro_f1": 1.0,
+    "token_per_label_f1": {
+      "NAME": 1.0,
+      "PRICE": 1.0,
+      "SIZE": 1.0
+    },
+    "entity_micro_precision": 1.0,
+    "entity_micro_recall": 1.0,
+    "entity_micro_f1": 1.0,
+    "entity_macro_f1": 1.0,
+    "entity_per_label_f1": {
+      "NAME": 1.0,
+      "PRICE": 1.0,
+      "SIZE": 1.0
+    }
+  },
+  "test_metrics": {
+    "item_count": 72,
+    "token_count": 625,
+    "entity_count": 216,
+    "token_micro_precision": 1.0,
+    "token_micro_recall": 1.0,
+    "token_micro_f1": 1.0,
+    "token_macro_f1": 1.0,
+    "token_per_label_f1": {
+      "NAME": 1.0,
+      "PRICE": 1.0,
+      "SIZE": 1.0
+    },
+    "entity_micro_precision": 1.0,
+    "entity_micro_recall": 1.0,
+    "entity_micro_f1": 1.0,
+    "entity_macro_f1": 1.0,
+    "entity_per_label_f1": {
+      "NAME": 1.0,
+      "PRICE": 1.0,
+      "SIZE": 1.0
+    }
+  },
+  "notes": "Deterministic extraction baseline converted into BIO2 tags on the fixed dataset splits. Gold tags are derived from structured slot annotations with substring alignment for name and surface-fragment alignment for price and size spans."
+}

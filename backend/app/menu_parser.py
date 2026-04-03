@@ -363,6 +363,11 @@ def parse_menu_text(
             sizes = []
             price_fragments = []
             size_fragments = []
+        name = (
+            derive_name(normalized, size_fragments, price_fragments)
+            if kind == "menu_item"
+            else None
+        )
 
         issue_codes: list[str] = []
         internal_category: str | None = None
@@ -387,11 +392,17 @@ def parse_menu_text(
                 else None
             )
             if category_classifier is not None:
-                model_prediction = category_classifier.predict(
-                    text=normalized,
-                    allowed_labels=allowed_labels,
-                    reducer=reduce_category,
-                )
+                if contains_latin_letters(name or normalized):
+                    model_prediction = category_classifier.predict(
+                        text=normalized,
+                        name=name,
+                        prices=prices,
+                        sizes=sizes,
+                        allowed_labels=allowed_labels,
+                        reducer=reduce_category,
+                    )
+                else:
+                    issue_codes.append("CATEGORY_MODEL_LOW_CONFIDENCE")
 
             should_use_model = (
                 model_prediction is not None and category_classifier.is_confident(model_prediction)
@@ -437,11 +448,6 @@ def parse_menu_text(
 
         if output_category is None:
             output_category = reduce_category(internal_category, allowed_labels)
-        name = (
-            derive_name(normalized, size_fragments, price_fragments)
-            if kind == "menu_item"
-            else None
-        )
 
         if kind == "menu_item":
             if not prices:
@@ -878,6 +884,10 @@ def canonical_category_text(text: str) -> str:
     lowered = NON_LETTER_PATTERN.sub(" ", lowered)
     lowered = MULTISPACE_PATTERN.sub(" ", lowered)
     return lowered.strip()
+
+
+def contains_latin_letters(text: str) -> bool:
+    return any(char.isascii() and char.isalpha() for char in text)
 
 
 def has_price_signal(line: str) -> bool:

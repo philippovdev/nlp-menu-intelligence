@@ -65,6 +65,17 @@ Derived exports are used for classification tables and optional BIO2-style
 extraction experiments. Annotation rules are documented in
 [annotation-guide.md](annotation-guide.md).
 
+The repository now also includes a BIO2 export derived from the structured
+slots:
+
+- [items.v2.bio2.jsonl](../../data/interim/items.v2.bio2.jsonl)
+
+Each row preserves the original item metadata plus whitespace-tokenized
+`tokens` and aligned BIO2 `tags` for `NAME`, `PRICE`, and `SIZE`. `DESC` is
+part of the annotation policy, but the released datasets do not contain
+description spans, so the active BIO2 export is intentionally limited to the
+three populated entity types.
+
 ## Label Set
 
 The active category set contains 12 labels:
@@ -99,7 +110,7 @@ Small starter files remain in the repository for tests and schema examples:
 
 ### v1
 
-The first in-repo experimental subset is:
+The first experimental subset is:
 
 - [items.v1.jsonl](../../data/annotated/items.v1.jsonl)
 - [dataset-manifest.v1.csv](../../data/raw/dataset-manifest.v1.csv)

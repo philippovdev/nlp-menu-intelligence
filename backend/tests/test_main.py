@@ -126,7 +126,7 @@ def test_parse_menu_uses_keyword_fallback_and_category_reduction(client: TestCli
 
     line = payload["items"][0]
     assert line["kind"] == "menu_item"
-    assert line["category"] == {"label": "drinks", "confidence": 0.5}
+    assert line["category"] == {"label": "drinks", "confidence": 0.98}
     assert line["fields"] == {
         "name": "Americano",
         "description": None,
@@ -162,7 +162,7 @@ def test_parse_menu_detects_noise_and_multiple_values(client: TestClient) -> Non
 
     pizza = payload["items"][1]
     assert pizza["kind"] == "menu_item"
-    assert pizza["category"] == {"label": "mains", "confidence": 0.83}
+    assert pizza["category"] == {"label": "mains", "confidence": 0.97}
     assert pizza["fields"]["prices"] == [
         {"value": 590, "currency": "RUB", "raw": "590"},
         {"value": 790, "currency": "RUB", "raw": "790"},
@@ -240,7 +240,7 @@ def test_parse_menu_uses_full_default_taxonomy_when_labels_are_omitted(client: T
     assert response.status_code == 200
     assert response.json()["items"][0]["category"] == {
         "label": "pizza",
-        "confidence": 0.72,
+        "confidence": 0.96,
     }
 
 

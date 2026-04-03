@@ -1,0 +1,78 @@
+{
+  "run_id": "bio2-token-logreg-v2-001",
+  "run_date": "2026-04-03",
+  "commit_sha": null,
+  "scikit_learn_version": "1.8.0",
+  "dataset_file": "data/interim/items.v2.bio2.jsonl",
+  "method": "contextual_logistic_regression_token_classifier",
+  "train_item_count": 288,
+  "train_token_count": 2505,
+  "tag_order": [
+    "B-NAME",
+    "B-PRICE",
+    "B-SIZE",
+    "I-NAME",
+    "I-PRICE",
+    "I-SIZE",
+    "O"
+  ],
+  "parameters": {
+    "context_window": 2,
+    "regularization_c": 4.0,
+    "max_iter": 2500,
+    "class_weight": "balanced",
+    "entity_labels": [
+      "NAME",
+      "PRICE",
+      "SIZE"
+    ]
+  },
+  "model_file": "models/bio2-token-logreg-items-v2.pkl",
+  "valid_metrics": {
+    "item_count": 72,
+    "token_count": 628,
+    "entity_count": 216,
+    "token_micro_precision": 1.0,
+    "token_micro_recall": 1.0,
+    "token_micro_f1": 1.0,
+    "token_macro_f1": 1.0,
+    "token_per_label_f1": {
+      "NAME": 1.0,
+      "PRICE": 1.0,
+      "SIZE": 1.0
+    },
+    "entity_micro_precision": 1.0,
+    "entity_micro_recall": 1.0,
+    "entity_micro_f1": 1.0,
+    "entity_macro_f1": 1.0,
+    "entity_per_label_f1": {
+      "NAME": 1.0,
+      "PRICE": 1.0,
+      "SIZE": 1.0
+    }
+  },
+  "test_metrics": {
+    "item_count": 72,
+    "token_count": 625,
+    "entity_count": 216,
+    "token_micro_precision": 1.0,
+    "token_micro_recall": 1.0,
+    "token_micro_f1": 1.0,
+    "token_macro_f1": 1.0,
+    "token_per_label_f1": {
+      "NAME": 1.0,
+      "PRICE": 1.0,
+      "SIZE": 1.0
+    },
+    "entity_micro_precision": 1.0,
+    "entity_micro_recall": 1.0,
+    "entity_micro_f1": 1.0,
+    "entity_macro_f1": 1.0,
+    "entity_per_label_f1": {
+      "NAME": 1.0,
+      "PRICE": 1.0,
+      "SIZE": 1.0
+    }
+  },
+  "notes": "BIO2 token classifier trained on whitespace-tokenized item text using contextual token features and LogisticRegression. Predictions are repaired to valid BIO2 boundaries before entity scoring."
+}

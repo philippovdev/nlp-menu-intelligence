@@ -4,6 +4,11 @@ import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
+from app.category_model_features import (
+    RECORD_INPUT_FORMAT,
+    TEXT_INPUT_FORMAT,
+    build_category_model_record,
+)
 from dataset_common import AnnotatedItem
 from pydantic import BaseModel, ConfigDict
 from sklearn import __version__ as sklearn_version
@@ -107,13 +112,34 @@ def build_label_order(items: list[AnnotatedItem]) -> list[str]:
     return sorted({item.category for item in items})
 
 
+def build_model_inputs(
+    items: list[AnnotatedItem],
+    *,
+    input_format: str = TEXT_INPUT_FORMAT,
+) -> list[object]:
+    if input_format == TEXT_INPUT_FORMAT:
+        return [item.text for item in items]
+    if input_format == RECORD_INPUT_FORMAT:
+        return [
+            build_category_model_record(
+                text=item.text,
+                name=item.slots.name,
+                prices=item.slots.prices,
+                sizes=item.slots.sizes,
+            )
+            for item in items
+        ]
+    raise ValueError(f"Unsupported category model input format: {input_format}")
+
+
 def evaluate_split(
     *,
     pipeline: Pipeline,
     items: list[AnnotatedItem],
     label_order: list[str],
+    input_format: str = TEXT_INPUT_FORMAT,
 ) -> SplitMetrics:
-    texts = [item.text for item in items]
+    texts = build_model_inputs(items, input_format=input_format)
     gold = [item.category for item in items]
     predicted = pipeline.predict(texts).tolist()
     return build_split_metrics(gold=gold, predicted=predicted, label_order=label_order)

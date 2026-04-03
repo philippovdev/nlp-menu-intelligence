@@ -1,6 +1,6 @@
 {
   "run_id": "realworld-eval-v1-001",
-  "run_date": "2026-03-16",
+  "run_date": "2026-04-03",
   "commit_sha": null,
   "eval_manifest_file": "data/eval/realworld-manifest.v1.csv",
   "eval_gold_file": "data/eval/realworld-gold.v1.jsonl",
@@ -12,8 +12,8 @@
   },
   "runtime": {
     "version": "0.0.1",
-    "category_model": "tfidf-logreg-items-v2@1.0.0",
-    "configured_category_model": "tfidf-logreg-items-v2@1.0.0",
+    "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
+    "configured_category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
     "category_model_ready": true
   },
   "metrics": {
@@ -226,7 +226,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": null
     },
     {
@@ -244,7 +244,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": null
     },
     {
@@ -262,7 +262,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": null
     },
     {
@@ -280,7 +280,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": null
     },
     {
@@ -298,7 +298,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": false
     },
     {
@@ -316,7 +316,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": false
     },
     {
@@ -334,7 +334,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": false
     },
     {
@@ -352,7 +352,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": false
     },
     {
@@ -370,7 +370,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": true
     },
     {
@@ -388,7 +388,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": true
     },
     {
@@ -406,7 +406,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": true
     },
     {
@@ -424,7 +424,7 @@
       "correct_price_count": 2,
       "correct_size_count": 2,
       "issue_codes": [],
-      "category_model": "tfidf-logreg-items-v2@1.0.0",
+      "category_model": "tfidf-enriched-logreg-items-v2@1.2.0",
       "ocr_used": true
     }
   ],

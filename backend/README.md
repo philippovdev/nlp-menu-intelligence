@@ -25,6 +25,7 @@ uvicorn app.main:app --reload
 
 - `POST /api/v1/menu/parse-file` requires Tesseract OCR for image uploads.
 - The Docker image installs `tesseract-ocr` with English and Russian language packs.
-- The default category model is `tfidf-union-logreg-items-v2@1.1.0`.
-- The backend uses a scikit-learn TF-IDF word/character union + Logistic Regression
-  classifier for category prediction and deterministic parsing for field extraction.
+- The default category model is `tfidf-enriched-logreg-items-v2@1.2.0`.
+- The backend uses a scikit-learn sparse Logistic Regression classifier with raw-text
+  TF-IDF, cleaned-name TF-IDF, and structured slot features for category prediction,
+  plus deterministic parsing for field extraction.

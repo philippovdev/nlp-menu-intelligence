@@ -16,6 +16,7 @@ from classification_baseline_common import (
     REPO_ROOT,
     build_artifact,
     build_label_order,
+    build_model_inputs,
     evaluate_split,
     format_output_path,
     resolve_repo_path,
@@ -27,7 +28,7 @@ DEFAULT_DATASET = REPO_ROOT / "data/annotated/items.v2.jsonl"
 DEFAULT_MODEL_OUTPUT = REPO_ROOT / "backend/app/model_assets/category_classifier.pkl"
 DEFAULT_METADATA_OUTPUT = REPO_ROOT / "backend/app/model_assets/category_classifier.json"
 DEFAULT_MINIMUM_CONFIDENCE = 0.35
-DEFAULT_MODEL_FAMILY = "tfidf_union_logreg"
+DEFAULT_MODEL_FAMILY = "tfidf_enriched_logreg"
 
 
 def parse_args() -> argparse.Namespace:
@@ -70,7 +71,7 @@ def main() -> int:
         pipeline = model_family.build_pipeline()
         parameters = model_family.build_parameters()
     pipeline.fit(
-        [item.text for item in train_items],
+        build_model_inputs(train_items, input_format=model_family.input_format),
         [item.category for item in train_items],
     )
 
@@ -87,11 +88,13 @@ def main() -> int:
             pipeline=pipeline,
             items=items_by_split["valid"],
             label_order=label_order,
+            input_format=model_family.input_format,
         ),
         test_metrics=evaluate_split(
             pipeline=pipeline,
             items=items_by_split["test"],
             label_order=label_order,
+            input_format=model_family.input_format,
         ),
         notes=(
             "Text-only category classification baseline trained on the fixed train split of "
@@ -109,6 +112,7 @@ def main() -> int:
         {
             "model_id": model_id,
             "minimum_confidence": args.minimum_confidence,
+            "input_format": model_family.input_format,
             "model_file": relative_to_repo(model_output),
         }
     )

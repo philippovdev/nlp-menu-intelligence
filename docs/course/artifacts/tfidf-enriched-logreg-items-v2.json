@@ -1,5 +1,5 @@
 {
-  "run_id": "export-category-classifier-v2-001",
+  "run_id": "tfidf-enriched-logreg-v2-001",
   "run_date": "2026-04-03",
   "commit_sha": "working-tree",
   "scikit_learn_version": "1.8.0",
@@ -479,9 +479,5 @@
       ]
     ]
   },
-  "notes": "Text-only category classification baseline trained on the fixed train split of items.v2.jsonl and evaluated on the fixed valid and test splits using LogisticRegression with enriched sparse text/slot features.",
-  "model_id": "tfidf-enriched-logreg-items-v2@1.2.0",
-  "minimum_confidence": 0.35,
-  "input_format": "record",
-  "model_file": "backend/app/model_assets/category_classifier.pkl"
+  "notes": "Sparse category classification baseline trained on the fixed train split of items.v2.jsonl using raw text, cleaned item name, and structured slot features with LogisticRegression."
 }
