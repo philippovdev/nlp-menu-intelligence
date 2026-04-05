@@ -107,6 +107,11 @@ Output:
 }
 ```
 
+The reviewed result can also be flattened into CSV for spreadsheet-style
+inspection:
+
+![CSV export example](docs/images/readme-example-csv.png)
+
 ## NLP Framing
 
 The project is evaluated as three related tasks:
