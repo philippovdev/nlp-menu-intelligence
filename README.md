@@ -3,6 +3,16 @@
 Menu Intelligence is an NLP course project and working web application that
 turns raw menu content into structured menu data.
 
+> Reviewer quick links:
+> [Live website](https://nlp.philippov.dev) | [Course report PDF](report/main.pdf)
+
+This repository is intended to be read both as a research submission and as a
+working software artifact. The fastest way to evaluate it is:
+
+1. open the live system at [nlp.philippov.dev](https://nlp.philippov.dev)
+2. skim the compiled report at [report/main.pdf](report/main.pdf)
+3. review the end-to-end demos below
+
 ![Menu Intelligence demo](docs/images/readme-demo-text-to-json.gif)
 
 Demo: paste raw menu text, parse grouped results, and export the reviewed
