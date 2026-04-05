@@ -271,6 +271,18 @@ PRICE_OR_SIZE_TAIL_PATTERN = re.compile(
     rf"(?:{NUMBER_RE}\s*(?:₽|руб\.?|р\.?\b|rub\b|usd\b|eur\b|gbp\b|[$€£]|kg|g|gr|ml|l|cl|oz|cm|pc|pcs|шт\.?|кг|гр|г|мл|л|см)?\s*/?\s*)+$",
     re.IGNORECASE,
 )
+DESCRIPTION_KEYWORD_PATTERN = re.compile(
+    (
+        r"\b(?:"
+        r"белое|красное|розовое|сухое|полусухое|полусладкое|сладкое|брют|экстра\s+брют|"
+        r"white|red|rose|ros[eé]|dry|semi[- ]dry|semi[- ]sweet|sweet|brut|extra\s+brut|"
+        r"france|italy|spain|germany|chile|argentina|australia|new\s+zealand|"
+        r"франция|италия|испания|германия|чили|аргентина|австралия|португалия|"
+        r"бургундия|венето|пьемонт|тоскана|мальборо|шампань|риоха|мозель"
+        r")\b"
+    ),
+    re.IGNORECASE,
+)
 
 ISSUE_DEFINITIONS = {
     "UNKNOWN_HEADER_CATEGORY": (
@@ -357,7 +369,12 @@ def parse_menu_text(
             default_currency=request.currency_hint or DEFAULT_CURRENCY,
         )
 
-        kind, header_category = classify_line(normalized, prices, sizes)
+        kind, header_category = classify_line(
+            normalized,
+            prices,
+            sizes,
+            active_header_category=active_header_category,
+        )
         if kind != "menu_item":
             prices = []
             sizes = []
@@ -645,8 +662,17 @@ def extract_prices(
     return dedupe_models(prices), dedupe_strings(fragments)
 
 
-def classify_line(line: str, prices: list[Price], sizes: list[Size]) -> tuple[str, str | None]:
+def classify_line(
+    line: str,
+    prices: list[Price],
+    sizes: list[Size],
+    *,
+    active_header_category: str | None = None,
+) -> tuple[str, str | None]:
     if is_noise(line):
+        return "noise", None
+
+    if looks_ocr_merged_row(line, prices=prices, sizes=sizes):
         return "noise", None
 
     header_category = guess_header_category(line)
@@ -656,7 +682,15 @@ def classify_line(line: str, prices: list[Price], sizes: list[Size]) -> tuple[st
     if looks_generic_header(line, prices=prices, sizes=sizes):
         return "category_header", None
 
-    if prices or sizes or looks_menu_item(line):
+    if looks_description_line(line, prices=prices, sizes=sizes):
+        return "noise", None
+
+    if looks_menu_item(
+        line,
+        prices=prices,
+        sizes=sizes,
+        active_header_category=active_header_category,
+    ):
         return "menu_item", None
 
     return "noise", None
@@ -692,9 +726,53 @@ def looks_generic_header(line: str, prices: list[Price], sizes: list[Size]) -> b
     return False
 
 
-def looks_menu_item(line: str) -> bool:
+def looks_menu_item(
+    line: str,
+    *,
+    prices: list[Price],
+    sizes: list[Size],
+    active_header_category: str | None = None,
+) -> bool:
     words = split_words(line)
-    return bool(words) and len(words) <= 16 and count_letters(line) >= 3
+    if not words or count_letters(line) < 3:
+        return False
+    if len(words) > 16:
+        return False
+    if looks_ocr_merged_row(line, prices=prices, sizes=sizes):
+        return False
+    if looks_description_line(line, prices=prices, sizes=sizes):
+        return False
+    if prices or sizes:
+        return True
+    if active_header_category is not None and len(words) <= 10:
+        return True
+    return guess_item_category(line) is not None and len(words) <= 12
+
+
+def looks_description_line(line: str, prices: list[Price], sizes: list[Size]) -> bool:
+    if prices or sizes:
+        return False
+    if count_letters(line) < 6:
+        return False
+
+    slash_count = line.count("/")
+    descriptor_keyword = DESCRIPTION_KEYWORD_PATTERN.search(line) is not None
+    if slash_count < 2 and not descriptor_keyword:
+        return False
+
+    if guess_item_category(line) is not None:
+        return False
+
+    words = split_words(line)
+    return len(words) >= 4
+
+
+def looks_ocr_merged_row(line: str, prices: list[Price], sizes: list[Size]) -> bool:
+    signal_count = len(prices) + len(sizes)
+    if signal_count < 2:
+        return False
+    words = split_words(line)
+    return len(line) > 160 or len(words) > 24
 
 
 def guess_header_category(line: str) -> str | None:
