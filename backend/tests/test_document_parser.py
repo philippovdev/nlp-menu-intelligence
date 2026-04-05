@@ -1,4 +1,5 @@
 from io import BytesIO
+from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
 from PIL import Image
@@ -78,6 +79,10 @@ def build_oriented_jpeg_bytes() -> bytes:
     buffer = BytesIO()
     image.save(buffer, format="JPEG", exif=exif)
     return buffer.getvalue()
+
+
+def build_ocr_box(x1: float, y1: float, x2: float, y2: float) -> list[list[float]]:
+    return [[x1, y1], [x2, y1], [x2, y2], [x1, y2]]
 
 
 def test_parse_menu_file_rejects_unsupported_media_type(client: TestClient) -> None:
@@ -204,6 +209,115 @@ def test_parse_menu_file_uses_ocr_for_images(client: TestClient, monkeypatch) ->
         {"value": 450, "currency": "RUB", "raw": "450"}
     ]
     assert payload["issues"] == []
+
+
+def test_parse_menu_file_reconstructs_multicolumn_ocr_boxes(
+    client: TestClient,
+    monkeypatch,
+) -> None:
+    image_bytes = build_png_bytes()
+
+    class FakeEngine:
+        def __call__(self, image: Image.Image) -> SimpleNamespace:
+            return SimpleNamespace(
+                txts=[
+                    "ВИНА",
+                    "ТЕКИЛА",
+                    "Шардоне",
+                    "300P",
+                    "Сауза золотая",
+                    "300P",
+                ],
+                boxes=[
+                    build_ocr_box(40, 10, 180, 34),
+                    build_ocr_box(360, 10, 520, 34),
+                    build_ocr_box(40, 60, 180, 84),
+                    build_ocr_box(210, 60, 270, 84),
+                    build_ocr_box(360, 60, 560, 84),
+                    build_ocr_box(585, 60, 645, 84),
+                ],
+            )
+
+    monkeypatch.setattr("app.image_ocr.get_rapidocr_engine", lambda: FakeEngine())
+
+    response = client.post(
+        "/api/v1/menu/parse-file",
+        files={"file": ("menu.png", image_bytes, "image/png")},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["document"]["extracted_text"] == (
+        "ВИНА\nШардоне 300 ₽\nТЕКИЛА\nСауза золотая 300 ₽"
+    )
+    assert [item["kind"] for item in payload["items"]] == [
+        "category_header",
+        "menu_item",
+        "category_header",
+        "menu_item",
+    ]
+    assert payload["items"][1]["fields"]["prices"] == [
+        {"value": 300, "currency": "RUB", "raw": "300 ₽"}
+    ]
+    assert payload["items"][3]["fields"]["prices"] == [
+        {"value": 300, "currency": "RUB", "raw": "300 ₽"}
+    ]
+
+
+def test_parse_menu_file_assembles_split_ocr_items_before_parser_ingestion(
+    client: TestClient,
+    monkeypatch,
+) -> None:
+    image_bytes = build_png_bytes()
+
+    class FakeEngine:
+        def __call__(self, image: Image.Image) -> SimpleNamespace:
+            return SimpleNamespace(
+                txts=[
+                    "ВИНА",
+                    "по бокалам, 150 мл",
+                    "Шардоне",
+                    "Белое сухое / Италия / Венето",
+                    "300P",
+                    "Рислинг",
+                    "350P",
+                ],
+                boxes=[
+                    build_ocr_box(40, 10, 180, 34),
+                    build_ocr_box(40, 42, 260, 66),
+                    build_ocr_box(40, 92, 220, 116),
+                    build_ocr_box(46, 122, 308, 148),
+                    build_ocr_box(260, 154, 320, 178),
+                    build_ocr_box(40, 214, 190, 238),
+                    build_ocr_box(260, 246, 320, 270),
+                ],
+            )
+
+    monkeypatch.setattr("app.image_ocr.get_rapidocr_engine", lambda: FakeEngine())
+
+    response = client.post(
+        "/api/v1/menu/parse-file",
+        files={"file": ("menu.png", image_bytes, "image/png")},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["document"]["extracted_text"] == (
+        "ВИНА\n"
+        "Шардоне Белое сухое / Италия / Венето 300 ₽\n"
+        "Рислинг 350 ₽"
+    )
+    assert [item["kind"] for item in payload["items"]] == [
+        "category_header",
+        "menu_item",
+        "menu_item",
+    ]
+    assert payload["items"][1]["fields"]["prices"] == [
+        {"value": 300, "currency": "RUB", "raw": "300 ₽"}
+    ]
+    assert payload["items"][2]["fields"]["prices"] == [
+        {"value": 350, "currency": "RUB", "raw": "350 ₽"}
+    ]
 
 
 def test_parse_menu_file_applies_exif_orientation_before_ocr(
